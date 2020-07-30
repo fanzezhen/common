@@ -81,7 +81,7 @@ public class HttpUtil {
                     byteArrayOutputStream.write(buffer, 0, len);
                     byteArrayOutputStream.flush();
                 }
-                result = ResponseData.success(byteArrayOutputStream.toString(StandardCharsets.UTF_8));
+                result = ResponseData.success(byteArrayOutputStream.toString(String.valueOf(StandardCharsets.UTF_8)));
             } else {
                 result = ResponseData.error(responseCode, "请求异常");
             }
@@ -139,7 +139,7 @@ public class HttpUtil {
                     byteArrayOutputStream.write(buffer, 0, len);
                     byteArrayOutputStream.flush();
                 }
-                result = ResponseData.success(byteArrayOutputStream.toString(StandardCharsets.UTF_8));
+                result = ResponseData.success(byteArrayOutputStream.toString(String.valueOf(StandardCharsets.UTF_8)));
             } else {
                 result = ResponseData.error(responseCode, "请求异常");
             }
@@ -164,8 +164,12 @@ public class HttpUtil {
 
         if (params != null) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
-                queryString.append(entry.getKey()).append("=").append(URLEncoder.encode(entry.getValue(),
-                        StandardCharsets.UTF_8)).append("&");
+                try {
+                    queryString.append(entry.getKey()).append("=").append(URLEncoder.encode(entry.getValue(),
+                            String.valueOf(StandardCharsets.UTF_8))).append("&");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return queryString;
