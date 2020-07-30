@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.security.facade.feign.remote;
+package com.github.fanzezhen.common.security.facade.remote;
 
 import com.github.fanzezhen.common.core.model.dto.SysPermissionDto;
 import com.github.fanzezhen.common.core.model.dto.SysUserDto;
