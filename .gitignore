@@ -1,0 +1,37 @@
+# IntelliJ Idea project files
+.idea
+*.iml
+*.uconf.properties
+*.logback.xml
+.mvn
+# Eclipse project files
+.classpath
+.settings
+.project
+.metadata
+
+# Temporary files
+out
+target
+conf_dev
+*.pyc
+*.conf
+tmp/
+
+# OSX temp files
+.DS_Store
+
+# GIT
+# .gitignore
+
+# DataBase
+*.rdb
+
+# log
+logs/
+
+
+# others
+andy
+*.temp
+.svn

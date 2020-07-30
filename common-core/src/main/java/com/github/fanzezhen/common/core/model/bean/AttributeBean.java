@@ -1,0 +1,18 @@
+package com.github.fanzezhen.common.core.model.bean;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * Created by fanzezhen on 2017/12/19.
+ * Desc:
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class AttributeBean {
+    private String type;
+    private String name;
+    private Object value;
+}

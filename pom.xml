@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.fanzezhen</groupId>
+    <artifactId>common</artifactId>
+    <version>2.0.0</version>
+
+    <modules>
+        <module>common-core</module>
+        <module>common-leaned</module>
+        <module>common-mp</module>
+        <module>common-security</module>
+        <module>common-swagger</module>
+        <module>common-exception</module>
+    </modules>
+
+    <packaging>pom</packaging>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <url>https://github.com/fanzezhen/${project.artifactId}</url>
+    <description>${project.artifactId}</description>
+
+    <!-- 代码库 -->
+    <scm>
+        <tag>master</tag>
+        <url>https://github.com/fanzezhen/${project.artifactId}.git</url>
+        <connection>scm:git:git@github.com:fanzezhen/${project.artifactId}.git</connection>
+        <developerConnection>scm:git:git@github.com:fanzezhen/${project.artifactId}.git</developerConnection>
+    </scm>
+
+    <!-- 开发者信息 -->
+    <developers>
+        <developer>
+            <name>fanzezhen</name>
+            <email>842618916@qq.com</email>
+            <roles>
+                <role>owner</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
+    <!-- 版权许可 -->
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <!-- 定义snapshots库和releases库的nexus地址 -->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>oss</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>oss</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <properties>
+        <cn.stylefeng.roses.version>2.2.13</cn.stylefeng.roses.version>
+        <com.github.fanzezhen.version>2.0.0</com.github.fanzezhen.version>
+        <com.alibaba.version>1.2.68</com.alibaba.version>
+        <com.baomidou.version>3.3.2</com.baomidou.version>
+        <com.google.guava.version>29.0-jre</com.google.guava.version>
+        <com.oracle.version>11.2.0.3</com.oracle.version>
+        <commons-net.version>3.6</commons-net.version>
+        <eu.bitwalker.version>1.21</eu.bitwalker.version>
+        <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
+        <io.springfox.version>2.9.2</io.springfox.version>
+        <javax.annotation.version>1.3.2</javax.annotation.version>
+        <javax.servlet.version>4.0.1</javax.servlet.version>
+        <javax.persistence.version>1.0.2</javax.persistence.version>
+        <mysql.version>8.0.19</mysql.version>
+        <org.slf4j.version>1.7.30</org.slf4j.version>
+        <org.apache.velocity.version>2.2</org.apache.velocity.version>
+        <org.freemarker.version>2.3.30</org.freemarker.version>
+        <org.apache.commons.commons-lang3.version>3.11</org.apache.commons.commons-lang3.version>
+        <org.apache.commons.commons-collections4.version>4.4</org.apache.commons.commons-collections4.version>
+        <commons-net.version>3.6</commons-net.version>
+        <org.apache.poi.version>4.1.2</org.apache.poi.version>
+        <org.apache.tomcat.embed.version>10.0.0-M7</org.apache.tomcat.embed.version>
+        <org.springframework.version>5.2.8.RELEASE</org.springframework.version>
+        <org.springframework.boot.version>2.3.2.RELEASE</org.springframework.boot.version>
+        <org.springframework.cloud.version>2.2.3.RELEASE</org.springframework.cloud.version>
+        <org.springframework.security.version>5.3.3.RELEASE</org.springframework.security.version>
+        <org.projectlombok.version>1.18.12</org.projectlombok.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
+        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.7</nexus-staging-maven-plugin.version>
+        <maven-scm-plugin.version>1.8.1</maven-scm-plugin.version>
+        <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
+    </properties>
+
+    <!-- 使用个人资料：由于生成javadoc和源jar以及使用GPG签署组件是一个相当耗时的过程，因此这些执行通常与正常的构建配置隔离并移动到配置文件中。
+    然后，在通过激活配置文件执行部署时，将使用此配置文件。 -->
+    <profiles>
+        <profile>
+            <id>oss</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <jdk>${java.version}</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>${java.version}</maven.compiler.source>
+                <maven.compiler.target>${java.version}</maven.compiler.target>
+                <maven.compiler.compilerVersion>${java.version}</maven.compiler.compilerVersion>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <finalName>${artifactId}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <!-- 指定编译器版本 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- 生成sources源码包的插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 生成javadoc文档包的插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                    <doclint>none</doclint>
+                    <charset>UTF-8</charset>
+                    <docencoding>UTF-8</docencoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <!-- <additionalparam>-Xdoclint:none</additionalparam>  -->
+                            <additionalJOption>-Xdoclint:none</additionalJOption>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>${maven-deploy-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>${nexus-staging-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <!-- 这个id不要乱设置，需要和后面的settings.xml中的server的id保持一致 -->
+                    <serverId>oss</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>deploy-to-sonatype</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                            <goal>release</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>${maven-scm-plugin.version}</version>
+            </plugin>
+
+            <!--gpg加密，用于生成.asc-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>${maven-gpg-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- 远程仓库列表 -->
+    <repositories>
+        <!-- 阿里云仓库 -->
+        <repository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    <!-- 插件仓库列表 -->
+    <pluginRepositories>
+        <!-- 阿里云仓库 -->
+        <pluginRepository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>
