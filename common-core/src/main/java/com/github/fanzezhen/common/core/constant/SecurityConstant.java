@@ -1,11 +1,15 @@
 package com.github.fanzezhen.common.core.constant;
 
 public class SecurityConstant {
-
     public static final String HOME_ADDRESS = "/hello";
     public static final String LOGIN_ADDRESS = "/oauth/login";
     public static final String DEFAULT_LOGIN_API = "/login";
-    public static final String LOGIN_API = "/user/login";
+    public static final String LOG_MATCHERS = "/log/**";    // 日志接口匹配格式
+    public static final String OAUTH_MATCHERS = "/oauth/**";  // 资源接口匹配格式
+    public static final String PUBLIC_MATCHERS = "/public/**";  // 开放接口匹配格式
+    public static final String STATIC_MATCHERS = "/static/**";  // 静态文件接口匹配格式
+    public static final String SWAGGER_UI_MATCHERS = "/swagger-ui.html/**";  // SWAGGER-UI接口匹配格式
+    public static final String SWAGGER_RESOURCE_MATCHERS = "/swagger-resources.html/**";  // SWAGGER-RESOURCE接口匹配格式
 
     // 权限加载的前缀
     public static final String PERMISSION_PREFIX = "permission_";
@@ -26,8 +30,9 @@ public class SecurityConstant {
     public static final String PERMISSION_SESSION_KEY = "SECURITY_PERMISSION_ATTR";
 
     // 不校验权限的接口
-    public static final String[] IGNORING_ANT_MATCHERS = {LOGIN_ADDRESS, "/assets/**", "/kaptcha/**", "/log/**", "/oauth/**",
-            "/static/**", "/v2/**", "/swagger-ui.html/**", "/swagger-resources/**", "/webjars/**", "/public/**"};
-    // 不校验权限的接口
-    public static final String[] CSRF_IGNORING_ANT_MATCHERS = {"/api/**", "/log/**"};
+    public static final String[] IGNORING_ANT_MATCHERS = {LOGIN_ADDRESS, LOG_MATCHERS, OAUTH_MATCHERS, PUBLIC_MATCHERS,
+            STATIC_MATCHERS, SWAGGER_UI_MATCHERS, SWAGGER_RESOURCE_MATCHERS};
+
+    // 忽略CSRF的接口
+    public static final String[] CSRF_IGNORING_ANT_MATCHERS = {"/api/**", LOG_MATCHERS};
 }
