@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.security.facade.feign;
+package com.github.fanzezhen.common.security.facade;
 
 import com.alibaba.fastjson.JSON;
 import com.github.fanzezhen.common.core.constant.CacheConstants;
@@ -7,8 +7,7 @@ import com.github.fanzezhen.common.core.enums.auth.RoleEnum;
 import com.github.fanzezhen.common.core.model.dto.SysPermissionDto;
 import com.github.fanzezhen.common.core.model.dto.SysUserDto;
 import com.github.fanzezhen.common.core.model.response.R;
-import com.github.fanzezhen.common.security.facade.UserDetailsServiceFacade;
-import com.github.fanzezhen.common.security.facade.feign.remote.UserDetailsRemote;
+import com.github.fanzezhen.common.security.facade.remote.UserDetailsRemote;
 import com.github.fanzezhen.common.security.model.SysUserDetail;
 import com.github.fanzezhen.common.security.property.SecurityProjectProperty;
 import lombok.extern.slf4j.Slf4j;
@@ -19,13 +18,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
 
 @Slf4j
-@Component
+@Service
 public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
     @Resource
     private SecurityProjectProperty securityProjectProperty;
