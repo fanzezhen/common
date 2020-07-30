@@ -91,6 +91,7 @@
         <org.springframework.boot.version>2.3.2.RELEASE</org.springframework.boot.version>
         <org.springframework.cloud.version>2.2.3.RELEASE</org.springframework.cloud.version>
         <org.springframework.security.version>5.3.3.RELEASE</org.springframework.security.version>
+        <org.springframework.social.version>1.1.6.RELEASE</org.springframework.social.version>
         <org.projectlombok.version>1.18.12</org.projectlombok.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
