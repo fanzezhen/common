@@ -1,7 +1,8 @@
-package com.github.fanzezhen.common.security;
+package com.github.fanzezhen.common.security.util;
 
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
+import com.github.fanzezhen.common.security.model.SysUserDetail;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,7 +37,7 @@ public class SecurityUtil {
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             return authentication;
         } else {
-            return null;
+            throw new ServiceException(CoreExceptionEnum.NO_CURRENT_USER);
         }
     }
 
@@ -55,14 +56,12 @@ public class SecurityUtil {
     /**
      * 获取登录用户
      */
-    public static User getUserNonNull() {
-        if (getAuthentication() == null)
+    public static SysUserDetail getSysUserDetail() {
+        try {
+            return (SysUserDetail) getAuthentication().getPrincipal();
+        } catch (Exception e) {
             throw new ServiceException(CoreExceptionEnum.NO_CURRENT_USER);
-        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) getAuthentication();
-        //details里面可能存放了当前登录用户的详细信息，也可以通过cast后拿到
-        User userDetails = (User) authenticationToken.getPrincipal();
-        if (userDetails == null) throw new ServiceException(CoreExceptionEnum.NO_CURRENT_USER);
-        return userDetails;
+        }
     }
 
     public static String encrypt(String s) {
