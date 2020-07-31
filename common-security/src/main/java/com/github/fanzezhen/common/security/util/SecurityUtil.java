@@ -64,6 +64,17 @@ public class SecurityUtil {
         }
     }
 
+    /**
+     * 获取登录用户
+     */
+    public static String getLoginUserId() {
+        try {
+            return getSysUserDetail().getId();
+        } catch (Exception e) {
+            throw new ServiceException(CoreExceptionEnum.NO_CURRENT_USER);
+        }
+    }
+
     public static String encrypt(String s) {
         return encrypt(s, new BCryptPasswordEncoder());
     }
