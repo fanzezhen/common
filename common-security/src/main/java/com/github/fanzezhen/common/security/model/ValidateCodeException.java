@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.security;
+package com.github.fanzezhen.common.security.model;
 
 import org.springframework.security.core.AuthenticationException;
 
