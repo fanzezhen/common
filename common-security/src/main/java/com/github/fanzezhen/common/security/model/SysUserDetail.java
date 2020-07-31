@@ -22,6 +22,8 @@ import java.util.function.Function;
 @Getter
 @Setter
 public class SysUserDetail extends User implements CredentialsContainer {
+    private static final long serialVersionUID = -447802196079077712L;
+
     private String id;
 
     /**
