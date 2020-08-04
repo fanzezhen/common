@@ -8,7 +8,7 @@ import org.apache.commons.net.ftp.FTPReply;
 import java.io.*;
 import java.util.HashMap;
 
-public class FtpUtils {
+public class FtpUtil {
     private String hostname;
     private int port;
     private String username;
@@ -17,14 +17,14 @@ public class FtpUtils {
     private InputStream inputStream = null;
     private OutputStream outputStream = null;
 
-    public FtpUtils(String hostname, int port, String username, String password) {
+    public FtpUtil(String hostname, int port, String username, String password) {
         this.hostname = hostname;
         this.port = port;
         this.username = username;
         this.password = password;
     }
 
-    public FtpUtils() {
+    public FtpUtil() {
     }
 
     public boolean uploadFile(String fileName, String originFilename) {
@@ -226,7 +226,7 @@ public class FtpUtils {
     }
 
     public static void main(String[] args) {
-        FtpUtils ftpUtil = new FtpUtils();
+        FtpUtil ftpUtil = new FtpUtil();
         ftpUtil.uploadFile("/imageroot/tzrck/timg.jpg", "D:\\timg.jpg");
 //		ftpUtil.downloadFile("a.txt", "C://Users//huangwending//Desktop//");
 //		ftpUtil.deleteFile("timg.jpg");
