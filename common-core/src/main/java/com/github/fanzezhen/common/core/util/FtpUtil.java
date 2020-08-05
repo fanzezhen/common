@@ -130,7 +130,10 @@ public class FtpUtil {
             if (changeWorkingDirectory) {
                 //上传文件 成功true 失败 false
                 System.out.println("inputStream.available(): " + inputStream.available());
-                if (!ftpClient.storeFile(fullPath + fileName, inputStream)) return R.failed("上传失败");
+                String remote = fullPath;
+                if (fullPath.endsWith("/")) remote += File.separator;
+                remote += fileName;
+                if (!ftpClient.storeFile(remote, inputStream)) return R.failed("上传失败");
             } else return R.failed("目录创建失败");
             ftpClient.logout();
         } catch (IOException e) {
