@@ -20,63 +20,67 @@ import java.util.Objects;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class R<T> implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Getter
-	@Setter
-	private Integer code;
+    @Getter
+    @Setter
+    private Integer code;
 
-	@Getter
-	@Setter
-	private String msg;
+    @Getter
+    @Setter
+    private String message;
 
 
-	@Getter
-	@Setter
-	private T data;
+    @Getter
+    @Setter
+    private T data;
 
-	public static <T> R<T> ok() {
-		return restResult(null, HttpStatus.OK.value(), "success");
-	}
+    public static <T> R<T> ok() {
+        return restResult(null, HttpStatus.OK.value(), "success");
+    }
 
-	public static <T> R<T> ok(T data) {
-		return restResult(data, HttpStatus.OK.value(), "success");
-	}
+    public static <T> R<T> ok(T data) {
+        return restResult(data, HttpStatus.OK.value(), "success");
+    }
 
-	public static <T> R<T> ok(T data, String msg) {
-		return restResult(data, HttpStatus.OK.value(), msg);
-	}
+    public static <T> R<T> ok(T data, String msg) {
+        return restResult(data, HttpStatus.OK.value(), msg);
+    }
 
-	public static <T> R<T> failed() {
-		return restResult(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
-	}
+    public static <T> R<T> failed() {
+        return restResult(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
+    }
 
-	public static <T> R<T> failed(String msg) {
-		return restResult(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), msg);
-	}
+    public static <T> R<T> failed(String msg) {
+        return restResult(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), msg);
+    }
 
-	public static <T> R<T> failed(AbstractBaseExceptionEnum msg) {
-		return restResult(null, msg.getCode(), msg.getMessage());
-	}
+    public static <T> R<T> failed(AbstractBaseExceptionEnum msg) {
+        return restResult(null, msg.getCode(), msg.getMessage());
+    }
 
-	public static <T> R<T> failed(T data) {
-		return restResult(data, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
-	}
+    public static <T> R<T> failed(T data) {
+        return restResult(data, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
+    }
 
-	public static <T> R<T> failed(T data, String msg) {
-		return restResult(data, HttpStatus.INTERNAL_SERVER_ERROR.value(), msg);
-	}
+    public static <T> R<T> failed(T data, String msg) {
+        return restResult(data, HttpStatus.INTERNAL_SERVER_ERROR.value(), msg);
+    }
 
-	private static <T> R<T> restResult(T data, Integer code, String msg) {
-		R<T> apiResult = new R<>();
-		apiResult.setCode(code);
-		apiResult.setData(data);
-		apiResult.setMsg(msg);
-		return apiResult;
-	}
+    private static <T> R<T> restResult(T data, Integer code, String msg) {
+        R<T> apiResult = new R<>();
+        apiResult.setCode(code);
+        apiResult.setData(data);
+        apiResult.setMessage(msg);
+        return apiResult;
+    }
 
-	public boolean isOk() {
-		return Objects.equals(code, HttpStatus.OK.value());
-	}
+    public boolean isOk() {
+        return Objects.equals(code, HttpStatus.OK.value());
+    }
+
+    public boolean isSuccess() {
+        return Objects.equals(code, HttpStatus.OK.value());
+    }
 }
 
