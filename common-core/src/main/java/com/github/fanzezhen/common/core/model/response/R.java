@@ -28,7 +28,7 @@ public class R<T> implements Serializable {
 
 	@Getter
 	@Setter
-	private String msg;
+	private String message;
 
 
 	@Getter
@@ -71,7 +71,7 @@ public class R<T> implements Serializable {
 		R<T> apiResult = new R<>();
 		apiResult.setCode(code);
 		apiResult.setData(data);
-		apiResult.setMsg(msg);
+		apiResult.setMessage(msg);
 		return apiResult;
 	}
 
