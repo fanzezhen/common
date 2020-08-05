@@ -131,7 +131,7 @@ public class FtpUtil {
                 //上传文件 成功true 失败 false
                 System.out.println("inputStream.available(): " + inputStream.available());
                 String remote = fullPath;
-                if (!fullPath.endsWith("/")) remote += File.separator;
+                if (fullPath.contains("/") && !fullPath.endsWith("/")) remote += "/";
                 remote += fileName;
                 if (!ftpClient.storeFile(remote, inputStream)) return R.failed("上传失败");
             } else return R.failed("目录创建失败");
