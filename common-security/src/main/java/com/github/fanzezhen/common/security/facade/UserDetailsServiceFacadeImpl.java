@@ -44,7 +44,7 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
     }
 
     @Override
-    @Cacheable(value = CacheConstants.USER_DETAILS, key = "#username")
+//    @Cacheable(value = CacheConstants.USER_DETAILS, key = "#username")
     public SysUserDetail loadUserByUsername(String username) throws UsernameNotFoundException {
         //用户，用于判断权限，请注意此用户名和方法参数中的username一致；BCryptPasswordEncoder是用来演示加密使用。
         SysUserDto sysUserDto = userDetailsRemote.loadUserByUsername(username, securityProjectProperty.APP_CODE).getData();
