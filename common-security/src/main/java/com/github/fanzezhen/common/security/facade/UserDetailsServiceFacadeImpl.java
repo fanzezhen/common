@@ -12,6 +12,7 @@ import com.github.fanzezhen.common.security.model.SysUserDetail;
 import com.github.fanzezhen.common.security.property.SecurityProjectProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -47,7 +48,7 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
     public SysUserDetail loadUserByUsername(String username) throws UsernameNotFoundException {
         //用户，用于判断权限，请注意此用户名和方法参数中的username一致；BCryptPasswordEncoder是用来演示加密使用。
         SysUserDto sysUserDto = userDetailsRemote.loadUserByUsername(username, securityProjectProperty.APP_CODE).getData();
-        if (sysUserDto != null) {
+        if (sysUserDto != null && StringUtils.isNotBlank(sysUserDto.getUsername())) {
             //生成环境是查询数据库获取username的角色用于后续权限判断（如：张三 admin)
             Set<GrantedAuthority> grantedAuthorities;
             Set<String> grantedAuthorityNameSet = new HashSet<>();
