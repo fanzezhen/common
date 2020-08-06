@@ -4,6 +4,7 @@ public class SecurityConstant {
     public static final String HOME_ADDRESS = "/hello";
     public static final String LOGIN_ADDRESS = "/oauth/login";
     public static final String DEFAULT_LOGIN_API = "/login";
+    public static final String ERROR_MATCHERS = "/error/**";    // 异常接口匹配格式
     public static final String LOG_MATCHERS = "/log/**";    // 日志接口匹配格式
     public static final String OAUTH_MATCHERS = "/oauth/**";  // 资源接口匹配格式
     public static final String PUBLIC_MATCHERS = "/public/**";  // 开放接口匹配格式
@@ -30,8 +31,8 @@ public class SecurityConstant {
     public static final String PERMISSION_SESSION_KEY = "SECURITY_PERMISSION_ATTR";
 
     // 不校验权限的接口
-    public static final String[] IGNORING_ANT_MATCHERS = {LOGIN_ADDRESS, LOG_MATCHERS, OAUTH_MATCHERS, PUBLIC_MATCHERS,
-            STATIC_MATCHERS, SWAGGER_UI_MATCHERS, SWAGGER_RESOURCE_MATCHERS};
+    public static final String[] IGNORING_ANT_MATCHERS = {ERROR_MATCHERS, LOGIN_ADDRESS, LOG_MATCHERS, OAUTH_MATCHERS,
+            PUBLIC_MATCHERS, STATIC_MATCHERS, SWAGGER_UI_MATCHERS, SWAGGER_RESOURCE_MATCHERS};
 
     // 忽略CSRF的接口
     public static final String[] CSRF_IGNORING_ANT_MATCHERS = {"/api/**", LOG_MATCHERS};
