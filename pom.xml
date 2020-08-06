@@ -90,9 +90,11 @@
         <org.springframework.version>5.2.8.RELEASE</org.springframework.version>
         <org.springframework.boot.version>2.3.2.RELEASE</org.springframework.boot.version>
         <org.springframework.cloud.version>2.2.3.RELEASE</org.springframework.cloud.version>
+        <org.springframework.data.version>2.3.2.RELEASE</org.springframework.data.version>
         <org.springframework.security.version>5.3.3.RELEASE</org.springframework.security.version>
         <org.springframework.social.version>1.1.6.RELEASE</org.springframework.social.version>
         <org.projectlombok.version>1.18.12</org.projectlombok.version>
+        <redis.clients.version>3.3.0</redis.clients.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
