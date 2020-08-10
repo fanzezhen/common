@@ -30,7 +30,7 @@ public abstract class GeneratorBean {
         setModulePackageName("com.github.fanzezhen.generator");
         setTableNameSplitter(",");
         setTables(GeneratorTool.scanner("表名"));
-        setSuperEntityClassName("com.github.fanzezhen.pojo.entity.BaseVarEntity");
+        setSuperEntityClassName("com.github.fanzezhen.common.core.model.BaseVarEntity");
         setSuperEntityColumns("id", "create_time", "create_user_id");
         init();
     }
