@@ -9,7 +9,6 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.*;
-import java.util.HashMap;
 
 @Slf4j
 public class FtpUtil {
@@ -188,7 +187,7 @@ public class FtpUtil {
         }
     }
 
-    private void doEnd() {
+    private void doEnd(FTPClient ftpClient, InputStream inputStream, OutputStream outputStream) {
         if (ftpClient.isConnected()) {
             try {
                 ftpClient.disconnect();
@@ -196,20 +195,11 @@ public class FtpUtil {
                 e.printStackTrace();
             }
         }
-        if (null != outputStream) {
-            try {
-                outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if (null != inputStream) {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        FileUtil.doClose(inputStream, outputStream);
+    }
+
+    private void doEnd() {
+        doEnd(ftpClient, inputStream, outputStream);
     }
 
     public static void main(String[] args) {

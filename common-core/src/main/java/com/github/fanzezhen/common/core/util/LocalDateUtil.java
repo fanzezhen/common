@@ -2,9 +2,11 @@ package com.github.fanzezhen.common.core.util;
 
 import com.github.fanzezhen.common.core.constant.DateConstant;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -130,9 +132,41 @@ public class LocalDateUtil {
         return null;
     }
 
+    /**
+     * 输入字符串和模板字符串，返回日期
+     *
+     * @param startDateInclusiveString 日期字符串
+     * @param endDateExclusiveString   日期字符串
+     * @param patterns                 日期格式字符串
+     */
+    public static Period period(String startDateInclusiveString, String endDateExclusiveString, String... patterns) {
+        for (String pattern : patterns) {
+            try {
+                LocalDate startDateInclusive = LocalDate.parse(startDateInclusiveString, DateTimeFormatter.ofPattern(pattern));
+                LocalDate endDateExclusive = LocalDate.parse(endDateExclusiveString, DateTimeFormatter.ofPattern(pattern));
+                return Period.between(startDateInclusive, endDateExclusive);
+            } catch (DateTimeParseException dateTimeParseException) {
+                log.warn(dateTimeParseException.getLocalizedMessage());
+            }
+        }
+        return Period.ZERO;
+    }
+
+    /**
+     * 输入字符串，返回日期间隔
+     *
+     * @param startDateInclusiveString 日期字符串
+     * @param endDateExclusiveString   日期字符串
+     */
+    public static Period period(String startDateInclusiveString, String endDateExclusiveString) {
+        if (StringUtils.isBlank(startDateInclusiveString) || StringUtils.isBlank(endDateExclusiveString))
+            return Period.ZERO;
+        return period(startDateInclusiveString, endDateExclusiveString, DateConstant.DATE_PATTERNS);
+    }
+
     public static void main(String[] args) {
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDate date = LocalDate.parse("2020-02-02 22:22:22", fmt);
-        System.out.println(date);
+        Period p = period("2016-01-01", "2002-01-01");
+        System.out.println(p.getYears());
+        System.out.println(p.getMonths());
     }
 }

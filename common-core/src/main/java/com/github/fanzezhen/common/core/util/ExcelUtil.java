@@ -228,10 +228,7 @@ public class ExcelUtil {
      * @param titles    表头
      * @param values    每行的单元格
      */
-    public static boolean writeExcel(String filepath,
-                                     String sheetName,
-                                     List<String> titles,
-                                     List<Map<String, Object>> values) throws IOException {
+    public static boolean writeExcel(String filepath, String sheetName, List<String> titles, List<Map<String, Object>> values) {
         OutputStream outputStream = null;
         if (StringUtils.isBlank(filepath)) {
             throw new IllegalArgumentException("文件路径不能为空");
@@ -307,11 +304,17 @@ public class ExcelUtil {
             try {
                 outputStream = new FileOutputStream(filepath);
                 workbook.write(outputStream);
+            } catch (FileNotFoundException e) {
+                throw new ServiceException(CoreExceptionEnum.FILE_NOT_FOUND);
+            } catch (IOException e) {
+                throw new ServiceException(CoreExceptionEnum.IO_ERROR);
             } finally {
-                if (outputStream != null) {
-                    outputStream.close();
+                FileUtil.doClose(outputStream);
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    log.warn(e.getLocalizedMessage());
                 }
-                workbook.close();
             }
             return true;
         }
@@ -340,7 +343,7 @@ public class ExcelUtil {
         XSSFCellStyle headerStyle = initStyle(wb);
         Font headerFont = wb.createFont();
         headerFont.setFontHeightInPoints((short) 12);
-        headerFont.setColor(IndexedColors.WHITE.getIndex());
+        headerFont.setColor(IndexedColors.BLACK.getIndex());
         titleFont.setFontName("微软雅黑");
         headerStyle.setFont(headerFont);
         styles.put("header", headerStyle);
@@ -402,9 +405,7 @@ public class ExcelUtil {
             outputStream = new FileOutputStream(desFilepath);
             workbook_des.write(outputStream);
         } finally {
-            if (outputStream != null) {
-                outputStream.close();
-            }
+            FileUtil.doClose(outputStream);
             if (workbook != null) {
                 workbook_des.close();
             }
@@ -428,7 +429,7 @@ public class ExcelUtil {
         headerStyle.setAlignment(HorizontalAlignment.CENTER);
         headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex()); // 前景色
-        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND); // 颜色填充方式
+        headerStyle.setFillPattern(FillPatternType.NO_FILL); // 颜色填充方式
         headerStyle.setWrapText(true);
         headerStyle.setBorderRight(BorderStyle.THIN); // 设置边界
         headerStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
@@ -442,7 +443,4 @@ public class ExcelUtil {
         return headerStyle;
     }
 
-    public static void main(String[] args) {
-
-    }
 }

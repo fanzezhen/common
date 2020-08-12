@@ -74,7 +74,7 @@ public class BeanConverterUtil {
         List<T> tRes = new ArrayList<>();
         try {
             for (S s : ss) {
-                T t = cls.newInstance();
+                T t = cls.getDeclaredConstructor().newInstance();
                 BeanUtil.copyProperties(s, t);
                 tRes.add(t);
             }
@@ -101,7 +101,7 @@ public class BeanConverterUtil {
         List<T> tRes = new ArrayList<>();
         try {
             for (S s : ss) {
-                T t = cls.newInstance();
+                T t = cls.getDeclaredConstructor().newInstance();
                 BeanUtil.copyProperties(s, t, ignoreProperties);
                 tRes.add(t);
             }
@@ -127,7 +127,7 @@ public class BeanConverterUtil {
         List<T> tRes = new ArrayList<>();
         try {
             for (S s : ss) {
-                T t = cls.newInstance();
+                T t = cls.getDeclaredConstructor().newInstance();
                 BeanUtil.copyProperties(s, t, CopyOptions.create().setIgnoreNullValue(ignoreNullProperties));
                 tRes.add(t);
             }
