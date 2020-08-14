@@ -82,8 +82,9 @@
         <org.slf4j.version>1.7.30</org.slf4j.version>
         <org.apache.velocity.version>2.2</org.apache.velocity.version>
         <org.freemarker.version>2.3.30</org.freemarker.version>
-        <org.apache.commons.commons-lang3.version>3.11</org.apache.commons.commons-lang3.version>
+        <org.apache.commons.commons-beanutils.version>1.9.4</org.apache.commons.commons-beanutils.version>
         <org.apache.commons.commons-collections4.version>4.4</org.apache.commons.commons-collections4.version>
+        <org.apache.commons.commons-lang3.version>3.11</org.apache.commons.commons-lang3.version>
         <commons-net.version>3.6</commons-net.version>
         <org.apache.poi.version>4.1.2</org.apache.poi.version>
         <org.apache.tomcat.embed.version>10.0.0-M7</org.apache.tomcat.embed.version>

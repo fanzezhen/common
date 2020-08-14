@@ -48,9 +48,10 @@ public class FileUtil {
 
     /**
      * MultipartFile 转 File
+     *
      * @param multipartFile 源文件
-     * @param path  目标file路径
-     * @return  file
+     * @param path          目标file路径
+     * @return file
      */
     public static File multipartFileToFile(MultipartFile multipartFile, String path) throws IOException {
         return multipartFileToFile(multipartFile, path, multipartFile.getOriginalFilename());
@@ -58,10 +59,11 @@ public class FileUtil {
 
     /**
      * MultipartFile 转 File
+     *
      * @param multipartFile 源文件
-     * @param path  目标file路径
-     * @param name  目标file名称
-     * @return  file
+     * @param path          目标file路径
+     * @param name          目标file名称
+     * @return file
      */
     public static File multipartFileToFile(MultipartFile multipartFile, String path, String name) throws IOException {
         File dir = new File(path);
@@ -69,5 +71,16 @@ public class FileUtil {
             log.debug("目录{}不存在，正在创建...{}", path, dir.mkdirs());  //多层目录需要调用mkdirs
         }
         return multipartFileToFile(multipartFile, path + CommonConstant.SEPARATOR + name);
+    }
+
+    public static void doClose(Closeable... closeables) {
+        for (Closeable closeable : closeables)
+            if (null != closeable) {
+                try {
+                    closeable.close();
+                } catch (IOException e) {
+                    log.warn(e.getLocalizedMessage());
+                }
+            }
     }
 }

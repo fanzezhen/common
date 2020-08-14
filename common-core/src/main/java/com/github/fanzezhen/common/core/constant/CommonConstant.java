@@ -1,11 +1,15 @@
 package com.github.fanzezhen.common.core.constant;
 
+import java.io.File;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class CommonConstant {
+    public static final String PROJECT_PATH = System.getProperty("user.dir") + File.separator;   // 项目目录
+    public static final String TMP_FOLDER = "tmp";  // 临时文件夹
+    public static final String TMP_PATH = PROJECT_PATH + TMP_FOLDER + File.separator;   // 临时文件夹全路径
     public static final String DEFAULT_USER_PASSWORD = "111111";    //默认密码
     public static final String SEPARATOR = "/";    //分隔符
 

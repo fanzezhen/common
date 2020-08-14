@@ -77,6 +77,11 @@
             <version>${io.jsonwebtoken.version}</version>
         </dependency>
         <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>${org.apache.commons.commons-beanutils.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>${org.apache.commons.commons-collections4.version}</version>
