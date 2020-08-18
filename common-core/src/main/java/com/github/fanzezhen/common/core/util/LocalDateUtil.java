@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 
 @Slf4j
 public class LocalDateUtil {
@@ -33,7 +35,7 @@ public class LocalDateUtil {
         if (localDate == null) return "";
         for (String pattern : patterns) {
             try {
-                return localDate.format(DateTimeFormatter.ofPattern(pattern));
+                return localDate.format(getDateTimeFormatter(pattern));
             } catch (DateTimeParseException dateTimeParseException) {
                 log.info(dateTimeParseException.getLocalizedMessage() + pattern);
             }
@@ -57,7 +59,7 @@ public class LocalDateUtil {
      * @param dateString 日期字符串
      */
     public static LocalDate toDate(String dateString) {
-        return toDate(dateString, DateConstant.DATE_DEFAULT_PATTERN);
+        return toDate(dateString, DateConstant.PATTERNS);
     }
 
     /**
@@ -69,8 +71,7 @@ public class LocalDateUtil {
     public static LocalDate toDate(String dateString, String... patterns) {
         for (String pattern : patterns) {
             try {
-                DateTimeFormatter fmt = DateTimeFormatter.ofPattern(pattern);
-                return LocalDate.parse(dateString, fmt);
+                return LocalDate.parse(dateString, getDateTimeFormatter(pattern));
             } catch (DateTimeParseException dateTimeParseException) {
                 log.warn(dateTimeParseException.toString());
             }
@@ -84,7 +85,13 @@ public class LocalDateUtil {
      * @param dateTimeString 日期字符串
      */
     public static LocalDateTime toDateTime(String dateTimeString) {
-        return toDateTime(dateTimeString, DateConstant.DATE_TIME_DEFAULT_PATTERN);
+        LocalDateTime localDateTime = toDateTime(dateTimeString, DateConstant.DATE_TIME_PATTERNS);
+        if (localDateTime == null) {
+            LocalDate localDate = toDate(dateTimeString, DateConstant.DATE_PATTERNS);
+            if (localDate != null)
+                localDateTime = localDate.atStartOfDay();
+        }
+        return localDateTime;
     }
 
     /**
@@ -96,8 +103,7 @@ public class LocalDateUtil {
     public static LocalDateTime toDateTime(String dateTimeString, String... patterns) {
         for (String pattern : patterns) {
             try {
-                DateTimeFormatter fmt = DateTimeFormatter.ofPattern(pattern);
-                return LocalDateTime.parse(dateTimeString, fmt);
+                return LocalDateTime.parse(dateTimeString, getDateTimeFormatter(pattern));
             } catch (DateTimeParseException dateTimeParseException) {
                 log.warn(dateTimeParseException.toString());
             }
@@ -115,8 +121,8 @@ public class LocalDateUtil {
     public static Period period(String startDateInclusiveString, String endDateExclusiveString, String... patterns) {
         for (String pattern : patterns) {
             try {
-                LocalDate startDateInclusive = LocalDate.parse(startDateInclusiveString, DateTimeFormatter.ofPattern(pattern));
-                LocalDate endDateExclusive = LocalDate.parse(endDateExclusiveString, DateTimeFormatter.ofPattern(pattern));
+                LocalDate startDateInclusive = LocalDate.parse(startDateInclusiveString, getDateTimeFormatter(pattern));
+                LocalDate endDateExclusive = LocalDate.parse(endDateExclusiveString, getDateTimeFormatter(pattern));
                 return Period.between(startDateInclusive, endDateExclusive);
             } catch (DateTimeParseException dateTimeParseException) {
                 log.warn(dateTimeParseException.getLocalizedMessage());
@@ -135,6 +141,18 @@ public class LocalDateUtil {
         if (StringUtils.isBlank(startDateInclusiveString) || StringUtils.isBlank(endDateExclusiveString))
             return Period.ZERO;
         return period(startDateInclusiveString, endDateExclusiveString, DateConstant.DATE_PATTERNS);
+    }
+
+    private static DateTimeFormatter getDateTimeFormatter(String pattern) {
+        return new DateTimeFormatterBuilder()
+                .appendPattern(pattern)
+                .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+                .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+                .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+                .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+                .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+                .parseDefaulting(ChronoField.MILLI_OF_SECOND, 0)
+                .toFormatter();
     }
 
     public static void main(String[] args) {
