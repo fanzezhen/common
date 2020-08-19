@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 public class DateConstant {
     public static final char[] DATE_SPLITTERS = {'-', '/', ' ', '.', '+', '*', '|', '?'};
+    public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
     public static final String DATE_DEFAULT_PATTERN = "yyyy-MM-dd";
     public static final String DATE_TIME_DEFAULT_PATTERN = "yyyy-MM-dd HH:mm:ss";
     public static final String[] DATE_PATTERNS = {"yyyy", "yyyy.", "yyyy年", "yyyyMM", "yyyy.MM", "yyyy-MM", "yyyy/MM",
