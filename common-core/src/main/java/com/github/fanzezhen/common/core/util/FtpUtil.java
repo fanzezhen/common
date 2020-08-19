@@ -32,6 +32,15 @@ public class FtpUtil {
     public FtpUtil() {
     }
 
+    public FtpUtil(String hostname, int port, String username, String password, String rootPath, String address) {
+        this.hostname = hostname;
+        this.port = port;
+        this.username = username;
+        this.password = password;
+        this.rootPath = rootPath;
+        this.address = address;
+    }
+
     public boolean uploadFile(String fileName, String originFilename) {
         boolean result;
         ftpClient = new FTPClient();
@@ -141,7 +150,10 @@ public class FtpUtil {
         } finally {
             doEnd();
         }
-        return R.ok(address + fullPath.replace(rootPath, "") + fileName);
+        String url = address + fullPath.replace(rootPath, "");
+        if (!url.endsWith("/")) url += "/";
+        url += fileName;
+        return R.ok(url);
     }
 
     public void downloadFile(String fileName, String localPath) {
