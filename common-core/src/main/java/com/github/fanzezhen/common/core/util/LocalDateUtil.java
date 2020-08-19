@@ -22,7 +22,7 @@ public class LocalDateUtil {
      * @param localDate 日期
      */
     public static String toDateString(ChronoLocalDate localDate) {
-        return toString(localDate, DateConstant.DATE_DEFAULT_PATTERN);
+        return toDateString(localDate, DateConstant.DATE_DEFAULT_PATTERN);
     }
 
     /**
@@ -31,7 +31,7 @@ public class LocalDateUtil {
      * @param localDate 日期
      * @param patterns  日期格式字符串
      */
-    public static String toString(ChronoLocalDate localDate, String... patterns) {
+    public static String toDateString(ChronoLocalDate localDate, String... patterns) {
         if (localDate == null) return "";
         for (String pattern : patterns) {
             try {
@@ -40,7 +40,26 @@ public class LocalDateUtil {
                 log.info(dateTimeParseException.getLocalizedMessage() + pattern);
             }
         }
-        log.warn("toString失败：" + localDate);
+        log.warn("toDateString失败：" + localDate);
+        return null;
+    }
+
+    /**
+     * 输入字符串和模板字符串，返回日期
+     *
+     * @param localDateTime 时间
+     * @param patterns      日期格式字符串
+     */
+    public static String toDateTimeString(LocalDateTime localDateTime, String... patterns) {
+        if (localDateTime == null) return "";
+        for (String pattern : patterns) {
+            try {
+                return localDateTime.format(getDateTimeFormatter(pattern));
+            } catch (DateTimeParseException dateTimeParseException) {
+                log.info(dateTimeParseException.getLocalizedMessage() + pattern);
+            }
+        }
+        log.warn("toDateTimeString失败：" + localDateTime);
         return null;
     }
 
@@ -49,8 +68,8 @@ public class LocalDateUtil {
      *
      * @param localDateTime 日期
      */
-    public static String toDateTimeString(ChronoLocalDate localDateTime) {
-        return toString(localDateTime, DateConstant.DATE_TIME_DEFAULT_PATTERN);
+    public static String toDateTimeString(LocalDateTime localDateTime) {
+        return toDateTimeString(localDateTime, DateConstant.DATE_TIME_DEFAULT_PATTERN);
     }
 
     /**
