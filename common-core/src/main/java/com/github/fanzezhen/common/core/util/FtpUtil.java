@@ -1,6 +1,7 @@
 package com.github.fanzezhen.common.core.util;
 
 import com.github.fanzezhen.common.core.model.response.R;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTP;
@@ -11,6 +12,7 @@ import org.apache.commons.net.ftp.FTPReply;
 import java.io.*;
 
 @Slf4j
+@AllArgsConstructor
 public class FtpUtil {
     private String hostname;
     private int port;
@@ -18,9 +20,13 @@ public class FtpUtil {
     private String password;
     private String rootPath = "/imageroot";
     private String address = "http://image.sgst.cn";
+    private String pathSeparator = "/";
     private FTPClient ftpClient = null;
     private InputStream inputStream = null;
     private OutputStream outputStream = null;
+
+    public FtpUtil() {
+    }
 
     public FtpUtil(String hostname, int port, String username, String password) {
         this.hostname = hostname;
@@ -29,16 +35,14 @@ public class FtpUtil {
         this.password = password;
     }
 
-    public FtpUtil() {
-    }
-
-    public FtpUtil(String hostname, int port, String username, String password, String rootPath, String address) {
+    public FtpUtil(int port, String hostname, String username, String password, String rootPath, String address, String pathSeparator) {
         this.hostname = hostname;
         this.port = port;
         this.username = username;
         this.password = password;
         this.rootPath = rootPath;
         this.address = address;
+        this.pathSeparator = pathSeparator;
     }
 
     public boolean uploadFile(String fileName, String originFilename) {
@@ -126,23 +130,16 @@ public class FtpUtil {
             if (!ftpClient.setFileType(FTP.BINARY_FILE_TYPE)) {
                 return R.failed("设置二进制传输模式失败");
             }
-            boolean changeWorkingDirectory = ftpClient.changeWorkingDirectory(fullPath);
-            if (!changeWorkingDirectory) {
-                System.out.println("目录不存在");
-                boolean makeDirectory = ftpClient.makeDirectory(fullPath);
-                changeWorkingDirectory = ftpClient.changeWorkingDirectory(fullPath);
-                System.out.println("创建： " + makeDirectory + "; 切换： " + changeWorkingDirectory);
-            } else {
-                System.out.println("目录存在");
-            }
+            boolean changeWorkingDirectory = changeWorkingDirectory(fullPath);
+            if (!changeWorkingDirectory) log.info("创建/切换目录失败：{}", fullPath);
             if (changeWorkingDirectory) {
                 //上传文件 成功true 失败 false
-                System.out.println("inputStream.available(): " + inputStream.available());
+                log.debug("inputStream.available(): " + inputStream.available());
                 String remote = fullPath;
                 if (fullPath.contains("/") && !fullPath.endsWith("/")) remote += "/";
                 remote += fileName;
                 if (!ftpClient.storeFile(remote, inputStream)) return R.failed("上传失败");
-            } else return R.failed("目录创建失败");
+            } else return R.failed("目录创建/切换失败：{}", fullPath);
             ftpClient.logout();
         } catch (IOException e) {
             log.warn(e.toString());
@@ -197,6 +194,29 @@ public class FtpUtil {
                 }
             }
         }
+    }
+
+    private boolean changeWorkingDirectory(String fullPath) {
+        boolean changeWorkingDirectory = false;
+        try {
+            changeWorkingDirectory = ftpClient.changeWorkingDirectory(fullPath);
+            if (changeWorkingDirectory) {
+                log.debug("切换目录成功：" + fullPath);
+                changeWorkingDirectory = true;
+            } else {
+                boolean makeDirectory = ftpClient.makeDirectory(fullPath);
+                if (makeDirectory) changeWorkingDirectory = ftpClient.changeWorkingDirectory(fullPath);
+                else {
+                    int lastIndexOfPathSeparator = fullPath.lastIndexOf(pathSeparator);
+                    if (lastIndexOfPathSeparator > 0)
+                        changeWorkingDirectory = changeWorkingDirectory(fullPath.substring(0, lastIndexOfPathSeparator));
+                }
+                log.debug("目录{}不存在，创建：{}， 切换：{}", fullPath, makeDirectory, changeWorkingDirectory);
+            }
+        } catch (IOException e) {
+            log.warn(e.getLocalizedMessage());
+        }
+        return changeWorkingDirectory;
     }
 
     private void doEnd(FTPClient ftpClient, InputStream inputStream, OutputStream outputStream) {
