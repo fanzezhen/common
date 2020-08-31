@@ -1,6 +1,7 @@
 package com.github.fanzezhen.common.core.model.response;
 
 import cn.stylefeng.roses.kernel.model.exception.AbstractBaseExceptionEnum;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@JsonIgnoreProperties(ignoreUnknown = true) // 忽略ok、success等字段
 public class R<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
