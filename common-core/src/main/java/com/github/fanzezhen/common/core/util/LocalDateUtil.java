@@ -45,6 +45,46 @@ public class LocalDateUtil {
     }
 
     /**
+     * 输入日期和分隔符，返回日期
+     *
+     * @param localDate  日期
+     * @param separators 分隔符
+     */
+    public static String toDateString(LocalDate localDate, char... separators) {
+        if (localDate == null || separators == null) return "";
+        if (separators.length == 1) {
+            String separator = String.valueOf(separators[0]);
+            return localDate.getYear() + separator + localDate.getMonthValue() + separator + localDate.getDayOfMonth();
+        } else if (separators.length == 2) {
+            return "" + localDate.getYear() + separators[0] + localDate.getMonthValue() + separators[1];
+        } else if (separators.length == 3) {
+            return "" + localDate.getYear() + separators[0] + localDate.getMonthValue() + separators[1] + localDate.getDayOfMonth() + separators[2];
+        }
+        log.warn("toDateString({})失败：" + localDate, separators);
+        return "";
+    }
+
+    /**
+     * 输入时间和分隔符，返回日期
+     *
+     * @param localDateTime 时间
+     * @param separators    分隔符
+     */
+    public static String toDateString(LocalDateTime localDateTime, char... separators) {
+        if (localDateTime == null || separators == null) return "";
+        if (separators.length == 1) {
+            String separator = String.valueOf(separators[0]);
+            return localDateTime.getYear() + separator + localDateTime.getMonthValue() + separator + localDateTime.getDayOfMonth();
+        } else if (separators.length == 2) {
+            return "" + localDateTime.getYear() + separators[0] + localDateTime.getMonthValue() + separators[1];
+        } else if (separators.length == 3) {
+            return "" + localDateTime.getYear() + separators[0] + localDateTime.getMonthValue() + separators[1] + localDateTime.getDayOfMonth() + separators[2];
+        }
+        log.warn("toDateString({})失败：" + localDateTime, separators);
+        return "";
+    }
+
+    /**
      * 输入字符串和模板字符串，返回日期
      *
      * @param localDateTime 时间
