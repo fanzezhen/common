@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -224,11 +226,22 @@ public class ExcelUtil {
      * 创建Excel文件
      *
      * @param filepath  filepath 文件全路径
+     * @param titleList 列的key值
+     * @param valueList 每行的单元格
+     */
+    public static boolean writeExcel(String filepath, List<String> titleList, List<Map<String, Object>> valueList) {
+        return writeExcel(filepath, titleList, valueList, "");
+    }
+
+    /**
+     * 创建Excel文件
+     *
+     * @param filepath  filepath 文件全路径
      * @param sheetName 新Sheet页的名字
-     * @param titles    表头
+     * @param titles    列的key值
      * @param values    每行的单元格
      */
-    public static boolean writeExcel(String filepath, String sheetName, List<String> titles, List<Map<String, Object>> values) {
+    public static boolean writeExcel(String filepath, List<String> titles, List<Map<String, Object>> values, String sheetName) {
         OutputStream outputStream = null;
         if (StringUtils.isBlank(filepath)) {
             throw new IllegalArgumentException("文件路径不能为空");
@@ -247,38 +260,28 @@ public class ExcelUtil {
             // 生成样式
             Map<String, CellStyle> styles = createStyles(workbook);
             // 创建标题行
-            Row row = sheet.createRow(0);
-            // 存储标题在Excel文件中的序号
-            Map<String, Integer> titleOrder = Maps.newHashMap();
-            for (int i = 0; i < titles.size(); i++) {
-                Cell cell = row.createCell(i);
-                cell.setCellStyle(styles.get("header"));
-                String title = titles.get(i);
-                cell.setCellValue(title);
-                titleOrder.put(title, i);
-            }
+            Row row;
             // 写入正文
             Iterator<Map<String, Object>> iterator = values.iterator();
-            // 行号
-            int index = 1;
-            while (iterator.hasNext()) {
-                row = sheet.createRow(index);
-                Map<String, Object> value = iterator.next();
-                for (Map.Entry<String, Object> map : value.entrySet()) {
-                    // 获取列名
-                    String title = map.getKey();
-                    // 根据列名获取序号
-                    int i = titleOrder.get(title);
+            int valueSize = values.size();
+            for (int rowIndex = 0; rowIndex < valueSize; rowIndex++) {
+                row = sheet.createRow(rowIndex);
+                Map<String, Object> rowValue = values.get(rowIndex);
+                int titleSize = titles.size();
+                for (int celIndex = 0; celIndex < titleSize; celIndex++) {
                     // 在指定序号处创建cell
-                    Cell cell = row.createCell(i);
+                    Cell cell = row.createCell(celIndex);
                     // 设置cell的样式
-                    if (index % 2 == 1) {
+                    if (rowIndex % 2 == 1) {
                         cell.setCellStyle(styles.get("cellA"));
                     } else {
                         cell.setCellStyle(styles.get("cellB"));
                     }
+
+                    // 获取列的key
+                    String celKey = titles.get(celIndex);
                     // 获取列的值
-                    Object object = map.getValue();
+                    Object object = rowValue.get(celKey);
                     // 判断object的类型
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     if (object instanceof Double) {
@@ -286,7 +289,11 @@ public class ExcelUtil {
                     } else if (object instanceof Date) {
                         String time = simpleDateFormat.format((Date) object);
                         cell.setCellValue(time);
-                    } else if (object instanceof Calendar) {
+                    } else if (object instanceof LocalDate) {
+                        cell.setCellValue((LocalDate) object);
+                    }else if (object instanceof LocalDateTime) {
+                        cell.setCellValue((LocalDateTime) object);
+                    }else if (object instanceof Calendar) {
                         Calendar calendar = (Calendar) object;
                         String time = simpleDateFormat.format(calendar.getTime());
                         cell.setCellValue(time);
@@ -298,7 +305,7 @@ public class ExcelUtil {
                         }
                     }
                 }
-                index++;
+
             }
 
             try {

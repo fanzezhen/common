@@ -1,15 +1,20 @@
 package com.github.fanzezhen.common.leaned;
 
 public class ChildBase extends Base {
+    private String c = Base.testS("c-child");
     public ChildBase() {
         System.out.println("ChildBase");
     }
     public ChildBase(String s) {
         super("a", "b");
-        System.out.println(s);
+        System.out.println("ChildBase");
     }
 
+    static {
+        System.out.println("child static");
+    }
     public static void main(String[] args) {
-        new ChildBase("a");
+//        System.out.println();
+        new ChildBase("s");
     }
 }
