@@ -34,8 +34,8 @@ public class CommonConstant {
     public static final String PERMISSION_DEFAULT_PID = "0";
 
     public static final ThreadPoolExecutor SYS_EXECUTOR = new ThreadPoolExecutor(
-            10, 20, 10, TimeUnit.SECONDS,
-            new ArrayBlockingQueue<>(20), Executors.defaultThreadFactory(),
+            10, 15, 10, TimeUnit.SECONDS,
+            new ArrayBlockingQueue<>(100), Executors.defaultThreadFactory(),
             new ThreadPoolExecutor.CallerRunsPolicy());
 
     public static void main(String[] args) {

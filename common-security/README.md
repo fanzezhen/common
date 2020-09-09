@@ -33,11 +33,7 @@ security
     project.license=@projectLicense@
     project.license.url=@projectLicenseUrl@
 
-   * 若项目为传统项目，应提供com.github.fanzezhen.security.facade.traditional中需要注入的bean，并在启动时扫描该目录：
-    
-    @SpringBootApplication(scanBasePackages = {"com.github.fanzezhen.security.facade.traditional")
-   
-   * 若项目为微服务项目，应添加微服务ID或地址参数，并在启动时扫描该目录：
+   * 应添加权限查询服务ID或地址参数，并在启动时扫描该目录：
         
     # 用户中心接口地址
     security.remote.user.detail.url=http://localhost:10002/framework/public
