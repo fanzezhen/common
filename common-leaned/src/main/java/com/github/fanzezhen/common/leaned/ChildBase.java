@@ -10,6 +10,10 @@ public class ChildBase extends Base {
         System.out.println("ChildBase");
     }
 
+    {
+        System.out.println("I am a ChildBase");
+    }
+
     static {
         System.out.println("child static");
     }

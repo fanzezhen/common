@@ -18,6 +18,10 @@ public class Base {
         return s;
     }
 
+    {
+        System.out.println("I am a Base");
+    }
+
     static {
         System.out.println("base static");
     }

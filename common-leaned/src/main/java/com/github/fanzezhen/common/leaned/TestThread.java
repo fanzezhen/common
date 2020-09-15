@@ -36,6 +36,7 @@ public class TestThread implements Runnable {
                 System.out.println("队列中阻塞的线程数" + queue.size());
             }
         }
+        new Thread(() -> {}).start();
         threadPool.shutdown();
     }
 }
