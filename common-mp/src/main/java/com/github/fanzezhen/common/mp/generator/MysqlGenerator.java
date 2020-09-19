@@ -22,31 +22,31 @@ public class MysqlGenerator extends GeneratorBean {
         setDbPassword("root");
     }
 
-    public MysqlGenerator(String dataSourceConfigUrl, String dbUsername, String dbPassword, String moduleName,
-                          String modulePackageName) {
+    public MysqlGenerator(String dataSourceConfigUrl, String dbUsername, String dbPassword,
+                          String modulePackageName, String... moduleNames) {
         setDataSourceConfigUrl(dataSourceConfigUrl);
         setDbUsername(dbUsername);
         setDbPassword(dbPassword);
-        setModuleName(moduleName);
+        setModuleNames(moduleNames);
         setModulePackageName(modulePackageName);
     }
 
-    public MysqlGenerator(String dataSourceConfigUrl, String dbUsername, String dbPassword, String moduleName,
-                          String modulePackageName, String superEntityClassName) {
+    public MysqlGenerator(String dataSourceConfigUrl, String dbUsername, String dbPassword,
+                          String modulePackageName, String superEntityClassName, String... moduleNames) {
         setDataSourceConfigUrl(dataSourceConfigUrl);
         setDbUsername(dbUsername);
         setDbPassword(dbPassword);
-        setModuleName(moduleName);
+        setModuleNames(moduleNames);
         setModulePackageName(modulePackageName);
         setSuperEntityClassName(superEntityClassName);
     }
 
-    public MysqlGenerator(String dataSourceConfigUrl, String dbUsername, String dbPassword, String moduleName,
+    public MysqlGenerator(String dataSourceConfigUrl, String dbUsername, String dbPassword, String[] moduleNames,
                           String modulePackageName, String superEntityClassName, String... superEntityColumns) {
         setDataSourceConfigUrl(dataSourceConfigUrl);
         setDbUsername(dbUsername);
         setDbPassword(dbPassword);
-        setModuleName(moduleName);
+        setModuleNames(moduleNames);
         setModulePackageName(modulePackageName);
         setSuperEntityClassName(superEntityClassName);
         setSuperEntityColumns(superEntityColumns);

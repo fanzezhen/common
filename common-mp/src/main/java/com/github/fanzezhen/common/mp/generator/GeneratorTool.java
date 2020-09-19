@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import com.github.fanzezhen.common.core.constant.CommonConstant;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -45,7 +46,11 @@ public class GeneratorTool {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath + "/" + generatorBean.getModuleName() + "/src/main/java");
+        StringBuilder moduleName = new StringBuilder();
+        for (String s : generatorBean.getModuleNames()) {
+            moduleName.append(CommonConstant.SEPARATOR).append(s);
+        }
+        gc.setOutputDir(projectPath + moduleName + "/src/main/java");
         gc.setAuthor(generatorBean.getAuthor());
         gc.setOpen(false);
         gc.setIdType(IdType.ASSIGN_UUID);
@@ -78,7 +83,7 @@ public class GeneratorTool {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
-                return projectPath + "/" + generatorBean.getModuleName() + "/src/main/resources/mapper/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
+                return projectPath + moduleName + "/src/main/resources/mapper/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
         cfg.setFileOutConfigList(focList);
@@ -89,7 +94,7 @@ public class GeneratorTool {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        if (StringUtils.isNotEmpty(generatorBean.getSuperEntityClassName())){
+        if (StringUtils.isNotEmpty(generatorBean.getSuperEntityClassName())) {
             strategy.setSuperEntityClass(generatorBean.getSuperEntityClassName());
             strategy.setSuperEntityColumns(generatorBean.getSuperEntityColumns());
         }
