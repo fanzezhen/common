@@ -15,6 +15,7 @@
         <module>common-security</module>
         <module>common-swagger</module>
         <module>common-exception</module>
+        <module>common-redis</module>
     </modules>
 
     <packaging>pom</packaging>

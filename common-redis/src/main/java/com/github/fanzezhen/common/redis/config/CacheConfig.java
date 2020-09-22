@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.core.config;
+package com.github.fanzezhen.common.redis.config;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
