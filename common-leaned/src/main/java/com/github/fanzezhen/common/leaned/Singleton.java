@@ -4,6 +4,7 @@ package com.github.fanzezhen.common.leaned;
  * 单例模式
  * 懒加载
  * 支持高并发
+ * @author fanzezhen
  */
 public class Singleton {
     private Singleton() {

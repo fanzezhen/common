@@ -97,6 +97,7 @@
         <org.springframework.data.version>2.3.2.RELEASE</org.springframework.data.version>
         <org.springframework.security.version>5.3.3.RELEASE</org.springframework.security.version>
         <org.springframework.social.version>1.1.6.RELEASE</org.springframework.social.version>
+        <org.springframework.batch.version>4.2.4.RELEASE</org.springframework.batch.version>
         <org.projectlombok.version>1.18.12</org.projectlombok.version>
         <redis.clients.version>3.3.0</redis.clients.version>
 

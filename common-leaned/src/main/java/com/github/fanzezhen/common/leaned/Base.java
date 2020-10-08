@@ -1,5 +1,8 @@
 package com.github.fanzezhen.common.leaned;
 
+/**
+ * @author fanzezhen
+ */
 public class Base {
     String a = testS("a-base");
     String b;
