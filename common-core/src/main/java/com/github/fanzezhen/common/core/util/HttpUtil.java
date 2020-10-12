@@ -7,21 +7,46 @@ import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
+import java.net.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
+/**
+ * @author fanzezhen
+ */
 @Slf4j
 public class HttpUtil {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         HashMap<String, String> params = new HashMap<>();
         params.put("id", "1956761");
         System.out.println(params);
+
+        // 发送同步请求：
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create("https://www.codesheep.cn"))
+                .GET()
+                .build();
+        // 同步请求方式，拿到结果前会阻塞当前线程
+        var httpResponse = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println("拿到结果前会阻塞当前线程...");
+        // 打印获取到的网页内容
+        System.out.println(httpResponse.body());
+
+        // 发送异步请求：
+        CompletableFuture<String> future = HttpClient.newHttpClient().
+                sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body);
+        System.out.println("先继续干点别的事情...");
+        // // 打印获取到的网页内容
+        System.out.println(future.get());
     }
 
     public static boolean isAjaxRequest(HttpServletRequest request) {
