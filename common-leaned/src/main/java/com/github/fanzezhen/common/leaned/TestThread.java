@@ -48,16 +48,17 @@ public class TestThread implements Runnable {
 
         private void doLog(Runnable r, ThreadPoolExecutor e) {
             // 可做日志记录等
-            System.err.println( r.toString() + " rejected");
+            System.err.println(r.toString() + " rejected");
 //          System.out.println("completedTaskCount: " + e.getCompletedTaskCount());
         }
     }
 
     public static void main(String[] args) {
         SynchronousQueue<Runnable> queue = new SynchronousQueue<Runnable>();
-//        ThreadFactory threadFactory = new NameTreadFactory();
-        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(5, 10, 60, TimeUnit.SECONDS, queue);
-        for (int i = 0; i < 10; i++) {
+        ThreadFactory threadFactory = new NameTreadFactory();
+        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(5, 10, 60, TimeUnit.SECONDS, queue, threadFactory);
+        int l = 10;
+        for (int i = 0; i < l; i++) {
             TestThread t = new TestThread(i);
             threadPool.execute(new TestThread(i));
             System.out.println("线程池中活跃的线程数： " + threadPool.getPoolSize());

@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,16 +20,8 @@ import java.util.stream.Stream;
  */
 public class Demo {
     public static void main(String[] args) throws ExecutionException, InterruptedException, IOException {
-        // part1
-        stringDemo();
-//        // part2
-//        collectionDemo();
-//        // part3
-//        streamDemo();
-//        // http
-//        httpDemo1();
-//        // http
-//        httpDemo2();
+        List<String> l = new ArrayList<String>(){{add("1");add("2");}};
+        System.out.println(l.stream().collect(Collectors.joining(","));
     }
 
     private static void stringDemo() {
@@ -43,6 +36,10 @@ public class Demo {
         System.out.println(list == copy);
         var set = Set.of("Java", "Python");
         var map = Map.of("Java", 1, "Python", 2);
+        new HashMap<>(2) {{
+            put("Java", 1);
+            put("Python", 2);
+        }};
     }
 
     private static void streamDemo() {

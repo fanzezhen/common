@@ -68,8 +68,11 @@ public class MysqlGenerator extends GeneratorBean {
     /**
      * RUN THIS
      */
-    public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        GeneratorTool.generator(MysqlGenerator.class.getConstructor().newInstance());
+    public static void main(String[] args) {
+        String dataSourceConfigUrl = "jdbc:mysql://localhost:3306/edc?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai";
+        String dbUsername = "root";
+        String dbPassword = "root";
+        String moduleParentName = "com.github.fanzezhen.common.mp.generator";
+        GeneratorTool.generator(new MysqlGenerator(dataSourceConfigUrl, dbUsername, dbPassword, moduleParentName));
     }
-
 }
