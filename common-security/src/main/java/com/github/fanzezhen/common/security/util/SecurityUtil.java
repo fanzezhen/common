@@ -10,6 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+/**
+ * @author zezhen.fan
+ */
 public class SecurityUtil {
     /**
      * 认证通过或已记住的用户。与guset搭配使用。
@@ -93,7 +96,7 @@ public class SecurityUtil {
 
     public static void main(String[] args) {
         for (int i = 0; i < 10; i++) {
-            System.out.println(encrypt("800213"));
+            System.out.println(encrypt("111111"));
         }
     }
 }

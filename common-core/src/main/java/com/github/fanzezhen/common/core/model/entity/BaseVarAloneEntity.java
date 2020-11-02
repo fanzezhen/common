@@ -1,6 +1,7 @@
 package com.github.fanzezhen.common.core.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 /**
  * 公共Model,将每个表都有的公共字段抽取出来
  *
+ * @author zezhen.fan
  * @ MappedSuperclass注解表示不是一个完整的实体类，将不会映射到数据库表，但是它的属性都将映射到其子类的数据库字段中
  */
 @EqualsAndHashCode(callSuper = true)
@@ -28,13 +30,14 @@ public class BaseVarAloneEntity extends BaseVarEntity {
      */
     @Column(name = "STATUS")
     @TableField(value = "STATUS")
-    private Integer status; //0--正常；1--禁用
+    private Integer status;
     /**
      * 删除标识（1-已删除；0-未删除）
      */
+    @TableLogic
     @Column(name = "DEL_FLAG")
     @TableField(value = "DEL_FLAG")
-    private Integer delFlag; //1-已删除；0-未删除
+    private Integer delFlag;
     /**
      * 更新时间
      */

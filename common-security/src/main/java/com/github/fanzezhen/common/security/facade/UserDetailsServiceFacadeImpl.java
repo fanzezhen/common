@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -52,17 +53,18 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
             //生成环境是查询数据库获取username的角色用于后续权限判断（如：张三 admin)
             Set<GrantedAuthority> grantedAuthorities;
             Set<String> grantedAuthorityNameSet = new HashSet<>();
-            if (!CollectionUtils.sizeIsEmpty(sysUserDto.getRoleTypeSets()))
+            if (!CollectionUtils.sizeIsEmpty(sysUserDto.getRoleTypeSets())) {
                 for (SysPermissionDto sysPermissionDto :
                         sysUserDto.getRoleTypeSets().contains(RoleEnum.RoleTypeEnum.SPECIAL_ADMIN.getType()) ?   // 超级管理员拥有所有权限
                                 userDetailsRemote.listPermission(securityProjectProperty.APP_CODE).getData() :
                                 sysUserDto.getSysPermissionDtoList()) {
                     grantedAuthorityNameSet.add(SecurityConstant.PERMISSION_PREFIX + sysPermissionDto.getId());
                 }
+            }
             grantedAuthorityNameSet.addAll(RoleEnum.RoleTypeEnum.securityRoleTypeCodeSetByType(sysUserDto.getRoleTypeSets()));
             //1：此处将权限信息添加到 GrantedAuthority 对象中，在后面进行全权限验证时会使用GrantedAuthority 对象。
             grantedAuthorities = new HashSet<>(AuthorityUtils.commaSeparatedStringToAuthorityList(
-                    org.apache.tomcat.util.buf.StringUtils.join(grantedAuthorityNameSet, ',')));
+                    String.join(",", grantedAuthorityNameSet)));
             SysUserDetail sysUserDetail = new SysUserDetail(sysUserDto, grantedAuthorities);
             sysUserDetail.setRoleIds(sysUserDto.getRoleIdSets());
             sysUserDetail.setRoleNames(sysUserDto.getRoleNameSets());

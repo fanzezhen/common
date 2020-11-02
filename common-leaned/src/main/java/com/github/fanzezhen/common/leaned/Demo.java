@@ -20,8 +20,6 @@ import java.util.stream.Stream;
  */
 public class Demo {
     public static void main(String[] args) throws ExecutionException, InterruptedException, IOException {
-        List<String> l = new ArrayList<String>(){{add("1");add("2");}};
-        System.out.println(l.stream().collect(Collectors.joining(","));
     }
 
     private static void stringDemo() {

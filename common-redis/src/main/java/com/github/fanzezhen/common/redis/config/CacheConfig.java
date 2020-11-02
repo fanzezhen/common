@@ -18,7 +18,6 @@ import java.time.Duration;
  **/
 @Configuration
 @EnableCaching
-//@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 3600 * 12)// Redis最大过期时间
 public class CacheConfig {
     @Resource
     private RedisConnectionFactory redisConnectionFactory;

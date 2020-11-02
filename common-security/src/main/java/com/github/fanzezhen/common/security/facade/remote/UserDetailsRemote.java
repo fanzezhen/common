@@ -19,7 +19,4 @@ public interface UserDetailsRemote {
 
     @PostMapping("/permission/list")
     R<List<SysPermissionDto>> listPermission(@RequestParam("appCode") String appCode);
-
-    @PostMapping("/log")
-    R<Boolean> addLog(@RequestBody LogOperation operationLogDTO);
 }
