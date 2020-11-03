@@ -149,23 +149,9 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().and()
-                .headers()
-                .frameOptions().sameOrigin()
-                .xssProtection()
-                .block(true)
-        ;
         http.csrf().ignoringAntMatchers(SecurityConstant.CSRF_IGNORING_ANT_MATCHERS);
-
-        http
-                .headers()
-                .cacheControl()
-                .and()
-                .contentTypeOptions()
-                .and()
-                .httpStrictTransportSecurity()
-                .and()
-                .xssProtection();
+        http.headers().frameOptions().sameOrigin().xssProtection().block(true);
+        // 取消安全报文头：http.headers().disable();
 
         http
                 .logout().permitAll()//定义logout不需要验证
@@ -177,16 +163,17 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(SecurityConstant.IGNORING_ANT_MATCHERS).permitAll()
                 // 不拦截自定义的业务请求
                 .antMatchers(securityProperty.ignoringAntMatchers).permitAll()
-                //其他没有限定的请求，登录后才允许访问
+                // 其他没有限定的请求，登录后才允许访问
                 .anyRequest().authenticated()
         ;
 
+        // 权限控制
         http.exceptionHandling().authenticationEntryPoint(casAuthenticationEntryPoint())
                 .and()
                 .addFilter(casAuthenticationFilter())
                 .addFilterBefore(casLogoutFilter(), LogoutFilter.class)
                 .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
-        http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);//权限控制
+        http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
     }
 
 }

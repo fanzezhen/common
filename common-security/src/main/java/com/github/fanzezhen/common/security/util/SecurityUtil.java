@@ -48,11 +48,15 @@ public class SecurityUtil {
      * 获取登录用户
      */
     public static User getUser() {
-        if (getAuthentication() == null) return null;
+        if (getAuthentication() == null) {
+            return null;
+        }
         UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) getAuthentication();
         //details里面可能存放了当前登录用户的详细信息，也可以通过cast后拿到
         User userDetails = (User) authenticationToken.getPrincipal();
-        if (userDetails == null) throw new ServiceException(CoreExceptionEnum.NO_CURRENT_USER);
+        if (userDetails == null) {
+            throw new ServiceException(CoreExceptionEnum.NO_CURRENT_USER);
+        }
         return userDetails;
     }
 
@@ -95,8 +99,6 @@ public class SecurityUtil {
     }
 
     public static void main(String[] args) {
-        for (int i = 0; i < 10; i++) {
-            System.out.println(encrypt("111111"));
-        }
+        System.out.println(encrypt("111111"));
     }
 }

@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
 @Controller
 @RequestMapping("/oauth")
-public class OAuthController {
+public class AuthController {
     @GetMapping("/login")
     public String login(ModelMap modelMap, HttpServletRequest request) {
         Enumeration<String> paramNames = request.getParameterNames();
