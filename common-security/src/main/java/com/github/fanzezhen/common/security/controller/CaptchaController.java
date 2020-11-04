@@ -18,6 +18,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
 @RestController
 @RequestMapping("/captcha")
@@ -32,10 +35,14 @@ public class CaptchaController {
     }
 
     private ImageCode createImageCode() {
-        int width = 100; // 验证码图片宽度
-        int height = 36; // 验证码图片长度
-        int length = 4;  // 验证码位数
-        int expireIn = 60; // 验证码有效时间 60s
+        // 验证码图片宽度
+        int width = 100;
+        // 验证码图片长度
+        int height = 36;
+        // 验证码位数
+        int length = 4;
+        // 验证码有效时间 60s
+        int expireIn = 60;
 
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
@@ -69,11 +76,13 @@ public class CaptchaController {
 
     private Color getRandColor(int fc, int bc) {
         Random random = new Random();
-        if (fc > 255)
+        if (fc > 255) {
             fc = 255;
+        }
 
-        if (bc > 255)
+        if (bc > 255) {
             bc = 255;
+        }
         int r = fc + random.nextInt(bc - fc);
         int g = fc + random.nextInt(bc - fc);
         int b = fc + random.nextInt(bc - fc);

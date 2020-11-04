@@ -1,5 +1,8 @@
 package com.github.fanzezhen.common.leaned;
 
+/**
+ * @author fanzezhen
+ */
 public class Algorithm {
     /**
      * 快速排序

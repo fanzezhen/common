@@ -10,6 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+/**
+ * @author zezhen.fan
+ */
 public class SecurityUtil {
     /**
      * 认证通过或已记住的用户。与guset搭配使用。
@@ -45,11 +48,15 @@ public class SecurityUtil {
      * 获取登录用户
      */
     public static User getUser() {
-        if (getAuthentication() == null) return null;
+        if (getAuthentication() == null) {
+            return null;
+        }
         UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) getAuthentication();
         //details里面可能存放了当前登录用户的详细信息，也可以通过cast后拿到
         User userDetails = (User) authenticationToken.getPrincipal();
-        if (userDetails == null) throw new ServiceException(CoreExceptionEnum.NO_CURRENT_USER);
+        if (userDetails == null) {
+            throw new ServiceException(CoreExceptionEnum.NO_CURRENT_USER);
+        }
         return userDetails;
     }
 
@@ -92,8 +99,6 @@ public class SecurityUtil {
     }
 
     public static void main(String[] args) {
-        for (int i = 0; i < 10; i++) {
-            System.out.println(encrypt("800213"));
-        }
+        System.out.println(encrypt("111111"));
     }
 }

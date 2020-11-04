@@ -4,14 +4,19 @@ import com.github.fanzezhen.common.core.model.entity.BaseVarAloneEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author zezhen.fan
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class SysUserDto extends BaseVarAloneEntity {
-    // 单位名称
+    /**
+     * 单位名称
+     */
     private String unitName;
 
     /**
@@ -77,7 +82,7 @@ public class SysUserDto extends BaseVarAloneEntity {
     /**
      * 最后操作时间
      */
-    private Date lastTime;
+    private LocalDateTime lastTime;
 
     /**
      * 所属应用代码

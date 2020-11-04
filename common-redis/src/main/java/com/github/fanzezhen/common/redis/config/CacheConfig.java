@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.core.config;
+package com.github.fanzezhen.common.redis.config;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -18,7 +18,6 @@ import java.time.Duration;
  **/
 @Configuration
 @EnableCaching
-//@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 3600 * 12)// Redis最大过期时间
 public class CacheConfig {
     @Resource
     private RedisConnectionFactory redisConnectionFactory;

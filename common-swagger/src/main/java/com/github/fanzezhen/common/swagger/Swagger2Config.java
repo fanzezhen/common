@@ -14,6 +14,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.Resource;
 
+/**
+ * @author zezhen.fan
+ */
 @EnableSwagger2
 @Configuration
 public class Swagger2Config extends WebMvcConfigurationSupport {

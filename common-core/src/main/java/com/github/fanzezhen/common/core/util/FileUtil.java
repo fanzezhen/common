@@ -9,6 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
 public class FileUtil {
     public static void inputStreamToFile(InputStream ins, File file) {
@@ -67,14 +70,16 @@ public class FileUtil {
      */
     public static File multipartFileToFile(MultipartFile multipartFile, String path, String name) throws IOException {
         File dir = new File(path);
-        if (!dir.exists()) {// 判断目录是否存在
-            log.debug("目录{}不存在，正在创建...{}", path, dir.mkdirs());  //多层目录需要调用mkdirs
+        // 判断目录是否存在
+        if (!dir.exists()) {
+            //多层目录需要调用mkdirs
+            log.debug("目录{}不存在，正在创建...{}", path, dir.mkdirs());
         }
         return multipartFileToFile(multipartFile, path + CommonConstant.SEPARATOR + name);
     }
 
     public static void doClose(Closeable... closeables) {
-        for (Closeable closeable : closeables)
+        for (Closeable closeable : closeables) {
             if (null != closeable) {
                 try {
                     closeable.close();
@@ -82,5 +87,6 @@ public class FileUtil {
                     log.warn(e.getLocalizedMessage());
                 }
             }
+        }
     }
 }

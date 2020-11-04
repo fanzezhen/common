@@ -31,29 +31,42 @@ public class ExcelUtil {
     /**
      * 读取指定上传文件的内容
      */
-    public static List<List<String>> readExcel(MultipartFile multipartFile) {
-        List<List<String>> rowList = new ArrayList<>();
+    public static List<List<List<String>>> readExcel(MultipartFile multipartFile) {
+        List<List<List<String>>> sheetList = new ArrayList<>();
         try {
             Workbook workbook = getWorkbook(multipartFile);
-            Sheet sheet = workbook.getSheetAt(0);
-            int rowTotalNum = sheet.getPhysicalNumberOfRows();
-            for (int rowIdx = 0; rowIdx < rowTotalNum; rowIdx++) {
-                List<String> colList = new ArrayList<>();
-                Row row = sheet.getRow(rowIdx);
-                int colTotalNum = row.getPhysicalNumberOfCells();
-                for (int colIdx = 0; colIdx < colTotalNum; colIdx++) {
-                    Cell cell = row.getCell(colIdx);
-                    if (cell == null) {
-                        colList.add("");
-                        colTotalNum++;
-                    } else {
-                        colList.add(cell.getStringCellValue());
-                    }
-                }
-                rowList.add(colList);
+            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+                sheetList.add(i, readExcel(workbook, i));
             }
         } catch (IOException e) {
-            throw new ServiceException(CoreExceptionEnum.FILE_READING_ERROR);
+             throw new ServiceException(CoreExceptionEnum.FILE_READING_ERROR);
+        }
+        return sheetList;
+    }
+
+    /**
+     * 读取指定上传文件的内容
+     */
+    public static List<List<String>> readExcel(Workbook workbook, int sheetIndex) {
+        List<List<String>> rowList = new ArrayList<>();
+        Sheet sheet = workbook.getSheetAt(sheetIndex);
+        int rowTotalNum = sheet.getPhysicalNumberOfRows();
+        for (int rowIdx = 0; rowIdx < rowTotalNum; rowIdx++) {
+            List<String> colList = new ArrayList<>();
+            Row row = sheet.getRow(rowIdx);
+            int colTotalNum = row.getPhysicalNumberOfCells();
+            for (int colIdx = 0; colIdx < colTotalNum; colIdx++) {
+                Cell cell = row.getCell(colIdx);
+                if (cell == null) {
+                    colList.add("");
+                    colTotalNum++;
+                } else {
+                    //设置单元格类型
+                    cell.setCellType(CellType.STRING);
+                    colList.add(cell.getStringCellValue());
+                }
+            }
+            rowList.add(colList);
         }
         return rowList;
     }
@@ -61,12 +74,12 @@ public class ExcelUtil {
     /**
      * 读取指定Sheet页的内容
      *
-     * @param filepath filepath 文件全路径
+     * @param filePath filePath 文件全路径
      * @param sheetNo  sheet序号,从0开始,如果读取全文sheetNo设置null
      */
-    public static String readExcel(String filepath, Integer sheetNo) throws EncryptedDocumentException, IOException {
+    public static String readExcel(String filePath, Integer sheetNo) throws EncryptedDocumentException, IOException {
         StringBuilder sb = new StringBuilder();
-        Workbook workbook = getWorkbook(filepath);
+        Workbook workbook = getWorkbook(filePath);
         if (workbook != null) {
             if (sheetNo == null) {
                 int numberOfSheets = workbook.getNumberOfSheets();

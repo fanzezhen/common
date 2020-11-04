@@ -24,6 +24,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.*;
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
 @Service
 public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
@@ -44,7 +47,7 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
     }
 
     @Override
-//    @Cacheable(value = CacheConstants.USER_DETAILS, key = "#username")
+    @Cacheable(value = CacheConstants.USER_DETAILS, key = "#username")
     public SysUserDetail loadUserByUsername(String username) throws UsernameNotFoundException {
         //用户，用于判断权限，请注意此用户名和方法参数中的username一致；BCryptPasswordEncoder是用来演示加密使用。
         SysUserDto sysUserDto = userDetailsRemote.loadUserByUsername(username, securityProjectProperty.APP_CODE).getData();
@@ -52,17 +55,19 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
             //生成环境是查询数据库获取username的角色用于后续权限判断（如：张三 admin)
             Set<GrantedAuthority> grantedAuthorities;
             Set<String> grantedAuthorityNameSet = new HashSet<>();
-            if (!CollectionUtils.sizeIsEmpty(sysUserDto.getRoleTypeSets()))
+            if (!CollectionUtils.sizeIsEmpty(sysUserDto.getRoleTypeSets())) {
+                // 判断SPECIAL_ADMIN， 超级管理员拥有所有权限
                 for (SysPermissionDto sysPermissionDto :
-                        sysUserDto.getRoleTypeSets().contains(RoleEnum.RoleTypeEnum.SPECIAL_ADMIN.getType()) ?   // 超级管理员拥有所有权限
+                        sysUserDto.getRoleTypeSets().contains(RoleEnum.RoleTypeEnum.SPECIAL_ADMIN.getType()) ?
                                 userDetailsRemote.listPermission(securityProjectProperty.APP_CODE).getData() :
                                 sysUserDto.getSysPermissionDtoList()) {
                     grantedAuthorityNameSet.add(SecurityConstant.PERMISSION_PREFIX + sysPermissionDto.getId());
                 }
+            }
             grantedAuthorityNameSet.addAll(RoleEnum.RoleTypeEnum.securityRoleTypeCodeSetByType(sysUserDto.getRoleTypeSets()));
             //1：此处将权限信息添加到 GrantedAuthority 对象中，在后面进行全权限验证时会使用GrantedAuthority 对象。
             grantedAuthorities = new HashSet<>(AuthorityUtils.commaSeparatedStringToAuthorityList(
-                    org.apache.tomcat.util.buf.StringUtils.join(grantedAuthorityNameSet, ',')));
+                    String.join(",", grantedAuthorityNameSet)));
             SysUserDetail sysUserDetail = new SysUserDetail(sysUserDto, grantedAuthorities);
             sysUserDetail.setRoleIds(sysUserDto.getRoleIdSets());
             sysUserDetail.setRoleNames(sysUserDto.getRoleNameSets());
@@ -77,7 +82,14 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
     @Override
     @Cacheable(value = CacheConstants.PERMISSION_DETAILS, key = "#appCode")
     public List<SysPermissionDto> listAllPermissionDto(String appCode) {
-        return userDetailsRemote.listPermission(appCode).getData();
+        R<List<SysPermissionDto>> sysPermissionDtoListResult = userDetailsRemote.listPermission(appCode);
+        if (sysPermissionDtoListResult != null && sysPermissionDtoListResult.getData() != null && sysPermissionDtoListResult.isOk()) {
+            return sysPermissionDtoListResult.getData();
+        } else {
+            log.warn("获取权限列表失败, {}", sysPermissionDtoListResult == null || sysPermissionDtoListResult.getData() == null ?
+                    "返回结果为null" : sysPermissionDtoListResult.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     public static void main(String[] args) {
@@ -94,9 +106,9 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
         sysPermissionDtoList.add(sysPermissionDto);
         sysPermissionDtoList.add(sysPermissionDto2);
         sysUserDto.setSysPermissionDtoList(sysPermissionDtoList);
-        sysUserDto.setRoleIdSets(new HashSet<String>(Arrays.asList("roleId-1", "roleId-2")));
-        sysUserDto.setRoleNameSets(new HashSet<String>(Arrays.asList("roleName-1", "roleName-2")));
-        sysUserDto.setRoleTypeSets(new HashSet<Integer>(Arrays.asList(1, 2)));
+        sysUserDto.setRoleIdSets(new HashSet<>(Arrays.asList("roleId-1", "roleId-2")));
+        sysUserDto.setRoleNameSets(new HashSet<>(Arrays.asList("roleName-1", "roleName-2")));
+        sysUserDto.setRoleTypeSets(new HashSet<>(Arrays.asList(1, 2)));
         sysUserDto.setId("id");
         sysUserDto.setUsername("1");
         sysUserDto.setPassword("1");

@@ -6,7 +6,7 @@ swagger
 引用条件
    * 此模块需扫描该目录结构，如：
     
-    @SpringBootApplication(scanBasePackages = {"项目目录", "com.github.fanzezhen.swagger"})
+    @SpringBootApplication(scanBasePackages = {"项目目录", "com.github.fanzezhen.common.swagger"})
    
    * 此模块需要获取配置参数： 
 

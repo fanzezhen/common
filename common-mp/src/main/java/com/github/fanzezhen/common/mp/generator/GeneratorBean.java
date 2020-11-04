@@ -9,7 +9,7 @@ public abstract class GeneratorBean {
     private String driverName;
     private String dbUsername;
     private String dbPassword;
-    private String moduleName;
+    private String[] moduleNames;
     private String packageName;
     private String modulePackageName;
     private String tableNameSplitter;
@@ -21,16 +21,19 @@ public abstract class GeneratorBean {
         this.superEntityColumns = superEntityColumns;
     }
 
+    /**
+     * 初始化
+     */
     public abstract void init();
 
     public GeneratorBean() {
         setAuthor("fanzezhen");
         setPackageName("foundation");
-        setModuleName("mpp-generator");
+        setModuleNames(new String[]{"mpp-generator"});
         setModulePackageName("com.github.fanzezhen.generator");
         setTableNameSplitter(",");
         setTables(GeneratorTool.scanner("表名"));
-        setSuperEntityClassName("com.github.fanzezhen.common.core.model.BaseVarEntity");
+        setSuperEntityClassName("com.github.fanzezhen.common.core.model.entity.BaseVarEntity");
         setSuperEntityColumns("id", "create_time", "create_user_id");
         init();
     }

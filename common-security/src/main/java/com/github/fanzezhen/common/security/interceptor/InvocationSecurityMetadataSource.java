@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by fanzezhen on 17/1/19.
@@ -33,10 +34,11 @@ public class InvocationSecurityMetadataSource implements FilterInvocationSecurit
      * 加载权限表中所有权限
      */
     public void loadResourceDefine() {
-        map = new HashMap<>();
+        map = new HashMap<>(100);
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
-        for (SysPermissionDto sysPermissionDto : userDetailsServiceFacade.listAllPermissionDto(securityProjectProperty.APP_CODE)) {
+        List<SysPermissionDto> sysPermissionDtoList = userDetailsServiceFacade.listAllPermissionDto(securityProjectProperty.APP_CODE);
+        for (SysPermissionDto sysPermissionDto : sysPermissionDtoList) {
             array = new ArrayList<>();
             cfg = new SecurityConfig(SecurityConstant.PERMISSION_PREFIX + sysPermissionDto.getId());
             array.add(cfg);

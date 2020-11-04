@@ -5,7 +5,7 @@
     <parent>
         <artifactId>common</artifactId>
         <groupId>com.github.fanzezhen</groupId>
-        <version>0.0.2.1</version>
+        <version>0.0.3.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -127,21 +127,6 @@
             <artifactId>spring-web</artifactId>
             <version>${org.springframework.version}</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-redis</artifactId>
-            <version>${org.springframework.data.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>${redis.clients.version}</version>
         </dependency>
     </dependencies>
 </project>

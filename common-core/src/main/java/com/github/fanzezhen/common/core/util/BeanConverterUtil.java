@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
 public class BeanConverterUtil {
 
@@ -21,8 +24,8 @@ public class BeanConverterUtil {
      *
      * @param source 源
      * @param target 目标
-     * @param <S>
-     * @param <T>
+     * @param <S>    源数据类型
+     * @param <T>    目标数据类型
      * @return 目标
      * @date 2018年12月4日
      * @version 1.0
@@ -38,8 +41,8 @@ public class BeanConverterUtil {
      * @param source           源
      * @param target           目标
      * @param ignoreProperties 无需转换的属性
-     * @param <S>
-     * @param <T>
+     * @param <S>源数据类型
+     * @param <T>目标数据类型
      * @return 目标
      * @date 2019-1-29
      */
@@ -55,8 +58,8 @@ public class BeanConverterUtil {
      * @param source               源
      * @param target               目标
      * @param ignoreNullProperties 是否无视null值字段（如果为true则无视）
-     * @param <S>
-     * @param <T>
+     * @param <S>源数据类型
+     * @param <T>目标数据类型
      * @return 目标
      * @date 2019-1-29
      */
@@ -68,10 +71,10 @@ public class BeanConverterUtil {
     /**
      * 对象List复制
      *
-     * @param ss
-     * @param cls
-     * @param <S>
-     * @param <T>
+     * @param ss        源数据
+     * @param cls       目标类型
+     * @param <S>源数据类型
+     * @param <T>目标数据类型
      * @return
      */
     public static <S, T> List<T> copyList(List<S> ss, Class<T> cls) {
@@ -94,11 +97,11 @@ public class BeanConverterUtil {
     /**
      * 对象List复制
      *
-     * @param ss
-     * @param cls
-     * @param ignoreProperties
-     * @param <S>
-     * @param <T>
+     * @param ss               源数据
+     * @param cls              目标类型
+     * @param ignoreProperties 忽略字段集合
+     * @param <S>源数据类型
+     * @param <T>目标数据类型
      * @return
      */
     public static <S, T> List<T> copyList(List<S> ss, Class<T> cls, String... ignoreProperties) {
@@ -120,11 +123,11 @@ public class BeanConverterUtil {
     /**
      * 对象List复制
      *
-     * @param ss
-     * @param cls
-     * @param ignoreNullProperties
-     * @param <S>
-     * @param <T>
+     * @param ss                   源数据
+     * @param cls                  目标类型
+     * @param ignoreNullProperties 忽略字段集合
+     * @param <S>源数据类型
+     * @param <T>目标数据类型
      * @return
      */
     public static <S, T> List<T> copyList(List<S> ss, Class<T> cls, boolean ignoreNullProperties) {

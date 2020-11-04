@@ -7,22 +7,19 @@ import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
+import java.net.*;
+//import java.net.http.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
+/**
+ * @author fanzezhen
+ */
 @Slf4j
 public class HttpUtil {
-
-    public static void main(String[] args) {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("id", "1956761");
-        System.out.println(params);
-    }
 
     public static boolean isAjaxRequest(HttpServletRequest request) {
         String ajaxFlag = request.getHeader("X-Requested-With");

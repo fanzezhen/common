@@ -29,6 +29,9 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+/**
+ * @author zezhen.fan
+ */
 @Configuration
 @EnableWebSecurity
 @Slf4j
@@ -122,7 +125,8 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public CasAuthenticationProvider casAuthenticationProvider() {
         CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
         casAuthenticationProvider.setAuthenticationUserDetailsService(userDetailsServiceFacade);
-        casAuthenticationProvider.setUserDetailsService(userDetailsServiceFacade); //这里只是接口类型，实现的接口不一样，都可以的。
+        // 这里只是接口类型，实现的接口不一样，都可以的。
+        casAuthenticationProvider.setUserDetailsService(userDetailsServiceFacade);
         casAuthenticationProvider.setServiceProperties(serviceProperties());
         casAuthenticationProvider.setTicketValidator(new Cas30ServiceTicketValidator(casProperties.getServerUrl()));
         casAuthenticationProvider.setKey("casAuthenticationProviderKey");
@@ -145,23 +149,9 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().and()
-                .headers()
-                .frameOptions().sameOrigin()
-                .xssProtection()
-                .block(true)
-        ;
         http.csrf().ignoringAntMatchers(SecurityConstant.CSRF_IGNORING_ANT_MATCHERS);
-
-        http
-                .headers()
-                .cacheControl()
-                .and()
-                .contentTypeOptions()
-                .and()
-                .httpStrictTransportSecurity()
-                .and()
-                .xssProtection();
+        http.headers().frameOptions().sameOrigin().xssProtection().block(true);
+        // 取消安全报文头：http.headers().disable();
 
         http
                 .logout().permitAll()//定义logout不需要验证
@@ -169,17 +159,21 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()//配置安全策略
 //                .antMatchers("/admin/**")
 //                .hasAnyRole(RoleEnum.RoleTypeEnum.ADMIN.getCode(), RoleEnum.RoleTypeEnum.SPECIAL_ADMIN.getCode())
-                .antMatchers(SecurityConstant.IGNORING_ANT_MATCHERS).permitAll()    // 不拦截
-                .antMatchers(securityProperty.ignoringAntMatchers).permitAll()    // 不拦截自定义的业务请求
-                .anyRequest().authenticated()//其他没有限定的请求，登录后才允许访问
+                // 不拦截
+                .antMatchers(SecurityConstant.IGNORING_ANT_MATCHERS).permitAll()
+                // 不拦截自定义的业务请求
+                .antMatchers(securityProperty.ignoringAntMatchers).permitAll()
+                // 其他没有限定的请求，登录后才允许访问
+                .anyRequest().authenticated()
         ;
 
+        // 权限控制
         http.exceptionHandling().authenticationEntryPoint(casAuthenticationEntryPoint())
                 .and()
                 .addFilter(casAuthenticationFilter())
                 .addFilterBefore(casLogoutFilter(), LogoutFilter.class)
                 .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
-        http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);//权限控制
+        http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
     }
 
 }
