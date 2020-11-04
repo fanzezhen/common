@@ -76,7 +76,7 @@
         <commons-net.version>3.6</commons-net.version>
         <eu.bitwalker.version>1.21</eu.bitwalker.version>
         <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
-        <io.springfox.version>2.9.2</io.springfox.version>
+        <io.springfox.version>3.0.0</io.springfox.version>
         <javax.annotation.version>1.3.2</javax.annotation.version>
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <javax.persistence.version>1.0.2</javax.persistence.version>
