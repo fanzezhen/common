@@ -2,57 +2,62 @@ package com.github.fanzezhen.common.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.oas.annotations.EnableOpenApi;
+import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author zezhen.fan
  */
-@EnableSwagger2
+@EnableOpenApi
 @Configuration
-public class Swagger2Config extends WebMvcConfigurationSupport {
+public class Swagger2Config implements WebMvcConfigurer {
     @Resource
     private SwaggerProperty swaggerProperty;
 
     @Bean
     public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .pathMapping("/")
-                .select()
+        return new Docket(DocumentationType.OAS_30).pathMapping("/")
+                // 是否开启swagger配置，生产环境需关闭
+                .enable(true)
+                .apiInfo(this.apiInfo())
+                .select() // 指定需要发布到Swagger的接口目录，不支持通配符
                 .apis(RequestHandlerSelectors.basePackage(swaggerProperty.BASE_PACKAGE))
                 .paths(PathSelectors.any())
-                .build().apiInfo(new ApiInfoBuilder()
-                        .title(swaggerProperty.TITLE)
-                        .description(swaggerProperty.DESCRIPTION)
-                        .version(swaggerProperty.VERSION)
-                        .contact(new Contact(swaggerProperty.LINK_MAN, swaggerProperty.LINK_URL, swaggerProperty.LINK_EMAIL))
-                        .license(swaggerProperty.LICENSE)
-                        .licenseUrl(swaggerProperty.LICENSE_URL)
-                        .build());
+                .build()
+                // 支持的通讯协议集合
+                .protocols(this.newHashSet("https", "http"));
     }
 
     /**
-     * 防止@EnableMvc把默认的静态资源路径覆盖了，手动设置的方式
-     *
-     * @param registry
+     * 项目信息
      */
-    @Override
-    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // 解决静态资源无法访问
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/");
-        // 解决swagger无法访问
-        registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-        // 解决swagger的js文件无法访问
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder().title(swaggerProperty.TITLE)
+                .description(swaggerProperty.DESCRIPTION)
+                .contact(new Contact(swaggerProperty.LINK_MAN, swaggerProperty.LINK_URL, swaggerProperty.LINK_EMAIL))
+                .version(swaggerProperty.VERSION)
+                .license(swaggerProperty.LICENSE)
+                .licenseUrl(swaggerProperty.LICENSE_URL)
+                .build();
+    }
 
+    @SafeVarargs
+    private final <T> Set<T> newHashSet(T... ts) {
+        if (ts.length > 0) {
+            return new LinkedHashSet<>(Arrays.asList(ts));
+        }
+        return null;
     }
 }
