@@ -1,106 +1,70 @@
 package com.github.fanzezhen.common.leaned;
 
-import org.apache.commons.lang3.StringUtils;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Stream;
 
 /**
  * @author zezhen.fan
  */
 public class Demo {
     public static void main(String[] args) throws ExecutionException, InterruptedException, IOException {
-    }
+        String originFilePath = "E:\\tmp\\test.xlsx";
+        int rowNum = 512;
+        int colNum = 512;
+        double rateOfChange = 0.8;
+        double antiRateOfChange = 1 - rateOfChange;
+        boolean isAnti = rateOfChange < 0.5;
+        double realRate = isAnti ? antiRateOfChange : rateOfChange;
 
-    private static void stringDemo() {
-        System.out.println("　1".trim());
-        System.out.println("　1".strip());
-    }
+        ExcelReader reader = ExcelUtil.getReader(FileUtil.file(originFilePath));
+        List<List<Object>> readAll = reader.read();
 
-    private static void collectionDemo() {
-        var list = List.of("Java", "Python", "C");
-        var copy = List.copyOf(list);
-        // true
-        System.out.println(list == copy);
-        var set = Set.of("Java", "Python");
-        var map = Map.of("Java", 1, "Python", 2);
-        new HashMap<>(2) {{
-            put("Java", 1);
-            put("Python", 2);
-        }};
-    }
+        List<Integer> allMatrixPointList = new ArrayList<>(rowNum * colNum);
+        List<Integer> idxMatrixPointList = new ArrayList<>(rowNum * colNum);
+        for (int i = 0; i < rowNum * colNum; i++) {
+            idxMatrixPointList.add(i);
+        }
 
-    private static void streamDemo() {
-        // 1. ofNullable(T t)
-        // 以前of(null)报错，现在可以使用ofNullable(null)
-        Stream<Object> s = Stream.ofNullable(null);
-        s.forEach(System.out::println);
+        readAll.forEach(list -> list.forEach(i -> allMatrixPointList.add(Integer.valueOf(String.valueOf(i)))));
 
-        // 2. takeWhile(Predicate<? super T> predicate)
-        // 此方法根据Predicate接口来判断如果为true则取出，生成一个新的流,碰到false即终止判断。
-        Stream<Integer> intStream = Stream.of(6, 10, 11, 15, 20);
-        Stream<Integer> intTakeStream = intStream.takeWhile(t -> t % 2 == 0);
-        System.out.println("intTakeStream：");
-        intTakeStream.forEach(System.out::println);
 
-        // 3. dropWhile(Predicate<? super T> predicate)
-        // 此方法根据Predicate接口来判断如果为true则丢弃，生成一个新的流,碰到false即终止判断。
-        intStream = Stream.of(6, 10, 11, 15, 20);
-        Stream<Integer> intDropStream = intStream.dropWhile(t -> t % 2 == 0);
-        System.out.println("intDropStream：");
-        intDropStream.forEach(System.out::println);
+        Random rand = new Random();
 
-        // 4. iterate重载
-        // 以前使用iterate方法生成无限流需要配合limit进行截断
-        Stream<Integer> limit = Stream.iterate(1, i -> i + 1).limit(5);
-        System.out.println("limit：");
-        // 现在重载后这个方法增加了个判断参数
-        Stream<Integer> iterate = Stream.iterate(1, i -> i <= 5, i -> i + 1);
-        System.out.println("iterate：");
-    }
+        for (int i = 0, count = rowNum * colNum; i < rowNum * colNum * realRate; i++, count--) {
+            int idx = rand.nextInt(count);
+            idxMatrixPointList.remove(idx);
+        }
 
-    private static void optionalDemo() {
-    }
+        idxMatrixPointList.forEach(idx -> allMatrixPointList.set(idx, allMatrixPointList.get(idx).equals(0) ? 1 : 0));
 
-    /**
-     * 发送同步请求
-     */
-    private static void httpDemo1() throws IOException, InterruptedException {
-        var request = HttpRequest.newBuilder()
-                .uri(URI.create("https://www.codesheep.cn"))
-                .GET()
-                .build();
-        // 同步请求方式，拿到结果前会阻塞当前线程
-        var httpResponse = HttpClient.newHttpClient()
-                .send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println("拿到结果前会阻塞当前线程...");
-        // 打印获取到的网页内容
-        System.out.println(httpResponse.body());
-    }
+        int len = allMatrixPointList.size();
+        System.out.println(len);
+        List<List<Integer>> writeAll = new ArrayList<>(rowNum);
+        for (int i = 0; i < 512; i++) {
+            List<Integer> row = new ArrayList<>(512);
+            for (int colIdx = 0; colIdx < 512; colIdx++) {
+                int idx = i * 512 + colIdx;
+                row.add(allMatrixPointList.get(idx));
+            }
+            writeAll.add(row);
+        }
 
-    /**
-     * 发送异步请求
-     */
-    private static void httpDemo2() throws InterruptedException, ExecutionException {
-        var request = HttpRequest.newBuilder()
-                .uri(URI.create("https://www.codesheep.cn"))
-                .GET()
-                .build();
-        CompletableFuture<String> future = HttpClient.newHttpClient().
-                sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(HttpResponse::body);
-        System.out.println("先继续干点别的事情...");
-        // 打印获取到的网页内容
-        System.out.println(future.get());
+        //通过工具类创建writer
+        ExcelWriter writer = ExcelUtil.getWriter("E:\\tmp\\writeTest.xlsx");
+        //通过构造方法创建writer
+        //ExcelWriter writer = new ExcelWriter("d:/writeTest.xls");
+        //一次性写出内容，强制输出标题
+        writer.write(writeAll);
+        //关闭writer，释放内存
+        writer.close();
     }
 }
