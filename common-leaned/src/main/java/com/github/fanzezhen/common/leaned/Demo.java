@@ -44,15 +44,15 @@ public class Demo {
             idxMatrixPointList.remove(idx);
         }
 
-        idxMatrixPointList.forEach(idx -> allMatrixPointList.set(idx, allMatrixPointList.get(idx).equals(0) ? 1 : 0));
+        idxMatrixPointList.forEach(idx -> allMatrixPointList.set(idx, (allMatrixPointList.get(idx) + 1) % 2));
 
         int len = allMatrixPointList.size();
         System.out.println(len);
         List<List<Integer>> writeAll = new ArrayList<>(rowNum);
-        for (int i = 0; i < 512; i++) {
-            List<Integer> row = new ArrayList<>(512);
-            for (int colIdx = 0; colIdx < 512; colIdx++) {
-                int idx = i * 512 + colIdx;
+        for (int i = 0; i < rowNum; i++) {
+            List<Integer> row = new ArrayList<>(colNum);
+            for (int colIdx = 0; colIdx < colNum; colIdx++) {
+                int idx = i * rowNum + colIdx;
                 row.add(allMatrixPointList.get(idx));
             }
             writeAll.add(row);

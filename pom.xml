@@ -169,6 +169,11 @@
                 <version>${io.springfox.version}</version>
             </dependency>
             <dependency>
+                <groupId>net.lingala.zip4j</groupId>
+                <artifactId>zip4j</artifactId>
+                <version>${net.lingala.zip4j.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml</artifactId>
                 <version>${org.apache.poi.version}</version>
