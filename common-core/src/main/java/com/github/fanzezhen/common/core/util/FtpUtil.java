@@ -1,6 +1,6 @@
 package com.github.fanzezhen.common.core.util;
 
-import com.github.fanzezhen.common.core.model.response.R;
+import com.github.fanzezhen.common.core.model.response.Result;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +11,9 @@ import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.*;
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
 @AllArgsConstructor
 public class FtpUtil {
@@ -70,9 +73,9 @@ public class FtpUtil {
         return result;
     }
 
-    public R<String> uploadFile(String fullName, File file) {
+    public Result<String> uploadFile(String fullName, File file) {
         if (StringUtils.isBlank(fullName) || file == null) {
-            return R.failed("参数不能为空");
+            return Result.failed("参数不能为空");
         }
         ftpClient = new FTPClient();
         // 设置utf-8编码
@@ -85,31 +88,33 @@ public class FtpUtil {
             int reply = ftpClient.getReplyCode();   //获取状态码
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftpClient.disconnect();        //结束连接
-                return R.failed("ftp登录失败");
+                return Result.failed("ftp登录失败");
             }
             //将客户端设置为被动模式
             ftpClient.enterLocalPassiveMode();
             inputStream = new FileInputStream(file);
             // 设置二进制传输模式
             if (!ftpClient.setFileType(FTP.BINARY_FILE_TYPE)) {
-                return R.failed("设置二进制传输模式失败");
+                return Result.failed("设置二进制传输模式失败");
             }
             //上传文件 成功true 失败 false
             if (!ftpClient.storeFile(fullName, inputStream)) {
-                return R.failed("storeFile上传失败");
+                return Result.failed("storeFile上传失败");
             }
             ftpClient.logout();
         } catch (IOException e) {
             log.warn(e.toString());
-            return R.failed(e.getLocalizedMessage());
+            return Result.failed(e.getLocalizedMessage());
         } finally {
             doEnd();
         }
-        return R.ok(address + fullName.replace(rootPath, ""));
+        return Result.ok(address + fullName.replace(rootPath, ""));
     }
 
-    public R<String> uploadFile(String fullPath, String fileName, File file) {
-        if (StringUtils.isAnyBlank(fullPath, fileName) || file == null) return R.failed("参数不能为空");
+    public Result<String> uploadFile(String fullPath, String fileName, File file) {
+        if (StringUtils.isAnyBlank(fullPath, fileName) || file == null) {
+            return Result.failed("参数不能为空");
+        }
         ftpClient = new FTPClient();
         // 设置utf-8编码
         ftpClient.setControlEncoding("UTF-8");
@@ -121,36 +126,46 @@ public class FtpUtil {
             int reply = ftpClient.getReplyCode();   //获取状态码
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftpClient.disconnect();        //结束连接
-                return R.failed("登录失败");
+                return Result.failed("登录失败");
             }
             //将客户端设置为被动模式
             ftpClient.enterLocalPassiveMode();
             inputStream = new FileInputStream(file);
             // 设置二进制传输模式
             if (!ftpClient.setFileType(FTP.BINARY_FILE_TYPE)) {
-                return R.failed("设置二进制传输模式失败");
+                return Result.failed("设置二进制传输模式失败");
             }
             boolean changeWorkingDirectory = changeWorkingDirectory(fullPath);
-            if (!changeWorkingDirectory) log.info("创建/切换目录失败：{}", fullPath);
+            if (!changeWorkingDirectory) {
+                log.info("创建/切换目录失败：{}", fullPath);
+            }
             if (changeWorkingDirectory) {
                 //上传文件 成功true 失败 false
                 log.debug("inputStream.available(): " + inputStream.available());
                 String remote = fullPath;
-                if (fullPath.contains("/") && !fullPath.endsWith("/")) remote += "/";
+                if (fullPath.contains("/") && !fullPath.endsWith("/")) {
+                    remote += "/";
+                }
                 remote += fileName;
-                if (!ftpClient.storeFile(remote, inputStream)) return R.failed("上传失败");
-            } else return R.failed("目录创建/切换失败：{}", fullPath);
+                if (!ftpClient.storeFile(remote, inputStream)) {
+                    return Result.failed("上传失败");
+                }
+            } else {
+                return Result.failed("目录创建/切换失败：{}", fullPath);
+            }
             ftpClient.logout();
         } catch (IOException e) {
             log.warn(e.toString());
-            return R.failed(e.getLocalizedMessage());
+            return Result.failed(e.getLocalizedMessage());
         } finally {
             doEnd();
         }
         String url = address + fullPath.replace(rootPath, "");
-        if (!url.endsWith("/")) url += "/";
+        if (!url.endsWith("/")) {
+            url += "/";
+        }
         url += fileName;
-        return R.ok(url);
+        return Result.ok(url);
     }
 
     public void downloadFile(String fileName, String localPath) {
@@ -205,11 +220,13 @@ public class FtpUtil {
                 changeWorkingDirectory = true;
             } else {
                 boolean makeDirectory = ftpClient.makeDirectory(fullPath);
-                if (makeDirectory) changeWorkingDirectory = ftpClient.changeWorkingDirectory(fullPath);
-                else {
+                if (makeDirectory) {
+                    changeWorkingDirectory = ftpClient.changeWorkingDirectory(fullPath);
+                } else {
                     int lastIndexOfPathSeparator = fullPath.lastIndexOf(pathSeparator);
-                    if (lastIndexOfPathSeparator > 0)
+                    if (lastIndexOfPathSeparator > 0) {
                         changeWorkingDirectory = changeWorkingDirectory(fullPath.substring(0, lastIndexOfPathSeparator));
+                    }
                 }
                 log.debug("目录{}不存在，创建：{}， 切换：{}", fullPath, makeDirectory, changeWorkingDirectory);
             }

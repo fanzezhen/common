@@ -1,10 +1,13 @@
-package com.github.fanzezhen.common.core.model;
+package com.github.fanzezhen.common.core.model.bean;
 
 import lombok.Data;
 
 import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 
+/**
+ * @author zezhen.fan
+ */
 @Data
 public class ImageCode {
 

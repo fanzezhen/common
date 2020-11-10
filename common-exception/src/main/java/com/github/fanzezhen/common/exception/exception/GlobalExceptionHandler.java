@@ -20,7 +20,7 @@ package com.github.fanzezhen.common.exception.exception;
 
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
-import com.github.fanzezhen.common.core.model.response.R;
+import com.github.fanzezhen.common.core.model.response.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -36,6 +36,8 @@ import java.util.List;
 
 /**
  * 全局的的异常处理器
+ *
+ * @author zezhen.fan
  */
 @Slf4j
 @RestControllerAdvice
@@ -48,38 +50,38 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.OK)
-    public R exception(Exception e) {
+    public Result<Object> exception(Exception e) {
         log.error("全局异常信息 ex={}", e.getMessage(), e);
-        return R.failed(CoreExceptionEnum.SERVICE_ERROR);
+        return Result.failed(CoreExceptionEnum.SERVICE_ERROR);
     }
 
     @ExceptionHandler(value = {NoHandlerFoundException.class})
     @ResponseStatus(HttpStatus.OK)
-    public R noHandlerFoundException(Exception e, HttpServletRequest request) {
+    public Result<Object> noHandlerFoundException(Exception e, HttpServletRequest request) {
         log.error("request:{} Method:{} message:{}", request.getRequestURI(), request.getMethod(), e.getMessage(), e);
         e.printStackTrace();
-        return R.failed("unhandled  server exception", request.getRequestURI());
+        return Result.failed("unhandled  server exception", request.getRequestURI());
     }
 
     /**
      * validation exception
      *
-     * @param exception
+     * @param exception 异常
      * @return R
      */
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
     @ResponseStatus(HttpStatus.OK)
-    public R bodyValidExceptionHandler(MethodArgumentNotValidException exception) {
+    public Result<Object> bodyValidExceptionHandler(MethodArgumentNotValidException exception) {
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         log.error("validation exception", exception);
-        return R.failed(fieldErrors.get(0).getDefaultMessage());
+        return Result.failed(fieldErrors.get(0).getDefaultMessage());
     }
 
     @ExceptionHandler(value = {ServiceException.class})
     @ResponseStatus(HttpStatus.OK)
-    public R businessException(Exception e, HttpServletRequest request) {
+    public Result<Object> businessException(Exception e, HttpServletRequest request) {
         log.error("request:{} Method:{} message:{}", request.getRequestURI(), request.getMethod(), e.getMessage(), e);
         ServiceException businessException = (ServiceException) e;
-        return R.failed(businessException.getCode(), businessException.getErrorMessage());
+        return Result.failed(businessException.getCode(), businessException.getErrorMessage());
     }
 }

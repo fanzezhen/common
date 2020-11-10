@@ -1,8 +1,8 @@
 package com.github.fanzezhen.common.mp.generator;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
-
-import java.lang.reflect.InvocationTargetException;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -12,6 +12,8 @@ import java.lang.reflect.InvocationTargetException;
  * @author fanzezhen
  * @since 2018-09-12
  */
+@Accessors(chain = true)
+@Builder
 @NoArgsConstructor
 public class MysqlGenerator extends GeneratorBean {
     @Override
@@ -22,57 +24,20 @@ public class MysqlGenerator extends GeneratorBean {
         setDbPassword("root");
     }
 
-    public MysqlGenerator(String dataSourceConfigUrl, String dbUsername, String dbPassword,
-                          String modulePackageName, String... moduleNames) {
-        setDataSourceConfigUrl(dataSourceConfigUrl);
-        setDbUsername(dbUsername);
-        setDbPassword(dbPassword);
-        setModuleNames(moduleNames);
-        setModulePackageName(modulePackageName);
-    }
-
-    public MysqlGenerator(String dataSourceConfigUrl, String dbUsername, String dbPassword,
-                          String modulePackageName, String superEntityClassName, String... moduleNames) {
-        setDataSourceConfigUrl(dataSourceConfigUrl);
-        setDbUsername(dbUsername);
-        setDbPassword(dbPassword);
-        setModuleNames(moduleNames);
-        setModulePackageName(modulePackageName);
-        setSuperEntityClassName(superEntityClassName);
-    }
-
-    public MysqlGenerator(String dataSourceConfigUrl, String dbUsername, String dbPassword, String[] moduleNames,
-                          String modulePackageName, String superEntityClassName, String... superEntityColumns) {
-        setDataSourceConfigUrl(dataSourceConfigUrl);
-        setDbUsername(dbUsername);
-        setDbPassword(dbPassword);
-        setModuleNames(moduleNames);
-        setModulePackageName(modulePackageName);
-        setSuperEntityClassName(superEntityClassName);
-        setSuperEntityColumns(superEntityColumns);
-    }
-
-    public MysqlGenerator(String author, String dataSourceConfigUrl, String driverName, String dbUsername, String dbPassword,
-                          String packageName, String modulePackageName, String tableNameSplitter, String tables) {
-        setAuthor(author);
-        setDataSourceConfigUrl(dataSourceConfigUrl);
-        setDriverName(driverName);
-        setDbUsername(dbUsername);
-        setDbPassword(dbPassword);
-        setPackageName(packageName);
-        setModulePackageName(modulePackageName);
-        setTableNameSplitter(tableNameSplitter);
-        setTables(tables);
-    }
-
     /**
      * RUN THIS
      */
     public static void main(String[] args) {
-        String dataSourceConfigUrl = "jdbc:mysql://localhost:3306/edc?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai";
+        String dataSourceConfigUrl = "jdbc:mysql://localhost:3306/xiaomei?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai";
         String dbUsername = "root";
         String dbPassword = "root";
-        String moduleParentName = "com.github.fanzezhen.common.mp.generator";
-        GeneratorTool.generator(new MysqlGenerator(dataSourceConfigUrl, dbUsername, dbPassword, moduleParentName));
+        String moduleParentName = "com.github.fanzezhen.common.mp";
+        GeneratorTool.generator(MysqlGenerator.builder().build()
+                .setAuthor("fanzezhen")
+                .setDataSourceConfigUrl(dataSourceConfigUrl)
+                .setDbUsername(dbUsername)
+                .setDbPassword(dbPassword)
+                .setSuperiorModuleNames("common-mp")
+                .setParentPackageName(moduleParentName).setSuperEntityClass(null));
     }
 }

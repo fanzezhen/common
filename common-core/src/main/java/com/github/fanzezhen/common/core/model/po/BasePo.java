@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * @author zezhen.fan
+ */
 @Data
 @NoArgsConstructor
 public class BasePo {

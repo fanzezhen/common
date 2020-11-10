@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * @author zezhen.fan
+ */
 public class GeneratorTool {
     /**
      * <p>
@@ -43,32 +46,32 @@ public class GeneratorTool {
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
 
-        // 全局配置
-        GlobalConfig gc = new GlobalConfig();
-        String projectPath = System.getProperty("user.dir");
-        StringBuilder moduleName = new StringBuilder();
-        for (String s : generatorBean.getModuleNames()) {
-            moduleName.append(CommonConstant.SEPARATOR).append(s);
-        }
-        gc.setOutputDir(projectPath + moduleName + "/src/main/java");
-        gc.setAuthor(generatorBean.getAuthor());
-        gc.setOpen(false);
-        gc.setIdType(IdType.ASSIGN_UUID);
-        mpg.setGlobalConfig(gc);
-
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setUrl(generatorBean.getDataSourceConfigUrl());
-        // dsc.setSchemaName("public");
         dsc.setDriverName(generatorBean.getDriverName());
         dsc.setUsername(generatorBean.getDbUsername());
         dsc.setPassword(generatorBean.getDbPassword());
         mpg.setDataSource(dsc);
 
+        List<String> moduleNameList = generatorBean.getModuleNameList();
+        // 全局配置
+        GlobalConfig gc = new GlobalConfig();
+        String projectPath = System.getProperty("user.dir");
+        StringBuilder moduleLevelName = new StringBuilder();
+        for (String s : moduleNameList) {
+            moduleLevelName.append(CommonConstant.SEPARATOR).append(s);
+        }
+        gc.setOutputDir(projectPath + moduleLevelName + "/src/main/java");
+        gc.setAuthor(generatorBean.getAuthor());
+        gc.setOpen(false);
+        gc.setIdType(IdType.ASSIGN_UUID);
+        mpg.setGlobalConfig(gc);
+
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setModuleName(generatorBean.getPackageName());
-        pc.setParent(generatorBean.getModulePackageName());
+        pc.setModuleName(generatorBean.getPackageModuleName());
+        pc.setParent(generatorBean.getParentPackageName());
         mpg.setPackageInfo(pc);
 
         // 自定义配置
@@ -83,7 +86,7 @@ public class GeneratorTool {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
-                return projectPath + moduleName + "/src/main/resources/mapper/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
+                return projectPath + moduleLevelName + "/src/main/resources/mapper/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
         cfg.setFileOutConfigList(focList);
@@ -94,16 +97,15 @@ public class GeneratorTool {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        if (StringUtils.isNotEmpty(generatorBean.getSuperEntityClassName())) {
-            strategy.setSuperEntityClass(generatorBean.getSuperEntityClassName());
+        if (generatorBean.getSuperEntityClass() != null) {
+            strategy.setSuperEntityClass(generatorBean.getSuperEntityClass());
             strategy.setSuperEntityColumns(generatorBean.getSuperEntityColumns());
         }
         strategy.setEntityLombokModel(true);
-//        strategy.setSuperControllerClass("com.baomidou.mybatisplus.samples.generator.common.BaseController");
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix("t_");
-//        strategy.setLogicDeleteFieldName("del_flag");
-        strategy.setInclude(generatorBean.getTables().split(generatorBean.getTableNameSplitter()));
+        strategy.setLogicDeleteFieldName(generatorBean.getLogicDeleteFieldName());
+        strategy.setInclude(generatorBean.getTableNameStr().split(generatorBean.getTableNameSplitter()));
         mpg.setStrategy(strategy);
         // 选择 freemarker 引擎需要指定如下加，注意 pom 依赖必须有！
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());

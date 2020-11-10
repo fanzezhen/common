@@ -2,11 +2,13 @@ package com.github.fanzezhen.common.core.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.ArrayUtils;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -30,6 +32,7 @@ public class BaseVarAloneEntity extends BaseVarEntity {
      */
     @Column(name = "STATUS")
     @TableField(value = "STATUS")
+    @ApiModelProperty("状态（0--正常；1--禁用）")
     private Integer status;
     /**
      * 删除标识（1-已删除；0-未删除）
@@ -37,18 +40,21 @@ public class BaseVarAloneEntity extends BaseVarEntity {
     @TableLogic
     @Column(name = "DEL_FLAG")
     @TableField(value = "DEL_FLAG")
+    @ApiModelProperty("删除标识（1-已删除；0-未删除）")
     private Integer delFlag;
     /**
      * 更新时间
      */
     @Column(name = "UPDATE_TIME")
     @TableField(value = "UPDATE_TIME")
+    @ApiModelProperty("更新时间")
     private LocalDateTime updateTime;
     /**
      * 更新者ID
      */
     @Column(name = "UPDATE_USER_ID")
     @TableField(value = "UPDATE_USER_ID")
+    @ApiModelProperty("更新者ID")
     private String updateUserId;
 
     public void init(BaseVarAloneEntity baseAlonePo) {
@@ -57,5 +63,9 @@ public class BaseVarAloneEntity extends BaseVarEntity {
         this.updateTime = baseAlonePo.getUpdateTime();
         this.updateUserId = baseAlonePo.getUpdateUserId();
         super.init(baseAlonePo);
+    }
+
+    public static String[] getFieldNames() {
+        return ArrayUtils.addAll(BaseVarEntity.getFieldNames(), "status", "del_flag", "update_time", "update_user_id");
     }
 }

@@ -12,16 +12,17 @@ import java.util.Objects;
 
 /**
  * 响应信息主体
+ * JsonIgnoreProperties注解用于忽略ok、success等字段
  *
  * @param <T>
- * @author lengleng
+ * @author zezhen.fan
  */
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@JsonIgnoreProperties(ignoreUnknown = true) // 忽略ok、success等字段
-public class R<T> implements Serializable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Result<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Getter
@@ -37,40 +38,40 @@ public class R<T> implements Serializable {
     @Setter
     private T data;
 
-    public static <T> R<T> ok() {
+    public static <T> Result<T> ok() {
         return restResult(null, HttpStatus.OK.value(), "success");
     }
 
-    public static <T> R<T> ok(T data) {
+    public static <T> Result<T> ok(T data) {
         return restResult(data, HttpStatus.OK.value(), "success");
     }
 
-    public static <T> R<T> ok(T data, String msg) {
+    public static <T> Result<T> ok(T data, String msg) {
         return restResult(data, HttpStatus.OK.value(), msg);
     }
 
-    public static <T> R<T> failed() {
+    public static <T> Result<T> failed() {
         return restResult(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
     }
 
-    public static <T> R<T> failed(String msg) {
+    public static <T> Result<T> failed(String msg) {
         return restResult(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), msg);
     }
 
-    public static <T> R<T> failed(AbstractBaseExceptionEnum msg) {
+    public static <T> Result<T> failed(AbstractBaseExceptionEnum msg) {
         return restResult(null, msg.getCode(), msg.getMessage());
     }
 
-    public static <T> R<T> failed(T data) {
+    public static <T> Result<T> failed(T data) {
         return restResult(data, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
     }
 
-    public static <T> R<T> failed(T data, String msg) {
+    public static <T> Result<T> failed(T data, String msg) {
         return restResult(data, HttpStatus.INTERNAL_SERVER_ERROR.value(), msg);
     }
 
-    private static <T> R<T> restResult(T data, Integer code, String msg) {
-        R<T> apiResult = new R<>();
+    private static <T> Result<T> restResult(T data, Integer code, String msg) {
+        Result<T> apiResult = new Result<>();
         apiResult.setCode(code);
         apiResult.setData(data);
         apiResult.setMessage(msg);

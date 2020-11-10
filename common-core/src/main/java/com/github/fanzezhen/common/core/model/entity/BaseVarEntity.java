@@ -3,6 +3,7 @@ package com.github.fanzezhen.common.core.model.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
  * 公共Model,将每个表都有的公共字段抽取出来
  *
  * @ MappedSuperclass注解表示不是一个完整的实体类，将不会映射到数据库表，但是它的属性都将映射到其子类的数据库字段中
+ * @author zezhen.fan
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -28,7 +30,8 @@ public class BaseVarEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     @TableField(value = "ID")
-    @TableId(value = "ID", type = IdType.UUID)
+    @TableId(value = "ID", type = IdType.ASSIGN_UUID)
+    @ApiModelProperty("主键ID")
     private String id;
 
     /**
@@ -36,6 +39,7 @@ public class BaseVarEntity extends BaseEntity {
      */
     @Column(name = "CREATE_TIME")
     @TableField(value = "CREATE_TIME")
+    @ApiModelProperty("创建时间")
     private LocalDateTime createTime;
 
     /**
@@ -43,6 +47,7 @@ public class BaseVarEntity extends BaseEntity {
      */
     @Column(name = "CREATE_USER_ID")
     @TableField(value = "CREATE_USER_ID")
+    @ApiModelProperty("创建人ID")
     private String createUserId;
 
     public void init(BaseVarEntity baseVarEntry) {
@@ -51,7 +56,8 @@ public class BaseVarEntity extends BaseEntity {
         this.createUserId = baseVarEntry.getCreateUserId();
     }
 
-    public BaseVarEntity(String createUserId) {
-        this.createUserId = createUserId;
+    public static String[] getFieldNames() {
+        return new String[]{"id", "create_time", "create_user_id"};
     }
+
 }

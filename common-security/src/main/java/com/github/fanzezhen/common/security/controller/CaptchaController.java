@@ -1,7 +1,7 @@
 package com.github.fanzezhen.common.security.controller;
 
 import com.github.fanzezhen.common.core.constant.SecurityConstant;
-import com.github.fanzezhen.common.core.model.ImageCode;
+import com.github.fanzezhen.common.core.model.bean.ImageCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
