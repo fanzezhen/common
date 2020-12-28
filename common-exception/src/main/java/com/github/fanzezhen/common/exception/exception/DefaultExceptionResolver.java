@@ -26,6 +26,7 @@ import java.util.Map;
 
 /**
  * 全局异常处理
+ * @author zezhen.fan
  */
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -42,12 +43,12 @@ public class DefaultExceptionResolver implements HandlerExceptionResolver {
 
     private int errorStatus = HttpServletResponse.SC_OK;
 
-    private static final boolean fastJsonViewPresent = ClassUtils.isPresent(
+    private static final boolean FAST_JSON_VIEW_PRESENT = ClassUtils.isPresent(
             "com.alibaba.fastjson.support.spring.FastJsonJsonView", DefaultExceptionResolver.class.getClassLoader());
 
     public DefaultExceptionResolver() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
             NoSuchMethodException, InvocationTargetException {
-        if (fastJsonViewPresent) {
+        if (FAST_JSON_VIEW_PRESENT) {
             defaultErrorJsonView = (View) Class.forName(
                     "com.alibaba.fastjson.support.spring.FastJsonJsonView").getDeclaredConstructor()
                     .newInstance();
@@ -137,7 +138,7 @@ public class DefaultExceptionResolver implements HandlerExceptionResolver {
     }
 
     public Map<String, Object> newExceptionResp(HttpServletRequest request, Exception exception) {
-        Map<String, Object> error = new HashMap<String, Object>();
+        Map<String, Object> error = new HashMap<>(2);
         if (exception instanceof ServiceException) {
             Integer errCode = ((ServiceException) exception).getCode();
             error.put("msg", exception.getMessage());

@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Accessors(chain = true)
 @Data
-public abstract class GeneratorBean {
+public abstract class AbstractGeneratorBean {
     /**
      * 作者
      */
@@ -68,7 +68,7 @@ public abstract class GeneratorBean {
      */
     private String logicDeleteFieldName;
 
-    public GeneratorBean putSuperiorModuleNames(String... moduleNames) {
+    public AbstractGeneratorBean putSuperiorModuleNames(String... moduleNames) {
         if (moduleNameList == null) {
             moduleNameList = new ArrayList<>();
         }
@@ -76,7 +76,7 @@ public abstract class GeneratorBean {
         return this;
     }
 
-    public GeneratorBean setSuperiorModuleNames(String... moduleNames) {
+    public AbstractGeneratorBean setSuperiorModuleNames(String... moduleNames) {
         this.moduleNameList = new ArrayList<>(Arrays.asList(moduleNames));
         return this;
     }
@@ -90,7 +90,7 @@ public abstract class GeneratorBean {
      */
     public abstract void init();
 
-    public GeneratorBean() {
+    public AbstractGeneratorBean() {
         setLogicDeleteFieldName(Constant.LOGIC_DELETE_FIELD_NAME);
         setModuleNameList(new ArrayList<>() {{
             add(Constant.AUTOMATED_MODULE_NAME);

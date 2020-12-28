@@ -5,6 +5,9 @@ import com.github.fanzezhen.common.core.enums.CommonEnum;
 
 import java.util.HashMap;
 
+/**
+ * @author zezhen.fan
+ */
 public class SysUserDict extends AbstractDict {
 
     @Override
@@ -33,7 +36,7 @@ public class SysUserDict extends AbstractDict {
 
     @Override
     protected void initBeAdapter() {
-        putFieldAdapter("sex", new HashMap<String, Object>() {{
+        putFieldAdapter("sex", new HashMap<>(4) {{
             put(CommonEnum.SexEnum.WOMAN.getDesc(), CommonEnum.SexEnum.WOMAN.getCode());
             put(CommonEnum.SexEnum.MAN.getDesc(), CommonEnum.SexEnum.MAN.getCode());
             put(CommonEnum.SexEnum.UNKNOWN.getDesc(), CommonEnum.SexEnum.UNKNOWN.getCode());

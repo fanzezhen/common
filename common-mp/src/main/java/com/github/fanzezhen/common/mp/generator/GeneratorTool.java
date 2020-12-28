@@ -42,7 +42,7 @@ public class GeneratorTool {
      * 读取控制台内容
      * </p>
      */
-    public static void generator(GeneratorBean generatorBean) {
+    public static void generator(AbstractGeneratorBean generatorBean) {
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
 

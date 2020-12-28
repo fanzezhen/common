@@ -19,7 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by fanzezhen on 17/1/19.
+ * @author fanzezhen
+ * @date 17/1/19
  */
 @Component
 public class InvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
@@ -37,7 +38,7 @@ public class InvocationSecurityMetadataSource implements FilterInvocationSecurit
         map = new HashMap<>(100);
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
-        List<SysPermissionDto> sysPermissionDtoList = userDetailsServiceFacade.listAllPermissionDto(securityProjectProperty.APP_CODE);
+        List<SysPermissionDto> sysPermissionDtoList = userDetailsServiceFacade.listAllPermissionDto(securityProjectProperty.appCode);
         for (SysPermissionDto sysPermissionDto : sysPermissionDtoList) {
             array = new ArrayList<>();
             cfg = new SecurityConfig(SecurityConstant.PERMISSION_PREFIX + sysPermissionDto.getId());
@@ -48,10 +49,18 @@ public class InvocationSecurityMetadataSource implements FilterInvocationSecurit
 
     }
 
-    //此方法是为了判定用户请求的url 是否在权限表中，如果在权限表中，则返回给 decide 方法，用来判定用户是否有此权限。如果不在权限表中则放行。
+    /**
+     * 此方法是为了判定用户请求的url 是否在权限表中，如果在权限表中，则返回给 decide 方法，用来判定用户是否有此权限。如果不在权限表中则放行。
+     *
+     * @param object object
+     * @return Collection<ConfigAttribute>
+     * @throws IllegalArgumentException IllegalArgumentException
+     */
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
-        if (map == null) loadResourceDefine();
+        if (map == null) {
+            loadResourceDefine();
+        }
         //object 中包含用户请求的request 信息
         HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
         AntPathRequestMatcher matcher;

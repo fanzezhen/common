@@ -28,7 +28,6 @@ public class BeanConverterUtil {
      * @param <T>    目标数据类型
      * @return 目标
      * @date 2018年12月4日
-     * @version 1.0
      */
     public static <S, T> T copy(S source, T target) {
         BeanUtil.copyProperties(source, target);
@@ -75,7 +74,7 @@ public class BeanConverterUtil {
      * @param cls       目标类型
      * @param <S>源数据类型
      * @param <T>目标数据类型
-     * @return
+     * @return List
      */
     public static <S, T> List<T> copyList(List<S> ss, Class<T> cls) {
 
@@ -102,7 +101,7 @@ public class BeanConverterUtil {
      * @param ignoreProperties 忽略字段集合
      * @param <S>源数据类型
      * @param <T>目标数据类型
-     * @return
+     * @return List
      */
     public static <S, T> List<T> copyList(List<S> ss, Class<T> cls, String... ignoreProperties) {
 
@@ -128,7 +127,7 @@ public class BeanConverterUtil {
      * @param ignoreNullProperties 忽略字段集合
      * @param <S>源数据类型
      * @param <T>目标数据类型
-     * @return
+     * @return List
      */
     public static <S, T> List<T> copyList(List<S> ss, Class<T> cls, boolean ignoreNullProperties) {
 
@@ -149,8 +148,8 @@ public class BeanConverterUtil {
     /**
      * 将对象装换为map
      *
-     * @param bean
-     * @return
+     * @param bean 对象
+     * @return Map
      */
     public static <T> Map<String, Object> beanToMap(T bean) {
         Map<String, Object> map = Maps.newHashMap();
@@ -166,9 +165,9 @@ public class BeanConverterUtil {
     /**
      * 将map装换为javabean对象
      *
-     * @param map
-     * @param bean
-     * @return
+     * @param map Map<String, Object>
+     * @param bean bean
+     * @return 对象
      */
     public static <T> T mapToBean(Map<String, Object> map, T bean) {
         BeanMap beanMap = BeanMap.create(bean);
@@ -179,7 +178,7 @@ public class BeanConverterUtil {
     /**
      * 将List<T>转换为List<Map<String, Object>>
      *
-     * @param objList
+     * @param objList List<T>
      */
     public static <T> List<Map<String, Object>> objectsToMaps(List<T> objList) {
         List<Map<String, Object>> list = Lists.newArrayList();
@@ -198,11 +197,9 @@ public class BeanConverterUtil {
     /**
      * 将List<Map<String,Object>>转换为List<T>
      *
-     * @param maps
-     * @param clazz
-     * @return
-     * @throws InstantiationException
-     * @throws IllegalAccessException
+     * @param maps List<Map<String, Object>>
+     * @param clazz Class<T>
+     * @return List<T>
      */
     public static <T> List<T> mapsToObjects(List<Map<String, Object>> maps, Class<T> clazz)
             throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {

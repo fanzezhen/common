@@ -1,15 +1,24 @@
 package com.github.fanzezhen.common.core.enums.auth;
 
+/**
+ * @author zezhen.fan
+ */
 public class PermissionEnum {
     /**
-     * @description (权限类型枚举类).
+     * 权限类型枚举类
      */
     public enum PermissionTypeEnum {
+        /**
+         * 菜单
+         */
         MENU(1, "菜单"),
+        /**
+         * 按钮
+         */
         BUTTON(2, "按钮");
 
-        private int type;
-        private String desc;
+        private final int type;
+        private final String desc;
 
         public int getType() {
             return type;

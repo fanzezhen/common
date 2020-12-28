@@ -6,20 +6,35 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.*;
 
+/**
+ * @author zezhen.fan
+ */
 public class RoleEnum {
     /**
      * @author fanzezhen
      * 角色类型枚举类
      */
     public enum RoleTypeEnum {
+        /**
+         * 超级管理员
+         */
         SPECIAL_ADMIN(0, "SPECIAL_ADMIN", "超级管理员"),
+        /**
+         * 管理员
+         */
         ADMIN(1, "ADMIN", "管理员"),
+        /**
+         * 普通角色
+         */
         NORMAL(2, "NORMAL", "普通角色"),
+        /**
+         * 访客角色
+         */
         GUEST(3, "GUEST", "访客角色");
 
-        private int type;
-        private String code;
-        private String desc;
+        private final int type;
+        private final String code;
+        private final String desc;
 
         RoleTypeEnum(int type, String code, String desc) {
             this.type = type;
@@ -61,7 +76,9 @@ public class RoleEnum {
 
         public static Set<String> securityRoleTypeCodeSetByType(Collection<? extends Integer> types) {
             Set<String> roleTypeCodeSet = new HashSet<>();
-            if (CollectionUtils.sizeIsEmpty(types)) return roleTypeCodeSet;
+            if (CollectionUtils.sizeIsEmpty(types)) {
+                return roleTypeCodeSet;
+            }
             for (RoleTypeEnum roleTypeEnum : values()) {
                 if (types.contains(roleTypeEnum.type)) {
                     roleTypeCodeSet.add(SecurityConstant.ROLE_PREFIX + roleTypeEnum.code);
@@ -79,7 +96,4 @@ public class RoleEnum {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(RoleTypeEnum.ADMIN);
-    }
 }

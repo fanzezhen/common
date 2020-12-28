@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * CAS的配置参数
+ * @author zezhen.fan
  */
 @Data
 @Component

@@ -3,26 +3,29 @@ package com.github.fanzezhen.common.security.property;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author zezhen.fan
+ */
 @Component
 public class SecurityProjectProperty {
     @Value("${project.code}")
-    public String APP_CODE;
+    public String appCode;
     @Value("${project.version}")
-    public String VERSION;
+    public String version;
     @Value("${project.base.package}")
-    public String BASE_PACKAGE;
+    public String basePackage;
     @Value("${project.title}")
-    public String TITLE;
+    public String title;
     @Value("${project.description}")
-    public String DESCRIPTION;
+    public String description;
     @Value("${project.link.man}")
-    public String LINK_MAN;
+    public String linkMan;
     @Value("${project.link.url}")
-    public String LINK_URL;
+    public String linkUrl;
     @Value("${project.link.email}")
-    public String LINK_EMAIL;
+    public String linkEmail;
     @Value("${project.license}")
-    public String LICENSE;
+    public String license;
     @Value("${project.license.url}")
-    public String LICENSE_URL;
+    public String licenseUrl;
 }

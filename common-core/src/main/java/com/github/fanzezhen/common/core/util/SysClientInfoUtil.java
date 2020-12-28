@@ -16,22 +16,29 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author zezhen.fan
+ */
 public class SysClientInfoUtil {
+    static String unknown = "unknown";
+    static String localhostIp = "127.0.0.1";
+    static String comma = ",";
+
     /**
      * 获取发起请求的IP地址
      */
     public static String getIp(HttpServletRequest request) {
-        String ip = null;
+        String ip;
         ip = request.getHeader(SysConstant.X_FORWARDED_FOR);
-        if ((ip == null) || (ip.length() == 0) || ("unknown".equalsIgnoreCase(ip))) {
+        if ((ip == null) || (ip.length() == 0) || (unknown.equalsIgnoreCase(ip))) {
             ip = request.getHeader(SysConstant.PROXY_CLIENT_IP);
         }
-        if ((ip == null) || (ip.length() == 0) || ("unknown".equalsIgnoreCase(ip))) {
+        if ((ip == null) || (ip.length() == 0) || (unknown.equalsIgnoreCase(ip))) {
             ip = request.getHeader(SysConstant.WL_PROXY_CLIENT_IP);
         }
-        if ((ip == null) || (ip.length() == 0) || ("unknown".equalsIgnoreCase(ip))) {
+        if ((ip == null) || (ip.length() == 0) || (unknown.equalsIgnoreCase(ip))) {
             ip = request.getRemoteAddr();
-            if (ip.equals("127.0.0.1")) {
+            if (localhostIp.equals(ip)) {
                 InetAddress inetAddress = null;
                 try {
                     inetAddress = InetAddress.getLocalHost();
@@ -41,9 +48,10 @@ public class SysClientInfoUtil {
                 ip = inetAddress != null ? inetAddress.getHostAddress() : null;
             }
         }
-        if ((ip != null) && (ip.length() > 15)) {
-            if (ip.indexOf(",") > 0) {
-                ip = ip.substring(0, ip.indexOf(","));
+        int ipRange = 15;
+        if ((ip != null) && (ip.length() > ipRange)) {
+            if (ip.indexOf(comma) > 0) {
+                ip = ip.substring(0, ip.indexOf(comma));
             }
         }
         return ip;
@@ -99,13 +107,13 @@ public class SysClientInfoUtil {
     }
 
     public static Map<String, String> getRequestParameters() {
-        HashMap<String, String> values = new HashMap<>();
+        HashMap<String, String> values = new HashMap<>(10);
         HttpServletRequest request = getRequest();
         if (request != null) {
-            Enumeration enums = request.getParameterNames();
+            Enumeration<String> enums = request.getParameterNames();
 
             while (enums.hasMoreElements()) {
-                String paramName = (String) enums.nextElement();
+                String paramName = enums.nextElement();
                 String paramValue = request.getParameter(paramName);
                 values.put(paramName, paramValue);
             }
@@ -115,7 +123,7 @@ public class SysClientInfoUtil {
     }
 
     public static Map<String, String> getAll(HttpServletRequest request) {
-        return new HashMap<String, String>(){{
+        return new HashMap<>(5) {{
             put("os", SysClientInfoUtil.getOsName(request));
             put("osName", SysClientInfoUtil.getOsName(request));
             put("ip", SysClientInfoUtil.getIp(request));

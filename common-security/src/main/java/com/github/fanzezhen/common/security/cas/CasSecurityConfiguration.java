@@ -55,12 +55,16 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * tokenRepository.setCreateTableOnStartup(true);
+     * create table persistent_logins (username varchar(64) not null, series varchar(64) primary key, token varchar(64) not null, last_used timestamp not null)
+     *
+     * @return PersistentTokenRepository
+     */
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
         tokenRepository.setDataSource(dataSource);
-        // tokenRepository.setCreateTableOnStartup(true);
-        // create table persistent_logins (username varchar(64) not null, series varchar(64) primary key, token varchar(64) not null, last_used timestamp not null)
         return tokenRepository;
     }
 
@@ -151,14 +155,12 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().ignoringAntMatchers(SecurityConstant.CSRF_IGNORING_ANT_MATCHERS);
         http.headers().frameOptions().sameOrigin().xssProtection().block(true);
-        // 取消安全报文头：http.headers().disable();
-
         http
-                .logout().permitAll()//定义logout不需要验证
+                // 定义logout不需要验证
+                .logout().permitAll()
                 .and()
-                .authorizeRequests()//配置安全策略
-//                .antMatchers("/admin/**")
-//                .hasAnyRole(RoleEnum.RoleTypeEnum.ADMIN.getCode(), RoleEnum.RoleTypeEnum.SPECIAL_ADMIN.getCode())
+                // 配置安全策略
+                .authorizeRequests()
                 // 不拦截
                 .antMatchers(SecurityConstant.IGNORING_ANT_MATCHERS).permitAll()
                 // 不拦截自定义的业务请求

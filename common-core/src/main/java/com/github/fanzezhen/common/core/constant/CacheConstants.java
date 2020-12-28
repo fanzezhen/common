@@ -20,6 +20,7 @@ package com.github.fanzezhen.common.core.constant;
 
 /**
  * 缓存的key 常量
+ * @author zezhen.fan
  */
 public interface CacheConstants {
 

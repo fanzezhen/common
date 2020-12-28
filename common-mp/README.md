@@ -4,6 +4,11 @@ MyBatis-Plus
    * 主体框架： Springboot 2
    * 持久层： MyBatis-Plus
 
+启用配置
+   * @MapperScan(mapper文件夹路径)
+   * 枚举， 支持统配符 * 或者 ; 分割
+     * mybatis-plus.typeEnumsPackage=com.github.fanzezhen.common.core.enums.db
+
 generator使用方法
    * 项目依赖该模块后使用GeneratorTool.generator()
    

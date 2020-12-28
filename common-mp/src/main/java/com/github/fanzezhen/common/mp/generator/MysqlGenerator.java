@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Builder
 @NoArgsConstructor
-public class MysqlGenerator extends GeneratorBean {
+public class MysqlGenerator extends AbstractGeneratorBean {
     @Override
     public void init() {
         setDataSourceConfigUrl("jdbc:mysql://localhost:3306/framework?useSSL=false&useUnicode=true&characterEncoding=UTF-8");

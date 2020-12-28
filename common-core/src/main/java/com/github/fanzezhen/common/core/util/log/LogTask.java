@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimerTask;
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
 public class LogTask {
     public static TimerTask log(String logApi, Map<String, String> logMap) {
@@ -32,7 +35,7 @@ public class LogTask {
             @Override
             public void run() {
                 try {
-                    log.info(String.valueOf(log(logApi, new HashMap<String, String>() {{
+                    log.info(String.valueOf(log(logApi, new HashMap<>(8) {{
                         put("username", username);
                         put("logType", logType);
                         put("os", os);
@@ -63,18 +66,5 @@ public class LogTask {
     public static TimerTask loginLog(String logApi, HttpServletRequest request, Map<String, String> logMap) {
         logMap.putAll(SysClientInfoUtil.getAll(request));
         return log(logApi, logMap);
-    }
-
-    public static TimerTask tt(String api) {
-        return new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    System.out.println(HttpUtil.doPost(api, new HashMap<>()));
-                } catch (Exception e) {
-                    log.error("创建登录日志异常!", e);
-                }
-            }
-        };
     }
 }

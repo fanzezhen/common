@@ -8,11 +8,22 @@ import java.util.HashMap;
  * @author fengshuonan
  */
 public abstract class AbstractDict {
-
-    protected HashMap<String, String> dict = new HashMap<>();   // 字典映射，实体的字段名→字段标题
-    protected HashMap<String, String> reverseDict = new HashMap<>(); // 字典映射，实体标题→实体的字段名
-    protected HashMap<String, HashMap<Object, String>> fieldWrapperDict = new HashMap<>();  // 字段枚举值映射，实体的字段名→{枚举名：枚举值}
-    protected HashMap<String, HashMap<String, Object>> fieldAdapterDict = new HashMap<>();  // 字段枚举值映射，实体的字段名→{枚举值：枚举名}
+    /**
+     * 字典映射，实体的字段名→字段标题
+     */
+    protected HashMap<String, String> dict = new HashMap<>();
+    /**
+     * 字典映射，实体标题→实体的字段名
+     */
+    protected HashMap<String, String> reverseDict = new HashMap<>();
+    /**
+     * 字段枚举值映射，实体的字段名→{枚举名：枚举值}
+     */
+    protected HashMap<String, HashMap<Object, String>> fieldWrapperDict = new HashMap<>();
+    /**
+     * 字段枚举值映射，实体的字段名→{枚举值：枚举名}
+     */
+    protected HashMap<String, HashMap<String, Object>> fieldAdapterDict = new HashMap<>();
 
     public AbstractDict() {
         put("id", "主键id");
@@ -58,12 +69,15 @@ public abstract class AbstractDict {
     public boolean containsKey(Object key) {
         return dict.containsKey(String.valueOf(key));
     }
+
     public boolean containsReverseKey(Object key) {
         return reverseDict.containsKey(String.valueOf(key));
     }
 
     public String get(String key) {
-        if (this.dict.get(key) == null) return key;
+        if (this.dict.get(key) == null) {
+            return key;
+        }
         return this.dict.get(key);
     }
 
@@ -72,7 +86,9 @@ public abstract class AbstractDict {
     }
 
     public String getReverse(String key) {
-        if (this.reverseDict.get(key) == null) return key;
+        if (this.reverseDict.get(key) == null) {
+            return key;
+        }
         return this.reverseDict.get(key);
     }
 
@@ -97,10 +113,13 @@ public abstract class AbstractDict {
     }
 
     public void putFieldWrapper(String field, Object value, String desc) {
-        if (this.fieldWrapperDict.containsKey(field)) getFieldWrapper(field).put(value, desc);
-        else putFieldWrapper(field, new HashMap<Object, String>() {{
-            put(value, desc);
-        }});
+        if (this.fieldWrapperDict.containsKey(field)) {
+            getFieldWrapper(field).put(value, desc);
+        } else {
+            putFieldWrapper(field, new HashMap<>(1) {{
+                put(value, desc);
+            }});
+        }
     }
 
     public HashMap<String, Object> getFieldAdapter(String key) {
@@ -114,7 +133,7 @@ public abstract class AbstractDict {
     public Object getFieldAdapter(String field, String value) {
         try {
             return this.fieldAdapterDict.get(field).get(value);
-        }catch (NullPointerException nullPointerException){
+        } catch (NullPointerException nullPointerException) {
             return value;
         }
     }

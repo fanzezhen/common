@@ -27,13 +27,20 @@ import java.util.concurrent.TimeUnit;
  */
 public class LogManager {
 
-    // 线程池size
+    /**
+     * 线程池size
+     */
     private final int CORE_POOL_SIZE = 10;
-    //日志记录操作延时
+    /**
+     * 日志记录操作延时
+     */
     private final int OPERATE_DELAY_TIME = 10;
 
-    //异步操作记录日志的线程池
-    private ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(CORE_POOL_SIZE);
+    /**
+     * 异步操作记录日志的线程池
+     */
+    private final ScheduledThreadPoolExecutor executor =
+            new ScheduledThreadPoolExecutor(CORE_POOL_SIZE, new LogTreadFactory());
 
     private LogManager() {
     }

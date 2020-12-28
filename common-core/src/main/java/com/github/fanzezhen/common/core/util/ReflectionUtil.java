@@ -18,7 +18,8 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * Created by Andy on 2018/12/20.
+ * @author Andy
+ * @date 2018/12/20
  * Desc:
  */
 @Slf4j
@@ -26,53 +27,33 @@ public class ReflectionUtil {
     /**
      * 获取bean的所有field
      *
-     * @param bean
-     * @return
+     * @param bean bean
+     * @return Field[]
      */
     public static Field[] getAttributeFields(Object bean) {
         return bean.getClass().getDeclaredFields();
     }
 
     /**
-     * @param field
-     * @param bean
-     * @return
+     * @param field 字段
+     * @param bean  实体
+     * @return AttributeBean
      */
     public static AttributeBean getAttribute(Field field, Object bean) {
         String name = field.getName();
-        String type = field.getGenericType().toString();                //获取属性的类型
-
-        Object value;
-        try {
-            //将属性的首字符大写，构造get方法
-            Method m = bean.getClass().getMethod("get" + name.substring(0, 1).toUpperCase() + name.substring(1));
-            value = m.invoke(bean);     //调用getter方法获取属性值
-        } catch (NoSuchMethodException e) {
-            String errMsg = "反射Getter方法未找到！" + e.getLocalizedMessage();
-            log.warn(errMsg);
-            e.printStackTrace();
-            throw new ServiceException(CoreExceptionEnum.SERVICE_ERROR.getCode(), errMsg);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            String errMsg = "反射Getter方法调用失败！" + e.getLocalizedMessage();
-            log.warn(errMsg);
-            e.printStackTrace();
-            throw new ServiceException(CoreExceptionEnum.SERVICE_ERROR.getCode(), errMsg);
-        }
-
+        // 获取属性的类型
+        String type = field.getGenericType().toString();
+        Object value = extractValue(bean, name);
         return new AttributeBean(type, name, value);
     }
 
-    /**
-     * @param fieldName 字段名
-     * @param bean      实体
-     * @return
-     */
-    public static Object getValue(String fieldName, Object bean) {
+    private static Object extractValue(Object bean, String name) {
         Object value;
         try {
-            //将属性的首字符大写，构造get方法
-            Method m = bean.getClass().getMethod("get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1));
-            value = m.invoke(bean);     //调用getter方法获取属性值
+            // 将属性的首字符大写，构造get方法
+            Method m = bean.getClass().getMethod("get" + name.substring(0, 1).toUpperCase() + name.substring(1));
+            // 调用getter方法获取属性值
+            value = m.invoke(bean);
         } catch (NoSuchMethodException e) {
             String errMsg = "反射Getter方法未找到！" + e.getLocalizedMessage();
             log.warn(errMsg);
@@ -90,7 +71,17 @@ public class ReflectionUtil {
     /**
      * @param fieldName 字段名
      * @param bean      实体
-     * @return
+     * @return value
+     */
+    public static Object getValue(String fieldName, Object bean) {
+
+        return extractValue(bean, fieldName);
+    }
+
+    /**
+     * @param fieldName 字段名
+     * @param bean      实体
+     * @return value
      */
     public static <V> V getValue(String fieldName, Object bean, Function<? super Object, V> converter) {
         return converter.apply(getValue(fieldName, bean));
@@ -99,33 +90,38 @@ public class ReflectionUtil {
     /**
      * @param fieldName 字段名
      * @param bean      实体
-     * @return
+     * @return boolean
      */
     public static boolean isEmptyValue(String fieldName, Object bean) {
         Object value = getValue(fieldName, bean);
-        if (StringUtils.isEmpty(value)) return true;
+        if (StringUtils.isEmpty(value)) {
+            return true;
+        }
         if (value instanceof Iterable || value instanceof Map || value instanceof Iterator ||
-                value instanceof Object[] || value instanceof Enumeration || value instanceof Array)
+                value instanceof Object[] || value instanceof Enumeration || value instanceof Array) {
             return CollectionUtils.sizeIsEmpty(getValue(fieldName, bean));
+        }
         return false;
     }
 
     /**
      * bean转hashMap
      *
-     * @param javaBean
-     * @return
-     * @throws Exception
+     * @param javaBean javaBean
+     * @return HashMap
      */
     public static HashMap<String, Object> javaBeanToHashMap(Object javaBean) {
-        HashMap<String, Object> map = new HashMap<>();
-        Method[] methods = javaBean.getClass().getMethods(); // 获取所有方法
+        HashMap<String, Object> map = new HashMap<>(10);
+        // 获取所有方法
+        Method[] methods = javaBean.getClass().getMethods();
         for (Method method : methods) {
             if (method.getName().startsWith("get")) {
-                String field = method.getName(); // 拼接属性名
+                // 拼接属性名
+                String field = method.getName();
                 field = field.substring(field.indexOf("get") + 3);
                 field = field.toLowerCase().charAt(0) + field.substring(1);
-                Object value = null; // 执行方法
+                // 执行方法
+                Object value = null;
                 try {
                     value = method.invoke(javaBean, (Object[]) null);
                 } catch (IllegalAccessException | InvocationTargetException e) {
@@ -140,8 +136,8 @@ public class ReflectionUtil {
     /**
      * 获取值为Null的属性名
      *
-     * @param source
-     * @return
+     * @param source source
+     * @return String[]
      */
     public static String[] getNullPropertyNames(Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
@@ -150,7 +146,9 @@ public class ReflectionUtil {
         Set<String> emptyNames = new HashSet<>();
         for (java.beans.PropertyDescriptor pd : pds) {
             Object srcValue = src.getPropertyValue(pd.getName());
-            if (srcValue == null) emptyNames.add(pd.getName());
+            if (srcValue == null) {
+                emptyNames.add(pd.getName());
+            }
         }
         String[] result = new String[emptyNames.size()];
         return emptyNames.toArray(result);
@@ -159,9 +157,9 @@ public class ReflectionUtil {
     /**
      * 获取两个bean属性值的区别
      *
-     * @param oldObject
-     * @param newObject
-     * @return
+     * @param oldObject oldObject
+     * @param newObject newObject
+     * @return List
      */
     public static List<HashMap<String, Object>> getDifferentPropertyList(Object oldObject, Object newObject) {
         List<HashMap<String, Object>> result = new ArrayList<>();
@@ -171,7 +169,7 @@ public class ReflectionUtil {
         fieldList.addAll(oldFieldList);
         fieldList.addAll(newFieldList);
         for (Field field : new HashSet<>(fieldList)) {
-            HashMap<String, Object> hashMap = new HashMap<>();
+            HashMap<String, Object> hashMap = new HashMap<>(3);
             if (!oldFieldList.contains(field)) {
                 Object newValue = getAttribute(field, newObject).getValue();
                 if (!StringUtils.isEmpty(newValue)) {
@@ -209,36 +207,38 @@ public class ReflectionUtil {
     }
 
     public static HashMap<String, HashMap<String, Object>> getDiff(Object before, Object after, AbstractDict dict, boolean isGetAll) {
-        HashMap<String, Object> beforeMap = new HashMap<>();
-        HashMap<String, Object> afterMap = new HashMap<>();
+        HashMap<String, Object> beforeMap = new HashMap<>(10);
+        HashMap<String, Object> afterMap = new HashMap<>(10);
         for (HashMap<String, Object> hashMap : getDifferentPropertyList(before, after)) {
             if (isGetAll || dict.containsKey(hashMap.get("name"))) {
                 beforeMap.put(dict.get(String.valueOf(hashMap.get("name"))), hashMap.get("oldValue"));
                 afterMap.put(dict.get(String.valueOf(hashMap.get("name"))), hashMap.get("newValue"));
             }
         }
-        return new HashMap<String, HashMap<String, Object>>() {{
+        return new HashMap<>(2) {{
             put("before", beforeMap);
             put("after", afterMap);
         }};
     }
 
     public static HashMap<String, Object> extractByDict(Object o, AbstractDict dict) {
-        HashMap<String, Object> result = new HashMap<>();
+        HashMap<String, Object> result = new HashMap<>(10);
         HashMap<String, Object> map = javaBeanToHashMap(o);
-        for (String key : map.keySet())
-            if (dict.containsKey(key))
+        for (String key : map.keySet()) {
+            if (dict.containsKey(key)) {
                 result.put(dict.get(key), map.get(key));
+            }
+        }
         return result;
     }
 
     /**
      * 通过反射为属性赋值， 需要同时存在该属性的setter和getter方法
      *
-     * @param bean
-     * @param fieldName
-     * @param value
-     * @return
+     * @param bean      bean
+     * @param fieldName fieldName
+     * @param value     value
+     * @return boolean
      */
     public static boolean set(Object bean, String fieldName, Object value) {
         try {
@@ -252,10 +252,4 @@ public class ReflectionUtil {
             return false;
         }
     }
-
-    public static void main(String[] args) {
-//        System.out.println(getDifferentPropertyList(new AttributeBean("1", "1", "1"),
-//        new AttributeBean("2", "2", "2")));
-    }
-
 }

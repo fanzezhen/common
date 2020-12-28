@@ -13,15 +13,19 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
 @Component
 public class ExpiredSessionStrategy implements SessionInformationExpiredStrategy {
-    private ObjectMapper objectMapper = new ObjectMapper();
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+
     @Override
-    public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException, ServletException {
+    public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException {
         // 这里也可以根据需要返回html页面或者json数据
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(2);
         map.put("code", 0);
         map.put("msg", "已经另一台机器登录，您被迫下线。" + event.getSessionInformation().getLastRequest());
         event.getResponse().setContentType("application/json;charset=UTF-8");

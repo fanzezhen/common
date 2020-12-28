@@ -44,7 +44,7 @@ public class ServletResponseUtil {
         } catch (IOException e) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "输出流读取失败！");
         } finally {
-            FileUtil.doClose(fis, bis);
+            CommonUtil.doClose(fis, bis);
         }
     }
 }

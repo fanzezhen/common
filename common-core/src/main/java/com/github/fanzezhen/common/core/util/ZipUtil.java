@@ -14,6 +14,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
 public class ZipUtil {
     private static final int BUFF_SIZE = 4096;
@@ -26,7 +29,8 @@ public class ZipUtil {
         ZipFile zf;
         try {
             zf = new ZipFile(zipFilePath);
-            zf.setCharset(Charset.forName("GBK"));//默认UTF8，如果压缩包中的文件名是GBK会出现乱码
+            // 默认UTF8，如果压缩包中的文件名是GBK会出现乱码
+            zf.setCharset(Charset.forName("GBK"));
             if (zf.isEncrypted()) {
                 zf.setPassword(password.toCharArray());
             }
@@ -49,21 +53,28 @@ public class ZipUtil {
         ZipFile zf;
         try {
             zf = new ZipFile(zipFilePath);
-            zf.setCharset(Charset.forName("GBK"));  // 默认UTF8，如果压缩包中的文件名是GBK会出现乱码，但不会影响解压文件内容
+            // 默认UTF8，如果压缩包中的文件名是GBK会出现乱码，但不会影响解压文件内容
+            zf.setCharset(Charset.forName("GBK"));
             if (zf.isEncrypted()) {
                 zf.setPassword(password.toCharArray());
             }
-            if (!destDir.endsWith("/") && !destDir.endsWith("\\")) destDir += File.separator;
+            String s = "\\";
+            if (!destDir.endsWith(File.separator) && !destDir.endsWith(s)) {
+                destDir += File.separator;
+            }
             for (Object obj : zf.getFileHeaders()) {
                 FileHeader fileHeader = (FileHeader) obj;
                 String pathname = destDir + getFileNameFromExtraData(fileHeader);
                 File destFile = new File(pathname);
                 if (fileHeader.isDirectory()) {
-                    if (!destFile.exists()) log.info("{}创建目录：{}", destFile.mkdirs(), pathname);
+                    if (!destFile.exists()) {
+                        log.info("{}创建目录：{}", destFile.mkdirs(), pathname);
+                    }
                     continue;
                 }
-                if (!destFile.getParentFile().exists())
+                if (!destFile.getParentFile().exists()) {
                     log.info("{}创建目录：{}", destFile.getParentFile().mkdirs(), destFile.getParentFile().getPath());
+                }
 
                 is = zf.getInputStream(fileHeader);
                 os = new FileOutputStream(destFile);

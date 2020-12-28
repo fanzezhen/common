@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
  */
 @Builder
 @NoArgsConstructor
-public class OracleGenerator extends GeneratorBean {
+public class OracleGenerator extends AbstractGeneratorBean {
     @Override
     public void init() {
         setDataSourceConfigUrl("jdbc:oracle:thin:@//10.10.28.42:1521/genome");

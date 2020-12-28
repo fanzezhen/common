@@ -50,7 +50,7 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
     @Cacheable(value = CacheConstants.USER_DETAILS, key = "#username")
     public SysUserDetail loadUserByUsername(String username) throws UsernameNotFoundException {
         //用户，用于判断权限，请注意此用户名和方法参数中的username一致；BCryptPasswordEncoder是用来演示加密使用。
-        SysUserDto sysUserDto = userDetailsRemote.loadUserByUsername(username, securityProjectProperty.APP_CODE).getData();
+        SysUserDto sysUserDto = userDetailsRemote.loadUserByUsername(username, securityProjectProperty.appCode).getData();
         if (sysUserDto != null && StringUtils.isNotBlank(sysUserDto.getUsername())) {
             //生成环境是查询数据库获取username的角色用于后续权限判断（如：张三 admin)
             Set<GrantedAuthority> grantedAuthorities;
@@ -59,7 +59,7 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
                 // 判断SPECIAL_ADMIN， 超级管理员拥有所有权限
                 for (SysPermissionDto sysPermissionDto :
                         sysUserDto.getRoleTypeSets().contains(RoleEnum.RoleTypeEnum.SPECIAL_ADMIN.getType()) ?
-                                userDetailsRemote.listPermission(securityProjectProperty.APP_CODE).getData() :
+                                userDetailsRemote.listPermission(securityProjectProperty.appCode).getData() :
                                 sysUserDto.getSysPermissionDtoList()) {
                     grantedAuthorityNameSet.add(SecurityConstant.PERMISSION_PREFIX + sysPermissionDto.getId());
                 }

@@ -54,13 +54,13 @@ public class FtpUtil {
         // 设置utf-8编码
         ftpClient.setControlEncoding("utf-8");
         try {
-            inputStream = new FileInputStream(new File(originFilename));
+            inputStream = new FileInputStream(originFilename);
             // 连接ftp服务器
             ftpClient.connect(hostname, port);
             // 登录ftp服务器
-//            ftpClient.login(username, password);
+            ftpClient.login(username, password);
             // 设置二进制传输模式
-//            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
             result = ftpClient.login(username, password) && ftpClient.setFileType(FTP.BINARY_FILE_TYPE) && ftpClient.storeFile(fileName, inputStream);
             inputStream.close();
             ftpClient.logout();
@@ -85,19 +85,20 @@ public class FtpUtil {
             ftpClient.connect(hostname, port);
             // 登录ftp服务器
             ftpClient.login(username, password);
-            int reply = ftpClient.getReplyCode();   //获取状态码
+            // 获取状态码
+            int reply = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftpClient.disconnect();        //结束连接
                 return Result.failed("ftp登录失败");
             }
-            //将客户端设置为被动模式
+            // 将客户端设置为被动模式
             ftpClient.enterLocalPassiveMode();
             inputStream = new FileInputStream(file);
             // 设置二进制传输模式
             if (!ftpClient.setFileType(FTP.BINARY_FILE_TYPE)) {
                 return Result.failed("设置二进制传输模式失败");
             }
-            //上传文件 成功true 失败 false
+            // 上传文件 成功true 失败 false
             if (!ftpClient.storeFile(fullName, inputStream)) {
                 return Result.failed("storeFile上传失败");
             }
@@ -119,16 +120,17 @@ public class FtpUtil {
         // 设置utf-8编码
         ftpClient.setControlEncoding("UTF-8");
         try {
-            // 连接FTP服务器// 如果采用默认端口，可以使用ftp.connect(host)的方式直接连接FTP服务器
+            // 连接FTP服务器, 如果采用默认端口，可以使用ftp.connect(host)的方式直接连接FTP服务器
             ftpClient.connect(hostname, port);
             // 登录ftp服务器
             ftpClient.login(username, password);
-            int reply = ftpClient.getReplyCode();   //获取状态码
+            // 获取状态码
+            int reply = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftpClient.disconnect();        //结束连接
                 return Result.failed("登录失败");
             }
-            //将客户端设置为被动模式
+            // 将客户端设置为被动模式
             ftpClient.enterLocalPassiveMode();
             inputStream = new FileInputStream(file);
             // 设置二进制传输模式
@@ -140,11 +142,11 @@ public class FtpUtil {
                 log.info("创建/切换目录失败：{}", fullPath);
             }
             if (changeWorkingDirectory) {
-                //上传文件 成功true 失败 false
+                // 上传文件 成功true 失败 false
                 log.debug("inputStream.available(): " + inputStream.available());
                 String remote = fullPath;
-                if (fullPath.contains("/") && !fullPath.endsWith("/")) {
-                    remote += "/";
+                if (fullPath.contains(pathSeparator) && !fullPath.endsWith(pathSeparator)) {
+                    remote += pathSeparator;
                 }
                 remote += fileName;
                 if (!ftpClient.storeFile(remote, inputStream)) {
@@ -161,8 +163,8 @@ public class FtpUtil {
             doEnd();
         }
         String url = address + fullPath.replace(rootPath, "");
-        if (!url.endsWith("/")) {
-            url += "/";
+        if (!url.endsWith(pathSeparator)) {
+            url += pathSeparator;
         }
         url += fileName;
         return Result.ok(url);
@@ -177,7 +179,7 @@ public class FtpUtil {
             FTPFile[] ftpFiles = ftpClient.listFiles();
             for (FTPFile ftpFile : ftpFiles) {
                 if (fileName.equalsIgnoreCase(ftpFile.getName())) {
-                    File file = new File(localPath + "/" + ftpFile.getName());
+                    File file = new File(localPath + pathSeparator + ftpFile.getName());
                     outputStream = new FileOutputStream(file);
                     ftpClient.retrieveFile(ftpFile.getName(), outputStream);
                     outputStream.close();
@@ -244,7 +246,7 @@ public class FtpUtil {
                 e.printStackTrace();
             }
         }
-        FileUtil.doClose(inputStream, outputStream);
+        CommonUtil.doClose(inputStream, outputStream);
     }
 
     private void doEnd() {
@@ -254,7 +256,5 @@ public class FtpUtil {
     public static void main(String[] args) {
         FtpUtil ftpUtil = new FtpUtil();
         ftpUtil.uploadFile("/imageroot/tzrck/timg.jpg", "D:\\timg.jpg");
-//		ftpUtil.downloadFile("a.txt", "C://Users//huangwending//Desktop//");
-//		ftpUtil.deleteFile("timg.jpg");
     }
 }

@@ -5,8 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
-public class SysUserBizLogStruct extends BizLogStruct {
+public class SysUserBizLogStruct extends AbstractBizLogStruct {
     static {
         serviceBeanName = "sysUserServiceImpl";
         beanMethodName = "getById";

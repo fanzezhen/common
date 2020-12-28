@@ -1,48 +1,37 @@
 package com.github.fanzezhen.common.core.util;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * @author zezhen.fan
+ */
+@Slf4j
 public class CommonUtil {
-    private static short number = 0;
-
-    private synchronized static short getNumber() {
-        return number++;
+    public static void doClose(Closeable... closeAbles) {
+        for (Closeable closeable : closeAbles) {
+            if (null != closeable) {
+                try {
+                    closeable.close();
+                } catch (IOException e) {
+                    log.warn(e.getLocalizedMessage());
+                }
+            }
+        }
     }
-
-    public static Long createId() {
-        return (long) Math.abs(UUID.randomUUID().toString().hashCode());
-    }
-
-    public static Long createIdViaUUID() {
-        return (long) Math.abs(UUID.randomUUID().hashCode());
-    }
-
-    public static Long createIdViaTimeAndUUID() {
-        String random = String.valueOf(Math.abs(UUID.randomUUID().hashCode()));
-        return Long.valueOf(new Date().getTime() + random.substring(random.length() - 5));
-    }
-
-    public static Long createIdViaTimeAndNum() {
-        return Long.valueOf(new Date().getTime() + String.format("%05d", Math.abs(getNumber())));
-    }
-
-    public static Date parseDateByStringAndPattern(String dateString, String pattern) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-        return sdf.parse(dateString);
-    }
-
     /**
      * 将Object转换成List<?>，避免Unchecked cast: 'java.lang.Object' to 'java.util.List<?>'
      * objectToList(obj, String.class)
      *
-     * @param obj
-     * @param clazz
-     * @param <T>
-     * @return
+     * @param obj   obj
+     * @param clazz clazz
+     * @return List<T>
      */
     public static <T> List<T> objectToList(Object obj, Class<T> clazz) {
         List<T> result = new ArrayList<T>();
@@ -59,10 +48,9 @@ public class CommonUtil {
      * 将Object转换成Set<?>，避免Unchecked cast: 'java.lang.Object' to 'java.util.Set<?>'
      * objectToList(obj, String.class)
      *
-     * @param obj
-     * @param clazz
-     * @param <T>
-     * @return
+     * @param obj   obj
+     * @param clazz clazz
+     * @return Set<T>
      */
     public static <T> Set<T> objectToSet(Object obj, Class<T> clazz) {
         Set<T> result = new HashSet<>();
@@ -75,18 +63,12 @@ public class CommonUtil {
         return null;
     }
 
-    public static HashMap<String, String> JsonToHashMap(JSONObject jsonObject){
-        HashMap<String, String> data = new HashMap<>();
-        for (String key:jsonObject.keySet()){
+    public static HashMap<String, String> jsonToHashMap(JSONObject jsonObject) {
+        HashMap<String, String> data = new HashMap<>(10);
+        for (String key : jsonObject.keySet()) {
             String value = jsonObject.get(key).toString();
             data.put(key, value);
         }
         return data;
-    }
-
-    public static void main(String[] args) {
-        for (int i = 0; i < 100; i++) {
-            System.out.println(createIdViaTimeAndNum());
-        }
     }
 }

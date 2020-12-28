@@ -3,7 +3,10 @@ package com.github.fanzezhen.common.core.struct;
 
 import com.github.fanzezhen.common.core.dict.AbstractDict;
 
-public abstract class BizLogStruct {
+/**
+ * @author zezhen.fan
+ */
+public abstract class AbstractBizLogStruct {
     protected static String serviceBeanName;
     protected static String beanMethodName = "getById";
     protected static AbstractDict dict;

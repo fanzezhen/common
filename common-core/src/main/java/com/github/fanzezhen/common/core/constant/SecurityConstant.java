@@ -1,5 +1,8 @@
 package com.github.fanzezhen.common.core.constant;
 
+/**
+ * @author zezhen.fan
+ */
 public class SecurityConstant {
     public static final String HOME_ADDRESS = "/hello";
     public static final String LOGIN_ADDRESS = "/oauth/login";

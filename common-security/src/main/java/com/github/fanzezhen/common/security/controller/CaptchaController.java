@@ -54,7 +54,8 @@ public class CaptchaController {
         graphics.fillRect(0, 0, width, height);
         graphics.setFont(new Font("Times New Roman", Font.ITALIC, 20));
         graphics.setColor(getRandColor(160, 200));
-        for (int i = 0; i < 155; i++) {
+        int range = 155;
+        for (int i = 0; i < range; i++) {
             int x = random.nextInt(width);
             int y = random.nextInt(height);
             int xl = random.nextInt(12);
@@ -75,13 +76,14 @@ public class CaptchaController {
     }
 
     private Color getRandColor(int fc, int bc) {
+        int range = 255;
         Random random = new Random();
-        if (fc > 255) {
-            fc = 255;
+        if (fc > range) {
+            fc = range;
         }
 
-        if (bc > 255) {
-            bc = 255;
+        if (bc > range) {
+            bc = range;
         }
         int r = fc + random.nextInt(bc - fc);
         int g = fc + random.nextInt(bc - fc);

@@ -4,6 +4,9 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
 
+/**
+ * @author zezhen.fan
+ */
 public class DateConstant {
     public static final char[] DATE_SPLITTERS = {'-', '/', ' ', '.', '+', '*', '|', '?'};
     public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";

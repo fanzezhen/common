@@ -13,8 +13,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -33,31 +31,23 @@ public class Swagger2Config implements WebMvcConfigurer {
                 .enable(true)
                 .apiInfo(this.apiInfo())
                 .select() // 指定需要发布到Swagger的接口目录，不支持通配符
-                .apis(RequestHandlerSelectors.basePackage(swaggerProperty.BASE_PACKAGE))
+                .apis(RequestHandlerSelectors.basePackage(swaggerProperty.basePackage))
                 .paths(PathSelectors.any())
                 .build()
                 // 支持的通讯协议集合
-                .protocols(this.newHashSet("https", "http"));
+                .protocols(Set.of("https", "http"));
     }
 
     /**
      * 项目信息
      */
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title(swaggerProperty.TITLE)
-                .description(swaggerProperty.DESCRIPTION)
-                .contact(new Contact(swaggerProperty.LINK_MAN, swaggerProperty.LINK_URL, swaggerProperty.LINK_EMAIL))
-                .version(swaggerProperty.VERSION)
-                .license(swaggerProperty.LICENSE)
-                .licenseUrl(swaggerProperty.LICENSE_URL)
+        return new ApiInfoBuilder().title(swaggerProperty.title)
+                .description(swaggerProperty.description)
+                .contact(new Contact(swaggerProperty.linkMan, swaggerProperty.linkUrl, swaggerProperty.linkEmail))
+                .version(swaggerProperty.version)
+                .license(swaggerProperty.license)
+                .licenseUrl(swaggerProperty.licenseUrl)
                 .build();
-    }
-
-    @SafeVarargs
-    private <T> Set<T> newHashSet(T... ts) {
-        if (ts.length > 0) {
-            return new LinkedHashSet<>(Arrays.asList(ts));
-        }
-        return null;
     }
 }

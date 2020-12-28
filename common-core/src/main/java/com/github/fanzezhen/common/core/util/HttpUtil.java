@@ -24,10 +24,6 @@ import java.util.concurrent.ExecutionException;
 public class HttpUtil {
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("id", "1956761");
-        System.out.println(params);
-
         // 发送同步请求：
         var request = HttpRequest.newBuilder()
                 .uri(URI.create("https://www.codesheep.cn"))
@@ -180,8 +176,11 @@ public class HttpUtil {
     }
 
     public static ResponseData doRequest(String url, HashMap<String, String> params, String method) {
-        if (HttpMethod.GET.name().equals(method)) return doGet(url, params);
-        else return doPost(url, params);
+        if (HttpMethod.GET.name().equals(method)) {
+            return doGet(url, params);
+        } else {
+            return doPost(url, params);
+        }
     }
 
     private static StringBuilder getQueryString(Map<String, String> params) {

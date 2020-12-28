@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
 public class TokenUtil {
 
@@ -72,13 +75,13 @@ public class TokenUtil {
      * @param token a jws string.
      */
     public static boolean validateToken(String token, String tokenSecret) {
-        String VALIDATE_FAILED = "validate failed : ";
-        //ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException
+        String validateFailed = "validate failed : ";
+        // ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException
         try {
             Jwts.parser().setSigningKey(tokenSecret).parseClaimsJws(token);
             return true;
         } catch (Exception ex) {
-            log.error(VALIDATE_FAILED + ex.getMessage());
+            log.error(validateFailed + ex.getMessage());
             return false;
         }
     }

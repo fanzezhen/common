@@ -13,13 +13,16 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
 public class DateUtil {
     /**
      * 输入字符串，返回日期
      *
-     * @param dateString
-     * @return
+     * @param dateString 日期字符串
+     * @return 日期
      */
     public static Date toDate(String dateString) {
         return toDate(dateString, DateConstant.PATTERNS);
@@ -28,9 +31,9 @@ public class DateUtil {
     /**
      * 输入字符串和模板字符串，返回日期
      *
-     * @param dateString
-     * @param pattern
-     * @return
+     * @param dateString 日期字符串
+     * @param pattern    日期字符串格式
+     * @return 日期
      */
     public static Date toDate(String dateString, String... pattern) {
         try {
@@ -88,7 +91,9 @@ public class DateUtil {
      */
     public static int figureCurrentAge(String birthday, String pattern) {
         Date birthDate = toDate(birthday, pattern);
-        if (birthDate == null) return -1;
+        if (birthDate == null) {
+            return -1;
+        }
         // 当前时间
         Calendar curr = Calendar.getInstance();
         // 生日
@@ -109,17 +114,20 @@ public class DateUtil {
         int currDay = targetCalendar.get(Calendar.DAY_OF_MONTH);
         int bornMonth = born.get(Calendar.MONTH);
         int bornDay = born.get(Calendar.DAY_OF_MONTH);
-        if ((currMonth < bornMonth) || (currMonth == bornMonth && currDay <= bornDay)) {
+        if (currMonth < bornMonth) {
+            age--;
+        } else if (currMonth == bornMonth && currDay <= bornDay) {
             age--;
         }
-        return Math.max(age, 0);
+
+        return age;
     }
 
     /**
      * 日期分隔符，处理特殊字符
      *
-     * @param splitter
-     * @return
+     * @param splitter splitter
+     * @return 处理后的字符串
      */
     private static String dealWithSplitter(char splitter) {
         switch (splitter) {
@@ -146,9 +154,9 @@ public class DateUtil {
      * 判断字符串是否是yyyyMMdd、yyyyMdd、yyyyMMd、yyyyMd格式，分隔符为splitter参数
      * 例如：yyyy-MM-dd、yyyy.MM.dd
      *
-     * @param mes
-     * @param splitter
-     * @return
+     * @param mes mes
+     * @param splitter splitter
+     * @return boolean
      */
     public static boolean isDateFormat(String mes, char splitter) {
         if (null == mes || 0 == mes.length()) {
@@ -172,7 +180,8 @@ public class DateUtil {
         int y = Integer.parseInt(matcher.group(1));
         int m = Integer.parseInt(matcher.group(2));
         int d = Integer.parseInt(matcher.group(3));
-        if (d > 28) {
+        int februaryDays = 28;
+        if (d > februaryDays) {
             Calendar c = Calendar.getInstance();
             c.set(y, m - 1, 1);
             int lastDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -184,17 +193,15 @@ public class DateUtil {
     /***
      * 判断字符串是否是yyyyMMdd、yyyyMdd、yyyyMMd、yyyyMd格式
      *
-     * @param mes
-     * @return
+     * @param mes mes
+     * @return boolean
      */
     public static boolean isDateFormat(String mes) {
         for (char splitter : DateConstant.DATE_SPLITTERS) {
-            if (isDateFormat(mes, splitter)) return true;
+            if (isDateFormat(mes, splitter)) {
+                return true;
+            }
         }
         return false;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(isDate("2019/01/02", "yyyy-MM-dd"));
     }
 }

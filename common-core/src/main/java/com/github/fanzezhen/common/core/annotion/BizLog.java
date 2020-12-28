@@ -17,12 +17,13 @@ package com.github.fanzezhen.common.core.annotion;
 
 
 
-import com.github.fanzezhen.common.core.struct.BizLogStruct;
+import com.github.fanzezhen.common.core.struct.AbstractBizLogStruct;
 
 import java.lang.annotation.*;
 
 /**
  * 标记需要做业务日志的方法
+ * @author zezhen.fan
  */
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
@@ -43,5 +44,5 @@ public @interface BizLog {
     /**
      * 包含ServiceBean、字典(用于查找key的中文名称和字段的中文名称)
      */
-    Class<? extends BizLogStruct> struct() default BizLogStruct.class;
+    Class<? extends AbstractBizLogStruct> struct() default AbstractBizLogStruct.class;
 }

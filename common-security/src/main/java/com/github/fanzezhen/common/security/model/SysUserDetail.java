@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.User;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
 @Getter
 @Setter
@@ -99,10 +102,22 @@ public class SysUserDetail extends User implements CredentialsContainer {
     private String appCode;
 
     private Set<GrantedAuthority> authorities;
-    private boolean accountNonLocked = true;    // 默认返回的是false，翻译成人话就是：是否不上锁，否，即上锁。
-    private boolean enabled = true; // 用户是否被有效，false时为禁用状态
-    private boolean accountNonExpired = true;  // User account has expired
-    private boolean credentialsNonExpired = true;  // User credentials have expired
+    /**
+     * 默认返回的是false，翻译成人话就是：是否不上锁，否，即上锁。
+     */
+    private boolean accountNonLocked = true;
+    /**
+     * 用户是否被有效，false时为禁用状态
+     */
+    private boolean enabled = true;
+    /**
+     * User account has expired
+     */
+    private boolean accountNonExpired = true;
+    /**
+     * User credentials have expired
+     */
+    private boolean credentialsNonExpired = true;
 
     private Collection<String> roleNames;
     private Collection<String> roleIds;
@@ -119,6 +134,7 @@ public class SysUserDetail extends User implements CredentialsContainer {
         BeanConverterUtil.copy(sysUserDto, this);
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString()).append(": ");

@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.core.util;
 
+import cn.hutool.core.util.StrUtil;
 import com.github.fanzezhen.common.core.constant.DateConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,9 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 
+/**
+ * @author zezhen.fan
+ */
 @Slf4j
 public class LocalDateUtil {
 
@@ -32,7 +36,9 @@ public class LocalDateUtil {
      * @param patterns  日期格式字符串
      */
     public static String toDateString(ChronoLocalDate localDate, String... patterns) {
-        if (localDate == null) return "";
+        if (localDate == null) {
+            return "";
+        }
         for (String pattern : patterns) {
             try {
                 return localDate.format(getDateTimeFormatter(pattern));
@@ -51,14 +57,19 @@ public class LocalDateUtil {
      * @param separators 分隔符
      */
     public static String toDateString(LocalDate localDate, char... separators) {
-        if (localDate == null || separators == null) return "";
-        if (separators.length == 1) {
-            String separator = String.valueOf(separators[0]);
-            return localDate.getYear() + separator + localDate.getMonthValue() + separator + localDate.getDayOfMonth();
-        } else if (separators.length == 2) {
-            return "" + localDate.getYear() + separators[0] + localDate.getMonthValue() + separators[1];
-        } else if (separators.length == 3) {
-            return "" + localDate.getYear() + separators[0] + localDate.getMonthValue() + separators[1] + localDate.getDayOfMonth() + separators[2];
+        if (localDate == null || separators == null) {
+            return "";
+        }
+        switch (separators.length) {
+            case 1:
+                String separator = String.valueOf(separators[0]);
+                return localDate.getYear() + separator + localDate.getMonthValue() + separator + localDate.getDayOfMonth();
+            case 2:
+                return "" + localDate.getYear() + separators[0] + localDate.getMonthValue() + separators[1];
+            case 3:
+                return "" + localDate.getYear() + separators[0] + localDate.getMonthValue() + separators[1] +
+                        localDate.getDayOfMonth() + separators[2];
+            default:
         }
         log.warn("toDateString({})失败：" + localDate, separators);
         return "";
@@ -71,17 +82,27 @@ public class LocalDateUtil {
      * @param separators    分隔符
      */
     public static String toDateString(LocalDateTime localDateTime, char... separators) {
-        if (localDateTime == null || separators == null) return "";
-        if (separators.length == 1) {
-            String separator = String.valueOf(separators[0]);
-            return localDateTime.getYear() + separator + localDateTime.getMonthValue() + separator + localDateTime.getDayOfMonth();
-        } else if (separators.length == 2) {
-            return "" + localDateTime.getYear() + separators[0] + localDateTime.getMonthValue() + separators[1];
-        } else if (separators.length == 3) {
-            return "" + localDateTime.getYear() + separators[0] + localDateTime.getMonthValue() + separators[1] + localDateTime.getDayOfMonth() + separators[2];
+        String dateString = StrUtil.EMPTY;
+        if (localDateTime == null || separators == null) {
+            return dateString;
+        }
+        switch (separators.length) {
+            case 1:
+                String separator = String.valueOf(separators[0]);
+                dateString = localDateTime.getYear() + separator + localDateTime.getMonthValue() +
+                        separator + localDateTime.getDayOfMonth();
+                break;
+            case 2:
+                dateString = "" + localDateTime.getYear() + separators[0] + localDateTime.getMonthValue() + separators[1];
+                break;
+            case 3:
+                dateString = "" + localDateTime.getYear() + separators[0] + localDateTime.getMonthValue() +
+                        separators[1] + localDateTime.getDayOfMonth() + separators[2];
+                break;
+            default:
         }
         log.warn("toDateString({})失败：" + localDateTime, separators);
-        return "";
+        return dateString;
     }
 
     /**
@@ -91,7 +112,9 @@ public class LocalDateUtil {
      * @param patterns      日期格式字符串
      */
     public static String toDateTimeString(LocalDateTime localDateTime, String... patterns) {
-        if (localDateTime == null) return "";
+        if (localDateTime == null) {
+            return "";
+        }
         for (String pattern : patterns) {
             try {
                 return localDateTime.format(getDateTimeFormatter(pattern));
@@ -147,8 +170,9 @@ public class LocalDateUtil {
         LocalDateTime localDateTime = toDateTime(dateTimeString, DateConstant.DATE_TIME_PATTERNS);
         if (localDateTime == null) {
             LocalDate localDate = toDate(dateTimeString, DateConstant.DATE_PATTERNS);
-            if (localDate != null)
+            if (localDate != null) {
                 localDateTime = localDate.atStartOfDay();
+            }
         }
         return localDateTime;
     }
@@ -197,8 +221,9 @@ public class LocalDateUtil {
      * @param endDateExclusiveString   日期字符串
      */
     public static Period period(String startDateInclusiveString, String endDateExclusiveString) {
-        if (StringUtils.isBlank(startDateInclusiveString) || StringUtils.isBlank(endDateExclusiveString))
+        if (StringUtils.isBlank(startDateInclusiveString) || StringUtils.isBlank(endDateExclusiveString)) {
             return Period.ZERO;
+        }
         return period(startDateInclusiveString, endDateExclusiveString, DateConstant.DATE_PATTERNS);
     }
 

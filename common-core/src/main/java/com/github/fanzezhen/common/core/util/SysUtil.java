@@ -10,6 +10,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author zezhen.fan
+ */
 public class SysUtil {
     private static final int CPU_TIME = 500;
 
@@ -17,13 +20,17 @@ public class SysUtil {
 
     private static final int FAULT_LENGTH = 10;
 
-    //获取内存使用率
+    /**
+     * 获取内存使用率
+     *
+     * @return MemoryMsg
+     */
     public static String getMemoryMsg() {
-        OperatingSystemMXBean operatingSystemMXBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        OperatingSystemMXBean operatingSystem = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         // 总的物理内存+虚拟内存
-        long totalSwapSpaceSize = operatingSystemMXBean.getTotalSwapSpaceSize();
+        long totalSwapSpaceSize = operatingSystem.getTotalSwapSpaceSize();
         // 剩余的物理内存
-        long freePhysicalMemorySize = operatingSystemMXBean.getFreePhysicalMemorySize();
+        long freePhysicalMemorySize = operatingSystem.getFreePhysicalMemorySize();
         double compare = (1 - freePhysicalMemorySize * 1.0 / totalSwapSpaceSize) * 100;
         return "内存已使用:" + (int) compare + "%";
     }
@@ -52,11 +59,17 @@ public class SysUtil {
         return usableSpace / totalSpace;
     }
 
-    //获取文件系统使用率
+    /**
+     * 获取文件系统使用率
+     *
+     * @return List<String>
+     */
     public static List<String> getDiskMsgList() {
+        char firstLetter = 'A';
+        char lastLetter = 'Z';
         // 操作系统
         List<String> list = new ArrayList<>();
-        for (char c = 'A'; c <= 'Z'; c++) {
+        for (char c = firstLetter; c <= lastLetter; c++) {
             String dirName = c + ":/";
             File win = new File(dirName);
             if (win.exists()) {
@@ -70,7 +83,11 @@ public class SysUtil {
         return list;
     }
 
-    //获得cpu使用率
+    /**
+     * 获得cpu使用率
+     *
+     * @return cpu
+     */
     public static String getCpuRatioForWindowsMsg() {
         try {
             String procCmd = System.getenv("windir") +
@@ -93,7 +110,12 @@ public class SysUtil {
         }
     }
 
-    //读取cpu相关信息
+    /**
+     * 读取cpu相关信息
+     *
+     * @param proc proc
+     * @return long
+     */
     private static long[] readCpu(final Process proc) {
         long[] resultArr = new long[2];
         try {
@@ -126,17 +148,21 @@ public class SysUtil {
                 }
                 String s1 = substring(line, kmtIdx, rocIdx - 1).trim();
                 String s2 = substring(line, umtIdx, wocIdx - 1).trim();
-                if (caption.equals("System Idle Process") || caption.equals("System")) {
-                    if (s1.length() > 0)
+                if ("System Idle Process".equals(caption) || "System".equals(caption)) {
+                    if (s1.length() > 0) {
                         idletime += Long.parseLong(s1);
-                    if (s2.length() > 0)
+                    }
+                    if (s2.length() > 0) {
                         idletime += Long.parseLong(s2);
+                    }
                     continue;
                 }
-                if (s1.length() > 0)
+                if (s1.length() > 0) {
                     kneltime += Long.parseLong(s1);
-                if (s2.length() > 0)
+                }
+                if (s2.length() > 0) {
                     usertime += Long.parseLong(s2);
+                }
             }
             resultArr[0] = idletime;
             resultArr[1] = kneltime + usertime;
@@ -156,15 +182,15 @@ public class SysUtil {
     /**
      * 由于String.subString对汉字处理存在问题（把一个汉字视为一个字节)，因此在 包含汉字的字符串时存在隐患，现调整如下：
      *
-     * @param src       要截取的字符串
-     * @param start_idx 开始坐标（包括该坐标)
-     * @param end_idx   截止坐标（包括该坐标）
+     * @param src      要截取的字符串
+     * @param startIdx 开始坐标（包括该坐标)
+     * @param endIdx   截止坐标（包括该坐标）
      * @return tgt.toString()
      */
-    private static String substring(String src, int start_idx, int end_idx) {
+    private static String substring(String src, int startIdx, int endIdx) {
         byte[] b = src.getBytes();
         StringBuilder tgt = new StringBuilder();
-        for (int i = start_idx; i <= end_idx; i++) {
+        for (int i = startIdx; i <= endIdx; i++) {
             tgt.append((char) b[i]);
         }
         return tgt.toString();

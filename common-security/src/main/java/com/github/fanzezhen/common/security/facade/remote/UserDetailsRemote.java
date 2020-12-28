@@ -15,9 +15,22 @@ import java.util.List;
 @FeignClient(url = "${security.remote.user.detail.url}", name = "userDetailsRemote")
 public interface UserDetailsRemote {
 
+    /**
+     * 加载用户信息
+     *
+     * @param username 用户名
+     * @param appCode  APP标识
+     * @return 用户信息
+     */
     @GetMapping("/user/by/username")
     Result<SysUserDto> loadUserByUsername(@RequestParam("username") String username, @RequestParam("appCode") String appCode);
 
+    /**
+     * 权限列表
+     *
+     * @param appCode APP标识
+     * @return 权限列表
+     */
     @GetMapping("/permission/list")
     Result<List<SysPermissionDto>> listPermission(@RequestParam("appCode") String appCode);
 }

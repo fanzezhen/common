@@ -1,7 +1,10 @@
 package com.github.fanzezhen.common.leaned;
 
+/**
+ * @author zezhen.fan
+ */
 public class ChildBase extends Base {
-    private String c = Base.testS("c-child");
+    private final String c = Base.testS("c-child");
     public ChildBase() {
         System.out.println("ChildBase");
     }
@@ -18,7 +21,6 @@ public class ChildBase extends Base {
         System.out.println("child static");
     }
     public static void main(String[] args) {
-//        System.out.println();
         new ChildBase("s");
     }
 }

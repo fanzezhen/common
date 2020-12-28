@@ -8,7 +8,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @author zezhen.fan
+ */
 @Service
 public interface UserDetailsServiceFacade extends UserDetailsService, AuthenticationUserDetailsService<CasAssertionAuthenticationToken> {
+    /**
+     * 权限列表
+     *
+     * @param appCode APP标识
+     * @return 权限列表
+     */
     List<SysPermissionDto> listAllPermissionDto(String appCode);
 }

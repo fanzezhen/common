@@ -13,7 +13,9 @@ import javax.servlet.*;
 import java.io.IOException;
 
 /**
- * Created by fanzezhen on 17/1/19.
+ *
+ * @author fanzezhen
+ * @date 17/1/19
  */
 @Component
 public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor implements Filter {
@@ -29,8 +31,7 @@ public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor imp
 
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
+    public void init(FilterConfig filterConfig) {
     }
 
     @Override

@@ -1,12 +1,21 @@
 package com.github.fanzezhen.common.core.enums;
 
+/**
+ * @author zezhen.fan
+ */
 public class CommonEnum {
 
     /**
      * 是否删除枚举类
      */
     public enum DeleteFlagEnum {
+        /**
+         * 未删除
+         */
         NO(0, "未删除"),
+        /**
+         * 已删除
+         */
         YES(1, "已删除");
 
         private final int code;
@@ -34,7 +43,13 @@ public class CommonEnum {
      * 是否启用
      */
     public enum StatusEnum {
+        /**
+         * 启用
+         */
         VALID(0, "启用"),
+        /**
+         * 禁用
+         */
         INVALID(1, "禁用");
 
         private final int code;
@@ -64,7 +79,13 @@ public class CommonEnum {
     }
 
     public enum ExitFlagEnum {
+        /**
+         * 在职的
+         */
         INCUMBENT(0, "在职的"),
+        /**
+         * 离职的
+         */
         OUTGOING(1, "离职的");
 
         private final int code;
@@ -85,7 +106,13 @@ public class CommonEnum {
     }
 
     public enum PermissionTypeEnum {
+        /**
+         * 只读权限
+         */
         OPERATE(0, "只读权限"),
+        /**
+         * 操作权限
+         */
         MANAGE(1, "操作权限"),
         ;
 
@@ -111,7 +138,13 @@ public class CommonEnum {
      * 附件类型枚举类
      */
     public enum AttachmentTypeEnum {
+        /**
+         * 图片
+         */
         PICTURE(0, "图片"),
+        /**
+         * 文件
+         */
         FILE(1, "文件");
 
         private int code;
@@ -139,31 +172,22 @@ public class CommonEnum {
         }
     }
 
-    public enum Enum {
-        NO(0, "否"),
-        YES(1, "是");
-
-        private final int code;
-        private final String desc;
-
-        Enum(int code, String desc) {
-            this.code = code;
-            this.desc = desc;
-        }
-
-        public int getCode() {
-            return code;
-        }
-
-        public String getDesc() {
-            return desc;
-        }
-    }
-
     public enum SexEnum {
+        /**
+         * 女
+         */
         WOMAN(0, "女"),
+        /**
+         * 男
+         */
         MAN(1, "男"),
+        /**
+         * 未知
+         */
         UNKNOWN(2, "未知"),
+        /**
+         * 未说明
+         */
         UNSPECIFIED(3, "未说明");
 
         private final int code;
@@ -188,9 +212,21 @@ public class CommonEnum {
      * 错误码以及错误描述
      */
     public enum ErrorMsgEnum {
+        /**
+         * 没有登录
+         */
         NOT_LOGIN("100001", "没有登录!"),
+        /**
+         * 登录被踢出
+         */
         LOGIN_KICK_AWAY("100002", "登录被踢出！"),
+        /**
+         * 无操作权限
+         */
         NO_OPERATION_PERMISSION("100003", "无操作权限！"),
+        /**
+         * 编码异常
+         */
         ENCODE_ERROR("100005", "编码异常！");
 
         private String code;
@@ -223,7 +259,13 @@ public class CommonEnum {
      * 是否匿名
      */
     public enum AnonymousEnum {
+        /**
+         * 匿名
+         */
         ANONYMOUS_YES(0, "匿名"),
+        /**
+         * 非匿名
+         */
         ANONYMOUS_NO(1, "非匿名");
 
         private Integer code;
@@ -251,7 +293,4 @@ public class CommonEnum {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(DeleteFlagEnum.NO.getCode());
-    }
 }
