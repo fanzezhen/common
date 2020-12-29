@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ResponseProperty {
-    @Value("${response.json.flag}")
+    @Value("${response.json.flag:false}")
     public boolean jsonFlag;
 }

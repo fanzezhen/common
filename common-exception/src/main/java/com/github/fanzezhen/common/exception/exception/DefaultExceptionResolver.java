@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.annotation.Order;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 /**
  * 全局异常处理
+ *
  * @author zezhen.fan
  */
 @Slf4j
@@ -35,13 +37,7 @@ public class DefaultExceptionResolver implements HandlerExceptionResolver {
     @Resource
     private ResponseProperty responseProperty;
 
-    private View defaultErrorJsonView;
-
-    private String defaultErrorPageView = "error/error";
-
-    private Map<String, String> exceptionMappings;
-
-    private int errorStatus = HttpServletResponse.SC_OK;
+    private final View defaultErrorJsonView;
 
     private static final boolean FAST_JSON_VIEW_PRESENT = ClassUtils.isPresent(
             "com.alibaba.fastjson.support.spring.FastJsonJsonView", DefaultExceptionResolver.class.getClassLoader());
@@ -57,92 +53,65 @@ public class DefaultExceptionResolver implements HandlerExceptionResolver {
         }
     }
 
-    public void setDefaultErrorJsonView(View defaultErrorJsonView) {
-        this.defaultErrorJsonView = defaultErrorJsonView;
-    }
-
-    public void setDefaultErrorPageView(String defaultErrorPageView) {
-        this.defaultErrorPageView = defaultErrorPageView;
-    }
-
-    public void setExceptionMappings(Map<String, String> exceptionMappings) {
-        this.exceptionMappings = exceptionMappings;
-    }
-
-    public void setErrorStatus(int errorStatus) {
-        this.errorStatus = errorStatus;
-    }
-
     @Override
     public ModelAndView resolveException(HttpServletRequest request,
-                                         HttpServletResponse response, Object handler, Exception ex) {
-        log.error("请求" + request.getRequestURI() + "发生异常", ex);
+                                         HttpServletResponse response,
+                                         Object handler,
+                                         @NonNull Exception exception) {
+        log.error("请求" + request.getRequestURI() + "发生异常", exception);
+        int errorStatus = HttpServletResponse.SC_OK;
         response.setStatus(errorStatus);
         ModelAndView modelAndView;
         if (responseProperty.jsonFlag) {
-            return jsonResponse(request, ex);
+            return jsonResponse(exception);
         }
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             // 检查是否存在ResponseBody注解
-            ResponseBody responseBody = handlerMethod
-                    .getMethodAnnotation(ResponseBody.class);
+            ResponseBody responseBody = handlerMethod.getMethodAnnotation(ResponseBody.class);
             if (responseBody == null) {
-                responseBody = AnnotationUtils.findAnnotation(
-                        handlerMethod.getBeanType(), ResponseBody.class);
+                responseBody = AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), ResponseBody.class);
             }
-
             if (responseBody != null || HttpUtil.isAjaxRequest(request)) {
                 // 判断是否存在jsonp注解
-                modelAndView = jsonResponse(request, ex);
+                modelAndView = jsonResponse(exception);
             } else {
-                modelAndView = viewResponse(request, response, ex);
+                modelAndView = viewResponse(response, exception);
             }
         } else {
             // 其他类型handler
             // 判断同步请求还是异步请求
             if (HttpUtil.isAjaxRequest(request)) {
-                modelAndView = jsonResponse(request, ex);
+                modelAndView = jsonResponse(exception);
             } else {
-                modelAndView = viewResponse(request, response, ex);
+                modelAndView = viewResponse(response, exception);
             }
         }
         return modelAndView;
     }
 
-    private ModelAndView jsonResponse(HttpServletRequest request, Exception ex) {
+    private ModelAndView jsonResponse(Exception ex) {
         ModelAndView errorView = new ModelAndView();
-        Map<String, Object> error = newExceptionResp(request, ex);
+        Map<String, Object> error = newExceptionResp(ex);
         errorView.setView(defaultErrorJsonView);
         errorView.addAllObjects(error);
         return errorView;
     }
 
-    private ModelAndView viewResponse(HttpServletRequest request,
-                                      HttpServletResponse response, Exception ex) {
+    private ModelAndView viewResponse(HttpServletResponse response, Exception ex) {
         ModelAndView errorView = new ModelAndView();
-        Map<String, Object> error = newExceptionResp(request, ex);
-        String viewName = defaultErrorPageView;
-
-        // 获取匹配的页面, 没有找到就使用默认errorPage
-        if (exceptionMappings != null) {
-            viewName = exceptionMappings.get(ex.getClass().getName());
-            if (viewName == null) {
-                viewName = defaultErrorPageView;
-            }
-        }
-
-        errorView.setViewName(viewName);
+        Map<String, Object> error = newExceptionResp(ex);
+        errorView.setViewName("redirect:/error/" + response.getStatus());
         errorView.addAllObjects(error);
         return errorView;
     }
 
-    public Map<String, Object> newExceptionResp(HttpServletRequest request, Exception exception) {
+    public Map<String, Object> newExceptionResp(Exception exception) {
         Map<String, Object> error = new HashMap<>(2);
         if (exception instanceof ServiceException) {
-            Integer errCode = ((ServiceException) exception).getCode();
-            error.put("msg", exception.getMessage());
-            error.put("code", errCode);
+            ServiceException serviceException = ((ServiceException) exception);
+            error.put("msg", serviceException.getErrorMessage());
+            error.put("code", serviceException.getCode());
         } else if (exception instanceof IllegalArgumentException) {
             error.put("msg", exception.getMessage());
             error.put("code", CoreExceptionEnum.SERVICE_ERROR.getCode());

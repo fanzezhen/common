@@ -2,15 +2,14 @@ package com.github.fanzezhen.common.core.util;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.beans.BeanMap;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -217,4 +216,50 @@ public class BeanConverterUtil {
         return list;
     }
 
+    /**
+     * 将Object转换成List<?>，避免Unchecked cast: 'java.lang.Object' to 'java.util.List<?>'
+     * objectToList(obj, String.class)
+     *
+     * @param obj   obj
+     * @param clazz clazz
+     * @return List<T>
+     */
+    public static <T> List<T> objectToList(Object obj, Class<T> clazz) {
+        List<T> result = new ArrayList<T>();
+        if (obj instanceof List<?>) {
+            for (Object o : (List<?>) obj) {
+                result.add(clazz.cast(o));
+            }
+            return result;
+        }
+        return null;
+    }
+
+    /**
+     * 将Object转换成Set<?>，避免Unchecked cast: 'java.lang.Object' to 'java.util.Set<?>'
+     * objectToList(obj, String.class)
+     *
+     * @param obj   obj
+     * @param clazz clazz
+     * @return Set<T>
+     */
+    public static <T> Set<T> objectToSet(Object obj, Class<T> clazz) {
+        Set<T> result = new HashSet<>();
+        if (obj instanceof List<?>) {
+            for (Object o : (List<?>) obj) {
+                result.add(clazz.cast(o));
+            }
+            return result;
+        }
+        return null;
+    }
+
+    public static HashMap<String, String> jsonToHashMap(JSONObject jsonObject) {
+        HashMap<String, String> data = new HashMap<>(10);
+        for (String key : jsonObject.keySet()) {
+            String value = jsonObject.get(key).toString();
+            data.put(key, value);
+        }
+        return data;
+    }
 }

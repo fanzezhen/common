@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.swagger;
 
+import com.github.fanzezhen.common.core.constant.CommonConstant;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -26,7 +27,7 @@ public class Swagger2Config implements WebMvcConfigurer {
 
     @Bean
     public Docket createRestApi() {
-        return new Docket(DocumentationType.OAS_30).pathMapping("/")
+        return new Docket(DocumentationType.OAS_30).pathMapping(CommonConstant.SEPARATOR_DIR)
                 // 是否开启swagger配置，生产环境需关闭
                 .enable(true)
                 .apiInfo(this.apiInfo())

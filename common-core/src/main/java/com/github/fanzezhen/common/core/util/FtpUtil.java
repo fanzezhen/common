@@ -1,6 +1,6 @@
 package com.github.fanzezhen.common.core.util;
 
-import com.github.fanzezhen.common.core.model.response.Result;
+import com.github.fanzezhen.common.core.model.response.ActionResult;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -73,9 +73,9 @@ public class FtpUtil {
         return result;
     }
 
-    public Result<String> uploadFile(String fullName, File file) {
+    public ActionResult<String> uploadFile(String fullName, File file) {
         if (StringUtils.isBlank(fullName) || file == null) {
-            return Result.failed("参数不能为空");
+            return ActionResult.failed("参数不能为空");
         }
         ftpClient = new FTPClient();
         // 设置utf-8编码
@@ -89,32 +89,32 @@ public class FtpUtil {
             int reply = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftpClient.disconnect();        //结束连接
-                return Result.failed("ftp登录失败");
+                return ActionResult.failed("ftp登录失败");
             }
             // 将客户端设置为被动模式
             ftpClient.enterLocalPassiveMode();
             inputStream = new FileInputStream(file);
             // 设置二进制传输模式
             if (!ftpClient.setFileType(FTP.BINARY_FILE_TYPE)) {
-                return Result.failed("设置二进制传输模式失败");
+                return ActionResult.failed("设置二进制传输模式失败");
             }
             // 上传文件 成功true 失败 false
             if (!ftpClient.storeFile(fullName, inputStream)) {
-                return Result.failed("storeFile上传失败");
+                return ActionResult.failed("storeFile上传失败");
             }
             ftpClient.logout();
         } catch (IOException e) {
             log.warn(e.toString());
-            return Result.failed(e.getLocalizedMessage());
+            return ActionResult.failed(e.getLocalizedMessage());
         } finally {
             doEnd();
         }
-        return Result.ok(address + fullName.replace(rootPath, ""));
+        return ActionResult.success(address + fullName.replace(rootPath, ""));
     }
 
-    public Result<String> uploadFile(String fullPath, String fileName, File file) {
+    public ActionResult<String> uploadFile(String fullPath, String fileName, File file) {
         if (StringUtils.isAnyBlank(fullPath, fileName) || file == null) {
-            return Result.failed("参数不能为空");
+            return ActionResult.failed("参数不能为空");
         }
         ftpClient = new FTPClient();
         // 设置utf-8编码
@@ -128,14 +128,14 @@ public class FtpUtil {
             int reply = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftpClient.disconnect();        //结束连接
-                return Result.failed("登录失败");
+                return ActionResult.failed("登录失败");
             }
             // 将客户端设置为被动模式
             ftpClient.enterLocalPassiveMode();
             inputStream = new FileInputStream(file);
             // 设置二进制传输模式
             if (!ftpClient.setFileType(FTP.BINARY_FILE_TYPE)) {
-                return Result.failed("设置二进制传输模式失败");
+                return ActionResult.failed("设置二进制传输模式失败");
             }
             boolean changeWorkingDirectory = changeWorkingDirectory(fullPath);
             if (!changeWorkingDirectory) {
@@ -150,15 +150,15 @@ public class FtpUtil {
                 }
                 remote += fileName;
                 if (!ftpClient.storeFile(remote, inputStream)) {
-                    return Result.failed("上传失败");
+                    return ActionResult.failed("上传失败");
                 }
             } else {
-                return Result.failed("目录创建/切换失败：{}", fullPath);
+                return ActionResult.failed("目录创建/切换失败：{}", fullPath);
             }
             ftpClient.logout();
         } catch (IOException e) {
             log.warn(e.toString());
-            return Result.failed(e.getLocalizedMessage());
+            return ActionResult.failed(e.getLocalizedMessage());
         } finally {
             doEnd();
         }
@@ -167,7 +167,7 @@ public class FtpUtil {
             url += pathSeparator;
         }
         url += fileName;
-        return Result.ok(url);
+        return ActionResult.success(url);
     }
 
     public void downloadFile(String fileName, String localPath) {

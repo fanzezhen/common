@@ -70,7 +70,8 @@ public class DateUtil {
 
     public static String addTimeToDateString(String dateString, String supplement) {
         return DateUtil.isDate(dateString, RegexConstant.DEFAULT_DATE) ?
-                (DateUtil.isDate(dateString, DateEnum.DateRegexEnum.MINIMALISM.getRegex()) ? DateUtil.minimalismToDefault(dateString, "-") : dateString) + " " + supplement
+                (DateUtil.isDate(dateString, DateEnum.DateRegexEnum.MINIMALISM.getRegex()) ?
+                        DateUtil.minimalismToDefault(dateString, "-") : dateString) + " " + supplement
                 : dateString;
     }
 

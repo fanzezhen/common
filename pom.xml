@@ -40,7 +40,7 @@
         <org.apache.poi.version>4.1.2</org.apache.poi.version>
         <org.apache.tomcat.embed.version>10.0.0-M7</org.apache.tomcat.embed.version>
         <org.mybatis.spring.boot.version>2.1.4</org.mybatis.spring.boot.version>
-        <org.springframework.version>5.2.8.RELEASE</org.springframework.version>
+        <org.springframework.version>5.2.10.RELEASE</org.springframework.version>
         <org.springframework.boot.version>2.3.5.RELEASE</org.springframework.boot.version>
         <org.springframework.cloud.version>3.0.0</org.springframework.cloud.version>
         <org.springframework.data.version>2.3.2.RELEASE</org.springframework.data.version>

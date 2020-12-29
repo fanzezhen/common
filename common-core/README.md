@@ -1,8 +1,8 @@
 common-core
 ------------------------------------------
 
-* exception 异常处理
+* 配置文件
     
     
-    # 使用前需配置自动注入
-    @SpringBootApplication(scanBasePackages = {"项目目录", "com.github.fanzezhen.common.exception.exception"})
+    # 需要取消自动封装返回结果的接口地址，以“,”分隔
+    auto.wrap.response.ignore.urls=

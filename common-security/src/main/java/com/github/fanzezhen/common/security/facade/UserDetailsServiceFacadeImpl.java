@@ -6,7 +6,7 @@ import com.github.fanzezhen.common.core.constant.SecurityConstant;
 import com.github.fanzezhen.common.core.enums.auth.RoleEnum;
 import com.github.fanzezhen.common.core.model.dto.SysPermissionDto;
 import com.github.fanzezhen.common.core.model.dto.SysUserDto;
-import com.github.fanzezhen.common.core.model.response.Result;
+import com.github.fanzezhen.common.core.model.response.ActionResult;
 import com.github.fanzezhen.common.security.facade.remote.UserDetailsRemote;
 import com.github.fanzezhen.common.security.model.SysUserDetail;
 import com.github.fanzezhen.common.security.property.SecurityProjectProperty;
@@ -82,8 +82,8 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
     @Override
     @Cacheable(value = CacheConstants.PERMISSION_DETAILS, key = "#appCode")
     public List<SysPermissionDto> listAllPermissionDto(String appCode) {
-        Result<List<SysPermissionDto>> sysPermissionDtoListResult = userDetailsRemote.listPermission(appCode);
-        if (sysPermissionDtoListResult != null && sysPermissionDtoListResult.getData() != null && sysPermissionDtoListResult.isOk()) {
+        ActionResult<List<SysPermissionDto>> sysPermissionDtoListResult = userDetailsRemote.listPermission(appCode);
+        if (sysPermissionDtoListResult != null && sysPermissionDtoListResult.getData() != null && sysPermissionDtoListResult.isSuccess()) {
             return sysPermissionDtoListResult.getData();
         } else {
             log.warn("获取权限列表失败, {}", sysPermissionDtoListResult == null || sysPermissionDtoListResult.getData() == null ?
@@ -116,7 +116,7 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
         sysUserDto.setEmail("1");
         sysUserDto.setPhone("1");
         sysUserDto.setUnitName("1");
-        System.out.println(JSON.toJSONString(Result.ok(sysUserDto)));
-        System.out.println(JSON.toJSONString(Result.ok(sysPermissionDtoList)));
+        System.out.println(JSON.toJSONString(ActionResult.success(sysUserDto)));
+        System.out.println(JSON.toJSONString(ActionResult.success(sysPermissionDtoList)));
     }
 }

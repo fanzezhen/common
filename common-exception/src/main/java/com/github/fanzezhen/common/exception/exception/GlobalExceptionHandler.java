@@ -1,26 +1,8 @@
-/*
- *
- *  *  Copyright (c) 2019-2020, 冷冷 (wangiegie@gmail.com).
- *  *  <p>
- *  *  Licensed under the GNU Lesser General Public License 3.0 (the "License");
- *  *  you may not use this file except in compliance with the License.
- *  *  You may obtain a copy of the License at
- *  *  <p>
- *  * https://www.gnu.org/licenses/lgpl.html
- *  *  <p>
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *
- */
-
 package com.github.fanzezhen.common.exception.exception;
 
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
-import com.github.fanzezhen.common.core.model.response.Result;
+import com.github.fanzezhen.common.core.model.response.ActionResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -50,17 +32,16 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.OK)
-    public Result<Object> exception(Exception e) {
+    public ActionResult<Object> exception(Exception e) {
         log.error("全局异常信息 ex={}", e.getMessage(), e);
-        return Result.failed(CoreExceptionEnum.SERVICE_ERROR);
+        return ActionResult.failed(CoreExceptionEnum.SERVICE_ERROR);
     }
 
     @ExceptionHandler(value = {NoHandlerFoundException.class})
     @ResponseStatus(HttpStatus.OK)
-    public Result<Object> noHandlerFoundException(Exception e, HttpServletRequest request) {
+    public ActionResult<Object> noHandlerFoundException(Exception e, HttpServletRequest request) {
         log.error("request:{} Method:{} message:{}", request.getRequestURI(), request.getMethod(), e.getMessage(), e);
-        e.printStackTrace();
-        return Result.failed("unhandled  server exception", request.getRequestURI());
+        return ActionResult.failed("unhandled  server exception", request.getRequestURI());
     }
 
     /**
@@ -71,17 +52,16 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
     @ResponseStatus(HttpStatus.OK)
-    public Result<Object> bodyValidExceptionHandler(MethodArgumentNotValidException exception) {
+    public ActionResult<Object> bodyValidExceptionHandler(MethodArgumentNotValidException exception) {
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         log.error("validation exception", exception);
-        return Result.failed(fieldErrors.get(0).getDefaultMessage());
+        return ActionResult.failed(fieldErrors);
     }
 
     @ExceptionHandler(value = {ServiceException.class})
     @ResponseStatus(HttpStatus.OK)
-    public Result<Object> businessException(Exception e, HttpServletRequest request) {
+    public ActionResult<Object> businessException(Exception e, HttpServletRequest request) {
         log.error("request:{} Method:{} message:{}", request.getRequestURI(), request.getMethod(), e.getMessage(), e);
-        ServiceException businessException = (ServiceException) e;
-        return Result.failed(businessException.getCode(), businessException.getErrorMessage());
+        return ActionResult.failed((ServiceException) e);
     }
 }

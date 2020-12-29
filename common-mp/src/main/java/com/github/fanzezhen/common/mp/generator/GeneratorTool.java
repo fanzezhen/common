@@ -60,7 +60,7 @@ public class GeneratorTool {
         String projectPath = System.getProperty("user.dir");
         StringBuilder moduleLevelName = new StringBuilder();
         for (String s : moduleNameList) {
-            moduleLevelName.append(CommonConstant.SEPARATOR).append(s);
+            moduleLevelName.append(CommonConstant.SEPARATOR_DIR).append(s);
         }
         gc.setOutputDir(projectPath + moduleLevelName + "/src/main/java");
         gc.setAuthor(generatorBean.getAuthor());

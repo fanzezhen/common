@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author zezhen.fan
  */
-public class SysUtil {
+public class SysServerInfoUtil {
     private static final int CPU_TIME = 500;
 
     private static final int PERCENT = 100;
