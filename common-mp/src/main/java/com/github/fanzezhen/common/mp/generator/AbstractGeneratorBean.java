@@ -1,13 +1,14 @@
 package com.github.fanzezhen.common.mp.generator;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.generator.config.po.TableFill;
 import com.github.fanzezhen.common.core.model.entity.BaseVarAloneEntity;
+import com.github.fanzezhen.common.core.model.entity.BaseVarEntity;
 import com.github.fanzezhen.common.mp.Constant;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author zezhen.fan
@@ -64,6 +65,10 @@ public abstract class AbstractGeneratorBean {
      */
     private String[] superEntityColumns;
     /**
+     * 自动填充列表
+     */
+    private Set<TableFill> tableFillSet;
+    /**
      * 数据表中的逻辑删除字段
      */
     private String logicDeleteFieldName;
@@ -101,5 +106,27 @@ public abstract class AbstractGeneratorBean {
         setSuperEntityClass(com.github.fanzezhen.common.core.model.entity.BaseVarAloneEntity.class);
         setSuperEntityColumns(BaseVarAloneEntity.getFieldNames());
         init();
+    }
+
+    public AbstractGeneratorBean setSuperEntityClass(Class<?> superEntityClass) {
+        this.superEntityClass = superEntityClass;
+        if (superEntityClass.isAssignableFrom(BaseVarEntity.class)) {
+            if (tableFillSet == null) {
+                tableFillSet = new HashSet<>();
+            }
+            tableFillSet.add(new TableFill("createTime", FieldFill.INSERT));
+            tableFillSet.add(new TableFill("createUserId", FieldFill.INSERT));
+        }
+        if (superEntityClass.isAssignableFrom(BaseVarAloneEntity.class)) {
+            tableFillSet.add(new TableFill("updateTime", FieldFill.INSERT_UPDATE));
+            tableFillSet.add(new TableFill("updateUserId", FieldFill.INSERT_UPDATE));
+            tableFillSet.add(new TableFill("status", FieldFill.INSERT_UPDATE));
+            tableFillSet.add(new TableFill("delFlag", FieldFill.INSERT_UPDATE));
+        }
+        return this;
+    }
+
+    public List<TableFill> getTableFillList() {
+        return new ArrayList<>(tableFillSet);
     }
 }

@@ -4,7 +4,6 @@ package com.github.fanzezhen.common.core.enums;
  * @author zezhen.fan
  */
 public class CommonEnum {
-
     /**
      * 是否删除枚举类
      */

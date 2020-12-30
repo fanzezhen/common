@@ -38,7 +38,7 @@ public class InvocationSecurityMetadataSource implements FilterInvocationSecurit
         map = new HashMap<>(100);
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
-        List<SysPermissionDto> sysPermissionDtoList = userDetailsServiceFacade.listAllPermissionDto(securityProjectProperty.appCode);
+        List<SysPermissionDto> sysPermissionDtoList = userDetailsServiceFacade.listAllPermissionDto(securityProjectProperty.getAppCode());
         for (SysPermissionDto sysPermissionDto : sysPermissionDtoList) {
             array = new ArrayList<>();
             cfg = new SecurityConfig(SecurityConstant.PERMISSION_PREFIX + sysPermissionDto.getId());
@@ -46,7 +46,6 @@ public class InvocationSecurityMetadataSource implements FilterInvocationSecurit
             //用权限的getUrl() 作为map的key，用ConfigAttribute的集合作为 value，
             map.put(String.valueOf(sysPermissionDto.getOperationUrl()), array);
         }
-
     }
 
     /**

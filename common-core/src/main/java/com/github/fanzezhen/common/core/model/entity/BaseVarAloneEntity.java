@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.core.model.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModelProperty;
@@ -31,7 +32,7 @@ public class BaseVarAloneEntity extends BaseVarEntity {
      * 状态（0--正常；1--禁用）
      */
     @Column(name = "STATUS")
-    @TableField(value = "STATUS")
+    @TableField(value = "STATUS", fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty("状态（0--正常；1--禁用）")
     private Integer status;
     /**
@@ -39,21 +40,21 @@ public class BaseVarAloneEntity extends BaseVarEntity {
      */
     @TableLogic
     @Column(name = "DEL_FLAG")
-    @TableField(value = "DEL_FLAG")
+    @TableField(value = "DEL_FLAG", fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty("删除标识（1-已删除；0-未删除）")
     private Integer delFlag;
     /**
      * 更新时间
      */
     @Column(name = "UPDATE_TIME")
-    @TableField(value = "UPDATE_TIME")
+    @TableField(value = "UPDATE_TIME", fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty("更新时间")
     private LocalDateTime updateTime;
     /**
      * 更新者ID
      */
     @Column(name = "UPDATE_USER_ID")
-    @TableField(value = "UPDATE_USER_ID")
+    @TableField(value = "UPDATE_USER_ID", fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty("更新者ID")
     private String updateUserId;
 

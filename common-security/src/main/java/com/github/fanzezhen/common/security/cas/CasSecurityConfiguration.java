@@ -37,8 +37,6 @@ import javax.sql.DataSource;
 @Slf4j
 public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Resource
-    private CasProperties casProperties;
-    @Resource
     private SecurityProperty securityProperty;
 
     @Resource
@@ -74,7 +72,7 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public CasAuthenticationEntryPoint casAuthenticationEntryPoint() {
         CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
-        casAuthenticationEntryPoint.setLoginUrl(casProperties.getServerLoginUrl());
+        casAuthenticationEntryPoint.setLoginUrl(securityProperty.getServerLoginUrl());
         casAuthenticationEntryPoint.setServiceProperties(serviceProperties());
         return casAuthenticationEntryPoint;
     }
@@ -86,7 +84,7 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public CasAuthenticationFilter casAuthenticationFilter() throws Exception {
         CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
         casAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        casAuthenticationFilter.setFilterProcessesUrl(casProperties.getAppLoginUrl());
+        casAuthenticationFilter.setFilterProcessesUrl(securityProperty.getAppLoginUrl());
         return casAuthenticationFilter;
     }
 
@@ -96,7 +94,7 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public ServiceProperties serviceProperties() {
         ServiceProperties serviceProperties = new ServiceProperties();
-        serviceProperties.setService(casProperties.getAppUrl() + casProperties.getAppLoginUrl());
+        serviceProperties.setService(securityProperty.getAppUrl() + securityProperty.getAppLoginUrl());
         serviceProperties.setAuthenticateAllArtifacts(true);
         return serviceProperties;
     }
@@ -107,7 +105,7 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public SingleSignOutFilter singleSignOutFilter() {
         SingleSignOutFilter singleSignOutFilter = new SingleSignOutFilter();
-        singleSignOutFilter.setLogoutCallbackPath(casProperties.getServerUrl());
+        singleSignOutFilter.setLogoutCallbackPath(securityProperty.getServerUrl());
         singleSignOutFilter.setIgnoreInitConfiguration(true);
         return singleSignOutFilter;
     }
@@ -117,8 +115,8 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public LogoutFilter casLogoutFilter() {
-        LogoutFilter logoutFilter = new LogoutFilter(casProperties.getServerLogoutUrl(), new SecurityContextLogoutHandler());
-        logoutFilter.setFilterProcessesUrl(casProperties.getAppLogoutUrl());
+        LogoutFilter logoutFilter = new LogoutFilter(securityProperty.getServerLogoutUrl(), new SecurityContextLogoutHandler());
+        logoutFilter.setFilterProcessesUrl(securityProperty.getAppLogoutUrl());
         return logoutFilter;
     }
 
@@ -132,7 +130,7 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // 这里只是接口类型，实现的接口不一样，都可以的。
         casAuthenticationProvider.setUserDetailsService(userDetailsServiceFacade);
         casAuthenticationProvider.setServiceProperties(serviceProperties());
-        casAuthenticationProvider.setTicketValidator(new Cas30ServiceTicketValidator(casProperties.getServerUrl()));
+        casAuthenticationProvider.setTicketValidator(new Cas30ServiceTicketValidator(securityProperty.getServerUrl()));
         casAuthenticationProvider.setKey("casAuthenticationProviderKey");
         return casAuthenticationProvider;
     }
@@ -164,7 +162,7 @@ public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // 不拦截
                 .antMatchers(SecurityConstant.IGNORING_ANT_MATCHERS).permitAll()
                 // 不拦截自定义的业务请求
-                .antMatchers(securityProperty.ignoringAntMatchers).permitAll()
+                .antMatchers(securityProperty.getIgnoringAntMatchers()).permitAll()
                 // 其他没有限定的请求，登录后才允许访问
                 .anyRequest().authenticated()
         ;

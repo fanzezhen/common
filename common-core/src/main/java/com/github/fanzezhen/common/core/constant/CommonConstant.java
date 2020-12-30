@@ -57,8 +57,6 @@ public interface CommonConstant {
     String LOGIN_FAILED_MESSAGE = "登录失败！";
     String ADMIN_ADDRESS_PATTERN = "/admin/**";
     String OAUTH_ADDRESS_PATTERN = "/oauth/**";
-    String TOKEN_KEY = "x-token";
-    String TOKEN_PREFIX = "Bearer ";
     String PERMISSION_PREFIX = "PERMISSION_";
     String PERMISSION_DEFAULT_PID = "0";
 

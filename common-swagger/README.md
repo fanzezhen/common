@@ -7,7 +7,8 @@ swagger
    * 此模块需扫描该目录结构，如：
     
     @SpringBootApplication(scanBasePackages = {"项目目录", "com.github.fanzezhen.common.swagger"})
-   
+    @EnableOpenApi   
+
    * 此模块需要获取配置参数： 
 
     project.code=SYS

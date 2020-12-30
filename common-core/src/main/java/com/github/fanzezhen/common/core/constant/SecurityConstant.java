@@ -1,5 +1,9 @@
 package com.github.fanzezhen.common.core.constant;
 
+import cn.hutool.core.util.ArrayUtil;
+
+import java.util.Arrays;
+
 /**
  * @author zezhen.fan
  */
@@ -8,8 +12,8 @@ public interface SecurityConstant {
     String LOGIN_ADDRESS = "/oauth/login";
     String DEFAULT_LOGIN_API = "/login";
     /**
-     *     异常接口匹配格式
-      */
+     * 异常接口匹配格式
+     */
     String ERROR_MATCHERS = "/error/**";
     /**
      * 日志接口匹配格式
@@ -30,11 +34,19 @@ public interface SecurityConstant {
     /**
      * SWAGGER-UI接口匹配格式
      */
-    String SWAGGER_UI_MATCHERS = "/swagger-ui.html/**";
+    String SWAGGER_UI_MATCHERS = "/swagger-ui/**";
     /**
      * SWAGGER-RESOURCE接口匹配格式
      */
-    String SWAGGER_RESOURCE_MATCHERS = "/swagger-resources.html/**";
+    String SWAGGER_RESOURCE_MATCHERS = "/swagger-resources/**";
+    /**
+     * SWAGGER-API-DOC接口匹配格式
+     */
+    String SWAGGER_API_DOCS_MATCHERS = "/v3/api-docs/**";
+    /**
+     * SWAGGER接口匹配格式集合
+     */
+    String[] SWAGGER_MATCHERS = {SWAGGER_UI_MATCHERS, SWAGGER_RESOURCE_MATCHERS, SWAGGER_API_DOCS_MATCHERS};
 
     /**
      * 权限加载的前缀
@@ -69,11 +81,11 @@ public interface SecurityConstant {
     /**
      * 不校验权限的接口
      */
-    String[] IGNORING_ANT_MATCHERS = {ERROR_MATCHERS, LOGIN_ADDRESS, LOG_MATCHERS, OAUTH_MATCHERS,
-            PUBLIC_MATCHERS, STATIC_MATCHERS, SWAGGER_UI_MATCHERS, SWAGGER_RESOURCE_MATCHERS};
+    String[] IGNORING_ANT_MATCHERS = ArrayUtil.addAll(SWAGGER_MATCHERS,
+            new String[]{ERROR_MATCHERS, LOGIN_ADDRESS, LOG_MATCHERS, OAUTH_MATCHERS, PUBLIC_MATCHERS, STATIC_MATCHERS});
 
     /**
      * 忽略CSRF的接口
      */
-    String[] CSRF_IGNORING_ANT_MATCHERS = {"/api/**", LOG_MATCHERS};
+    String[] CSRF_IGNORING_ANT_MATCHERS = {"/api/**", LOG_MATCHERS, PUBLIC_MATCHERS};
 }

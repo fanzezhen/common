@@ -62,7 +62,7 @@ public class DefaultExceptionResolver implements HandlerExceptionResolver {
         int errorStatus = HttpServletResponse.SC_OK;
         response.setStatus(errorStatus);
         ModelAndView modelAndView;
-        if (responseProperty.jsonFlag) {
+        if (responseProperty.isResponseJson()) {
             return jsonResponse(exception);
         }
         if (handler instanceof HandlerMethod) {

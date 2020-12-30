@@ -20,7 +20,7 @@ public class SecurityUtil {
      * @return 用户：true，否则 false
      */
     public static boolean isLoginUser() {
-        return SecurityContextHolder.getContext() != null && getAuthentication() != null;
+        return SecurityContextHolder.getContext() != null && getAuthenticationNotNull() != null;
     }
 
     /**
@@ -37,6 +37,17 @@ public class SecurityUtil {
      */
     public static Authentication getAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+        return authentication;
+    }
+
+    /**
+     * 获取认证信息
+     */
+    public static Authentication getAuthenticationNotNull() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             return authentication;
         } else {
@@ -48,10 +59,11 @@ public class SecurityUtil {
      * 获取登录用户
      */
     public static User getUser() {
-        if (getAuthentication() == null) {
+        Authentication authentication = getAuthentication();
+        if (authentication == null) {
             return null;
         }
-        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) getAuthentication();
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) authentication;
         //details里面可能存放了当前登录用户的详细信息，也可以通过cast后拿到
         User userDetails = (User) authenticationToken.getPrincipal();
         if (userDetails == null) {
@@ -64,8 +76,30 @@ public class SecurityUtil {
      * 获取登录用户
      */
     public static SysUserDetail getSysUserDetail() {
+        Authentication authentication = getAuthentication();
+        if (authentication == null || authentication.getPrincipal() == null) {
+            return null;
+        }
+        return (SysUserDetail) authentication.getPrincipal();
+    }
+
+    /**
+     * 获取登录用户
+     */
+    public static SysUserDetail getSysUserDetailNotNull() {
         try {
-            return (SysUserDetail) getAuthentication().getPrincipal();
+            return (SysUserDetail) getAuthenticationNotNull().getPrincipal();
+        } catch (Exception e) {
+            throw new ServiceException(CoreExceptionEnum.NO_CURRENT_USER);
+        }
+    }
+
+    /**
+     * 获取登录用户
+     */
+    public static String getSysUserId() {
+        try {
+            return getSysUserDetailNotNull().getId();
         } catch (Exception e) {
             throw new ServiceException(CoreExceptionEnum.NO_CURRENT_USER);
         }
@@ -75,8 +109,30 @@ public class SecurityUtil {
      * 获取登录用户
      */
     public static String getLoginUserId() {
+        SysUserDetail sysUserDetail = getSysUserDetail();
+        if (sysUserDetail == null) {
+            return null;
+        }
+        return sysUserDetail.getId();
+    }
+
+    /**
+     * 获取登录用户
+     */
+    public static String getLoginUsername() {
+        SysUserDetail sysUserDetail = getSysUserDetail();
+        if (sysUserDetail == null) {
+            return null;
+        }
+        return sysUserDetail.getUsername();
+    }
+
+    /**
+     * 获取登录用户
+     */
+    public static String getLoginUserIdNotNull() {
         try {
-            return getSysUserDetail().getId();
+            return getSysUserDetailNotNull().getId();
         } catch (Exception e) {
             throw new ServiceException(CoreExceptionEnum.NO_CURRENT_USER);
         }

@@ -31,13 +31,14 @@ public class MysqlGenerator extends AbstractGeneratorBean {
         String dataSourceConfigUrl = "jdbc:mysql://localhost:3306/xiaomei?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai";
         String dbUsername = "root";
         String dbPassword = "root";
-        String moduleParentName = "com.github.fanzezhen.common.mp";
+        String moduleParentName = "com.github.fanzezhen.common.log";
         GeneratorTool.generator(MysqlGenerator.builder().build()
                 .setAuthor("fanzezhen")
                 .setDataSourceConfigUrl(dataSourceConfigUrl)
                 .setDbUsername(dbUsername)
                 .setDbPassword(dbPassword)
-                .setSuperiorModuleNames("common-mp")
-                .setParentPackageName(moduleParentName).setSuperEntityClass(null));
+                .setSuperiorModuleNames("common-log")
+                .setParentPackageName(moduleParentName)
+                .setSuperEntityClass(com.github.fanzezhen.common.core.model.entity.BaseVarEntity.class));
     }
 }

@@ -66,6 +66,8 @@ public class GeneratorTool {
         gc.setAuthor(generatorBean.getAuthor());
         gc.setOpen(false);
         gc.setIdType(IdType.ASSIGN_UUID);
+        // 实体属性 Swagger2 注解
+        gc.setSwagger2(true);
         mpg.setGlobalConfig(gc);
 
         // 包配置
@@ -101,6 +103,7 @@ public class GeneratorTool {
             strategy.setSuperEntityClass(generatorBean.getSuperEntityClass());
             strategy.setSuperEntityColumns(generatorBean.getSuperEntityColumns());
         }
+        strategy.setTableFillList(generatorBean.getTableFillList());
         strategy.setEntityLombokModel(true);
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix("t_");

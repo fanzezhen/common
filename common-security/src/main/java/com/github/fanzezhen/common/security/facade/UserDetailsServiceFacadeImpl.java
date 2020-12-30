@@ -1,5 +1,8 @@
 package com.github.fanzezhen.common.security.facade;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.stylefeng.roses.kernel.model.exception.ServiceException;
+import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
 import com.alibaba.fastjson.JSON;
 import com.github.fanzezhen.common.core.constant.CacheConstants;
 import com.github.fanzezhen.common.core.constant.SecurityConstant;
@@ -7,11 +10,13 @@ import com.github.fanzezhen.common.core.enums.auth.RoleEnum;
 import com.github.fanzezhen.common.core.model.dto.SysPermissionDto;
 import com.github.fanzezhen.common.core.model.dto.SysUserDto;
 import com.github.fanzezhen.common.core.model.response.ActionResult;
+import com.github.fanzezhen.common.core.model.response.ErrorInfo;
 import com.github.fanzezhen.common.security.facade.remote.UserDetailsRemote;
 import com.github.fanzezhen.common.security.model.SysUserDetail;
 import com.github.fanzezhen.common.security.property.SecurityProjectProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
@@ -50,7 +55,7 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
     @Cacheable(value = CacheConstants.USER_DETAILS, key = "#username")
     public SysUserDetail loadUserByUsername(String username) throws UsernameNotFoundException {
         //用户，用于判断权限，请注意此用户名和方法参数中的username一致；BCryptPasswordEncoder是用来演示加密使用。
-        SysUserDto sysUserDto = userDetailsRemote.loadUserByUsername(username, securityProjectProperty.appCode).getData();
+        SysUserDto sysUserDto = userDetailsRemote.loadUserByUsername(username, securityProjectProperty.getAppCode()).getData();
         if (sysUserDto != null && StringUtils.isNotBlank(sysUserDto.getUsername())) {
             //生成环境是查询数据库获取username的角色用于后续权限判断（如：张三 admin)
             Set<GrantedAuthority> grantedAuthorities;
@@ -59,7 +64,7 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
                 // 判断SPECIAL_ADMIN， 超级管理员拥有所有权限
                 for (SysPermissionDto sysPermissionDto :
                         sysUserDto.getRoleTypeSets().contains(RoleEnum.RoleTypeEnum.SPECIAL_ADMIN.getType()) ?
-                                userDetailsRemote.listPermission(securityProjectProperty.appCode).getData() :
+                                userDetailsRemote.listPermission(securityProjectProperty.getAppCode()).getData() :
                                 sysUserDto.getSysPermissionDtoList()) {
                     grantedAuthorityNameSet.add(SecurityConstant.PERMISSION_PREFIX + sysPermissionDto.getId());
                 }
@@ -82,13 +87,24 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
     @Override
     @Cacheable(value = CacheConstants.PERMISSION_DETAILS, key = "#appCode")
     public List<SysPermissionDto> listAllPermissionDto(String appCode) {
+        String errMsg = "调用微服务获取权限列表失败：";
         ActionResult<List<SysPermissionDto>> sysPermissionDtoListResult = userDetailsRemote.listPermission(appCode);
-        if (sysPermissionDtoListResult != null && sysPermissionDtoListResult.getData() != null && sysPermissionDtoListResult.isSuccess()) {
-            return sysPermissionDtoListResult.getData();
+        if (sysPermissionDtoListResult != null) {
+            if (sysPermissionDtoListResult.isSuccess()) {
+                List<SysPermissionDto> data = sysPermissionDtoListResult.getData();
+                return data == null ? Lists.newArrayList() : data;
+            } else {
+                if (CollectionUtil.isNotEmpty(sysPermissionDtoListResult.getErrors())) {
+                    ErrorInfo errorInfo = sysPermissionDtoListResult.getErrors().get(0);
+                    errMsg += errorInfo.getMessage();
+                    throw new ServiceException(errorInfo.getCode(), errMsg);
+                }
+                throw new ServiceException(CoreExceptionEnum.SERVICE_ERROR.getCode(), errMsg);
+            }
         } else {
-            log.warn("获取权限列表失败, {}", sysPermissionDtoListResult == null || sysPermissionDtoListResult.getData() == null ?
-                    "返回结果为null" : sysPermissionDtoListResult.getMessage());
-            return new ArrayList<>();
+            errMsg += "获取权限列表失败，返回结果为null";
+            log.warn(errMsg);
+            throw new ServiceException(CoreExceptionEnum.SERVICE_ERROR.getCode(), errMsg);
         }
     }
 

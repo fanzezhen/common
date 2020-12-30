@@ -3,7 +3,7 @@ package com.github.fanzezhen.common.core.dict;
 
 import com.github.fanzezhen.common.core.enums.CommonEnum;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * @author zezhen.fan
@@ -36,12 +36,20 @@ public class SysUserDict extends AbstractDict {
 
     @Override
     protected void initBeAdapter() {
-        putFieldAdapter("sex", new HashMap<>(4) {{
+        putFieldAdapter("sex", new LinkedHashMap<>(4) {{
             put(CommonEnum.SexEnum.WOMAN.getDesc(), CommonEnum.SexEnum.WOMAN.getCode());
             put(CommonEnum.SexEnum.MAN.getDesc(), CommonEnum.SexEnum.MAN.getCode());
             put(CommonEnum.SexEnum.UNKNOWN.getDesc(), CommonEnum.SexEnum.UNKNOWN.getCode());
             put(CommonEnum.SexEnum.UNSPECIFIED.getDesc(), CommonEnum.SexEnum.UNSPECIFIED.getCode());
         }});
+    }
+
+    private static class SingletonHolder {
+        public static SysUserDict INSTANCE = new SysUserDict();
+    }
+
+    public static SysUserDict getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
 }

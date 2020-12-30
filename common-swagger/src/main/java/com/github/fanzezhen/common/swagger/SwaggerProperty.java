@@ -1,31 +1,35 @@
 package com.github.fanzezhen.common.swagger;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
  * @author zezhen.fan
  */
+@Getter
 @Component("swaggerProperty")
+@ConfigurationProperties("project")
 public class SwaggerProperty {
     @Value("${project.code:DEMO}")
-    public String appCode;
+    private String appCode;
     @Value("${project.version:1.0}")
-    public String version;
+    private String version;
     @Value("${project.base.package:com.github.fanzezhen}")
-    public String basePackage;
+    private String basePackage;
     @Value("${project.title:DEMO}")
-    public String title;
+    private String title;
     @Value("${project.description:示例}")
-    public String description;
+    private String description;
     @Value("${project.link.man:fanzezhen}")
-    public String linkMan;
+    private String linkMan;
     @Value("${project.link.url:https://github.com/fanzezhen/}")
-    public String linkUrl;
+    private String linkUrl;
     @Value("${project.link.email:fanzezhen@outlook.com}")
-    public String linkEmail;
+    private String linkEmail;
     @Value("${project.license:Apache License 2.0}")
-    public String license;
+    private String license;
     @Value("${project.license.url:http://www.apache.org/licenses/}")
-    public String licenseUrl;
+    private String licenseUrl;
 }

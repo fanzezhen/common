@@ -3,6 +3,7 @@ package com.github.fanzezhen.common.core.model.response;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.stylefeng.roses.kernel.model.exception.AbstractBaseExceptionEnum;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
+import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -31,6 +32,16 @@ public class ActionResult<T> implements Serializable {
     private boolean success;
     private T data;
     private List<ErrorInfo> errors;
+
+    public String getMsg(){
+        if (success){
+            return "success";
+        }
+        if (CollectionUtil.isEmpty(errors)){
+            return CoreExceptionEnum.SERVICE_ERROR.getMessage();
+        }
+        return errors.get(0).getMessage();
+    }
 
     public ActionResult(boolean success) {
         this.success = success;

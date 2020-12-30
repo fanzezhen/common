@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.core.model.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -38,7 +39,7 @@ public class BaseVarEntity extends BaseEntity {
      * 创建时间
      */
     @Column(name = "CREATE_TIME")
-    @TableField(value = "CREATE_TIME")
+    @TableField(value = "CREATE_TIME", fill = FieldFill.INSERT)
     @ApiModelProperty("创建时间")
     private LocalDateTime createTime;
 
@@ -46,7 +47,7 @@ public class BaseVarEntity extends BaseEntity {
      * 创建人ID
      */
     @Column(name = "CREATE_USER_ID")
-    @TableField(value = "CREATE_USER_ID")
+    @TableField(value = "CREATE_USER_ID", fill = FieldFill.INSERT)
     @ApiModelProperty("创建人ID")
     private String createUserId;
 

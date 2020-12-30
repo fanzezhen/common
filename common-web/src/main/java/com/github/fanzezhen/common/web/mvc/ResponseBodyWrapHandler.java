@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.core.mvc;
+package com.github.fanzezhen.common.web.mvc;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
