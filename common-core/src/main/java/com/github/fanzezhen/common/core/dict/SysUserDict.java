@@ -1,7 +1,7 @@
 package com.github.fanzezhen.common.core.dict;
 
 
-import com.github.fanzezhen.common.core.enums.CommonEnum;
+import com.github.fanzezhen.common.core.enums.db.SexEnum;
 
 import java.util.LinkedHashMap;
 
@@ -28,19 +28,19 @@ public class SysUserDict extends AbstractDict {
 
     @Override
     protected void initBeWrapped() {
-        putFieldWrapper("sex", CommonEnum.SexEnum.WOMAN.getCode(), CommonEnum.SexEnum.WOMAN.getDesc());
-        putFieldWrapper("sex", CommonEnum.SexEnum.MAN.getCode(), CommonEnum.SexEnum.MAN.getDesc());
-        putFieldWrapper("sex", CommonEnum.SexEnum.UNKNOWN.getCode(), CommonEnum.SexEnum.UNKNOWN.getDesc());
-        putFieldWrapper("sex", CommonEnum.SexEnum.UNSPECIFIED.getCode(), CommonEnum.SexEnum.UNSPECIFIED.getDesc());
+        putFieldWrapper("sex", SexEnum.WOMAN.code, SexEnum.WOMAN.getDesc());
+        putFieldWrapper("sex", SexEnum.MAN.code, SexEnum.MAN.getDesc());
+        putFieldWrapper("sex", SexEnum.UNKNOWN.code, SexEnum.UNKNOWN.getDesc());
+        putFieldWrapper("sex", SexEnum.UNSPECIFIED.code, SexEnum.UNSPECIFIED.getDesc());
     }
 
     @Override
     protected void initBeAdapter() {
         putFieldAdapter("sex", new LinkedHashMap<>(4) {{
-            put(CommonEnum.SexEnum.WOMAN.getDesc(), CommonEnum.SexEnum.WOMAN.getCode());
-            put(CommonEnum.SexEnum.MAN.getDesc(), CommonEnum.SexEnum.MAN.getCode());
-            put(CommonEnum.SexEnum.UNKNOWN.getDesc(), CommonEnum.SexEnum.UNKNOWN.getCode());
-            put(CommonEnum.SexEnum.UNSPECIFIED.getDesc(), CommonEnum.SexEnum.UNSPECIFIED.getCode());
+            put(SexEnum.WOMAN.getDesc(), SexEnum.WOMAN.code);
+            put(SexEnum.MAN.getDesc(), SexEnum.MAN.code);
+            put(SexEnum.UNKNOWN.getDesc(), SexEnum.UNKNOWN.code);
+            put(SexEnum.UNSPECIFIED.getDesc(), SexEnum.UNSPECIFIED.code);
         }});
     }
 

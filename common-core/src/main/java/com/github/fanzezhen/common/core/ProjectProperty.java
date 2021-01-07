@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.security.property;
+package com.github.fanzezhen.common.core;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 @ConfigurationProperties("project")
-public class SecurityProjectProperty {
+public class ProjectProperty {
     @Value("${project.code:DEMO}")
     private String appCode;
     @Value("${project.version:1.0}")

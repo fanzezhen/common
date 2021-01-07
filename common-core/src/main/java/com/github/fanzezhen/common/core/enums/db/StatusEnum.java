@@ -2,22 +2,23 @@ package com.github.fanzezhen.common.core.enums.db;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.baomidou.mybatisplus.annotation.IEnum;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 /**
+ * 状态是否启用
+ *
  * @author zezhen.fan
  */
-public enum DelFlagEnum implements IEnum<Integer> {
+public enum StatusEnum {
     /**
-     * 未删除
+     * 启用
      */
-    NotDeleted(0, "未删除"),
+    ENABLE(0, "启用"),
     /**
-     * 已删除
+     * 禁用
      */
-    deleted(1, "已删除");
+    DISABLE(1, "禁用");
 
     @EnumValue
     @JsonValue
@@ -25,20 +26,15 @@ public enum DelFlagEnum implements IEnum<Integer> {
     @Getter
     private final String desc;
 
-    @Override
-    public Integer getValue() {
-        return this.code;
-    }
-
-    DelFlagEnum(int value, String desc) {
-        this.code = value;
+    StatusEnum(int code, String desc) {
+        this.code = code;
         this.desc = desc;
     }
 
     public static String getNameByCode(Integer code) {
         if (code != null) {
-            DelFlagEnum[] var1 = values();
-            for (DelFlagEnum enumItem : var1) {
+            StatusEnum[] var1 = values();
+            for (StatusEnum enumItem : var1) {
                 if (code.equals(enumItem.code)) {
                     return enumItem.getDesc();
                 }
@@ -48,16 +44,16 @@ public enum DelFlagEnum implements IEnum<Integer> {
         return StrUtil.EMPTY;
     }
 
-    public static DelFlagEnum toEnum(int code) {
-        for (DelFlagEnum enumItem : values()) {
-            if (enumItem.code == code) {
-                return enumItem;
+    public static StatusEnum toEnum(int code) {
+        for (StatusEnum statusEnum : values()) {
+            if (statusEnum.code == code) {
+                return statusEnum;
             }
         }
         return null;
     }
 
     public static String getColumn() {
-        return "del_flag";
+        return "status";
     }
 }

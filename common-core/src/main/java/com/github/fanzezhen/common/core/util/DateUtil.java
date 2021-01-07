@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.core.util;
 
 import com.github.fanzezhen.common.core.constant.DateConstant;
 import com.github.fanzezhen.common.core.constant.RegexConstant;
-import com.github.fanzezhen.common.core.enums.DateEnum;
+import com.github.fanzezhen.common.core.enums.DateRegexEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -70,7 +70,7 @@ public class DateUtil {
 
     public static String addTimeToDateString(String dateString, String supplement) {
         return DateUtil.isDate(dateString, RegexConstant.DEFAULT_DATE) ?
-                (DateUtil.isDate(dateString, DateEnum.DateRegexEnum.MINIMALISM.getRegex()) ?
+                (DateUtil.isDate(dateString, DateRegexEnum.MINIMALISM.getRegex()) ?
                         DateUtil.minimalismToDefault(dateString, "-") : dateString) + " " + supplement
                 : dateString;
     }

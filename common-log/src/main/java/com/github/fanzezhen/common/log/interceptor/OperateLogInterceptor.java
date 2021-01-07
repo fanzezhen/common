@@ -8,8 +8,7 @@ import com.github.fanzezhen.common.core.context.SysContext;
 import com.github.fanzezhen.common.core.annotion.OperateLog;
 import com.github.fanzezhen.common.core.annotion.OperateLogMapper;
 import com.github.fanzezhen.common.core.dict.AbstractDict;
-import com.github.fanzezhen.common.core.enums.db.CommonFieldEnum;
-import com.github.fanzezhen.common.core.enums.db.OperateEnum;
+import com.github.fanzezhen.common.core.enums.table.CommonFieldEnum;
 import com.github.fanzezhen.common.log.foundation.entity.LogOperate;
 import com.github.fanzezhen.common.log.foundation.entity.LogOperateDetail;
 import com.github.fanzezhen.common.log.foundation.service.ILogOperateDetailService;
@@ -68,7 +67,8 @@ public class OperateLogInterceptor implements Interceptor {
                 return result;
             }
         }
-        AbstractDict dict = ReflectUtil.invokeStatic(ReflectUtil.getPublicMethod(operateLog.dictClass(), AbstractDict.instanceMethodName));
+        AbstractDict dict = ReflectUtil.invokeStatic(
+                ReflectUtil.getPublicMethod(operateLog.dictClass(), AbstractDict.INSTANCE_METHOD_NAME));
         boolean isAllFields = operateLog.isAllFields();
         String[] fieldNames = operateLog.fieldNameFilters();
         List<String> fieldNameList = Arrays.asList(fieldNames);
@@ -77,7 +77,7 @@ public class OperateLogInterceptor implements Interceptor {
         if (StrUtil.isBlank(tableName)) {
             tableName = getTableNameByClass(arg.getClass());
         }
-        LogOperate logOperate = insertLog(arg, tableName);
+        LogOperate logOperate = insertLog(String.valueOf(ReflectUtil.getFieldValue(arg, "id")), sqlCommandType.ordinal(), tableName);
         switch (sqlCommandType) {
             case INSERT:
                 dealInsertSqlCommandType(dict, operateLog, logOperate, arg);
@@ -143,13 +143,12 @@ public class OperateLogInterceptor implements Interceptor {
 
     }
 
-    private LogOperate insertLog(Object bean, String tableName) {
+    private LogOperate insertLog(String bizId, int operateType, String tableName) {
         LogOperate logOperate = new LogOperate();
-        logOperate.setBizId(String.valueOf(ReflectUtil.getFieldValue(bean, "id")));
+        logOperate.setBizId(bizId);
         logOperate.setTableName(tableName);
-        logOperate.setOperateType(OperateEnum.OperateType.UPDATE.getCode());
-        logOperate.setSource(OperateEnum.Source.PC.getCode());
-        logOperate.setModule(OperateEnum.Module.SUBJECT.getCode());
+        logOperate.setOperateType(operateType);
+        logOperate.setAppCode(SysContext.getCurrentAppCode());
         logOperate.setOperateUsername(SysContext.getUserName());
         if (useMicroservice) {
             logRemote.addLogOperate(logOperate);

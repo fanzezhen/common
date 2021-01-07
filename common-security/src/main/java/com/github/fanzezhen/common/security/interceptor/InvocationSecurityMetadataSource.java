@@ -3,7 +3,7 @@ package com.github.fanzezhen.common.security.interceptor;
 import com.github.fanzezhen.common.core.constant.SecurityConstant;
 import com.github.fanzezhen.common.core.model.dto.SysPermissionDto;
 import com.github.fanzezhen.common.security.facade.UserDetailsServiceFacade;
-import com.github.fanzezhen.common.security.property.SecurityProjectProperty;
+import com.github.fanzezhen.common.core.ProjectProperty;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -25,7 +25,7 @@ import java.util.List;
 @Component
 public class InvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
     @Resource
-    private SecurityProjectProperty securityProjectProperty;
+    private ProjectProperty projectProperty;
     @Resource
     private UserDetailsServiceFacade userDetailsServiceFacade;
 
@@ -38,7 +38,7 @@ public class InvocationSecurityMetadataSource implements FilterInvocationSecurit
         map = new HashMap<>(100);
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
-        List<SysPermissionDto> sysPermissionDtoList = userDetailsServiceFacade.listAllPermissionDto(securityProjectProperty.getAppCode());
+        List<SysPermissionDto> sysPermissionDtoList = userDetailsServiceFacade.listAllPermissionDto(projectProperty.getAppCode());
         for (SysPermissionDto sysPermissionDto : sysPermissionDtoList) {
             array = new ArrayList<>();
             cfg = new SecurityConfig(SecurityConstant.PERMISSION_PREFIX + sysPermissionDto.getId());

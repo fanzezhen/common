@@ -3,7 +3,8 @@ package com.github.fanzezhen.common.mp.config;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.github.fanzezhen.common.core.context.SysContext;
-import com.github.fanzezhen.common.core.enums.CommonEnum;
+import com.github.fanzezhen.common.core.enums.db.DelFlagEnum;
+import com.github.fanzezhen.common.core.enums.db.StatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
@@ -37,7 +38,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
             this.fillStrategy(metaObject, "updateUserId", loginUserId);
         }
         this.fillStrategy(metaObject, "updateTime", LocalDateTime.now());
-        this.fillStrategy(metaObject, "status", CommonEnum.StatusEnum.VALID.getCode());
-        this.fillStrategy(metaObject, "delFlag", CommonEnum.DeleteFlagEnum.NO.getCode());
+        this.fillStrategy(metaObject, "status", StatusEnum.ENABLE.code);
+        this.fillStrategy(metaObject, "delFlag", DelFlagEnum.NotDeleted.code);
     }
 }

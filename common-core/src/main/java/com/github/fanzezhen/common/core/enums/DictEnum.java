@@ -1,7 +1,8 @@
-package com.github.fanzezhen.common.core.enums.dict;
+package com.github.fanzezhen.common.core.enums;
 
 import com.github.fanzezhen.common.core.dict.AbstractDict;
 import com.github.fanzezhen.common.core.dict.SysUserDict;
+import lombok.Getter;
 
 /**
  * @author zezhen.fan
@@ -12,9 +13,10 @@ public enum DictEnum {
      */
     SYS_USER(SysUserDict.getInstance(), "系统用户字典");
 
-    public final AbstractDict dict;
-    public final String desc;
-
+    @Getter
+    private final AbstractDict dict;
+    @Getter
+    private final String desc;
 
     DictEnum(AbstractDict dict, String desc) {
         this.dict = dict;

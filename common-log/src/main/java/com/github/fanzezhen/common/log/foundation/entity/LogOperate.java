@@ -32,9 +32,6 @@ public class LogOperate extends BaseVarEntity {
     @ApiModelProperty(value = "操作类型")
     private Integer operateType;
 
-    @ApiModelProperty(value = "操作来源")
-    private Integer source;
-
     @ApiModelProperty(value = "操作模块")
     private Integer module;
 

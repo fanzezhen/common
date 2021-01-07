@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
  */
 @Data
 public abstract class AbstractDict {
-    public static final String instanceMethodName = "getInstance";
+    public static final String INSTANCE_METHOD_NAME = "getInstance";
     /**
      * 字典映射，实体的字段名→字段标题
      */

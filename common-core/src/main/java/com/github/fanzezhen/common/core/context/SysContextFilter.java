@@ -1,12 +1,14 @@
 package com.github.fanzezhen.common.core.context;
 
 import cn.hutool.core.util.StrUtil;
+import com.github.fanzezhen.common.core.ProjectProperty;
 import com.github.fanzezhen.common.core.constant.SysConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLDecoder;
@@ -18,8 +20,11 @@ import java.util.Enumeration;
  */
 @Slf4j
 @Component
-@Order(1)
+@Order(SysConstant.FILTER_ORDER)
 public class SysContextFilter implements Filter {
+    @Resource
+    private ProjectProperty projectProperty;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -79,11 +84,17 @@ public class SysContextFilter implements Filter {
                         if (log.isDebugEnabled()) {
                             log.debug("request {} has  header: {}, with value {}", requestUri, SysConstant.HEADER_LOCALE, headerVal);
                         }
+                    } else if (StrUtil.equalsIgnoreCase(curHeader, SysConstant.HEADER_APP_CODE)) {
+                        SysContext.put(SysConstant.HEADER_APP_CODE, headerVal);
+                        if (log.isDebugEnabled()) {
+                            log.debug("request {} has  header: {}, with value {}", requestUri, SysConstant.HEADER_APP_CODE, headerVal);
+                        }
                     } else {
                         SysContext.put(curHeader, headerVal);
                     }
                 }
             }
+            SysContext.setCurrentAppCode(projectProperty.getAppCode());
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (Throwable ex) {
             log.error(ex.getMessage(), ex);

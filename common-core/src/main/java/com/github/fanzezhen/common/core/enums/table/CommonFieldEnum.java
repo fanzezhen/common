@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.core.enums.db;
+package com.github.fanzezhen.common.core.enums.table;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;

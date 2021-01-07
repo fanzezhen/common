@@ -2,22 +2,29 @@ package com.github.fanzezhen.common.core.enums.db;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.baomidou.mybatisplus.annotation.IEnum;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 /**
  * @author zezhen.fan
  */
-public enum DelFlagEnum implements IEnum<Integer> {
+public enum SexEnum {
     /**
-     * 未删除
+     * 女
      */
-    NotDeleted(0, "未删除"),
+    WOMAN(0, "女"),
     /**
-     * 已删除
+     * 男
      */
-    deleted(1, "已删除");
+    MAN(1, "男"),
+    /**
+     * 未知
+     */
+    UNKNOWN(2, "未知"),
+    /**
+     * 未说明
+     */
+    UNSPECIFIED(3, "未说明");
 
     @EnumValue
     @JsonValue
@@ -25,20 +32,15 @@ public enum DelFlagEnum implements IEnum<Integer> {
     @Getter
     private final String desc;
 
-    @Override
-    public Integer getValue() {
-        return this.code;
-    }
-
-    DelFlagEnum(int value, String desc) {
-        this.code = value;
+    SexEnum(int code, String desc) {
+        this.code = code;
         this.desc = desc;
     }
 
     public static String getNameByCode(Integer code) {
         if (code != null) {
-            DelFlagEnum[] var1 = values();
-            for (DelFlagEnum enumItem : var1) {
+            SexEnum[] var1 = values();
+            for (SexEnum enumItem : var1) {
                 if (code.equals(enumItem.code)) {
                     return enumItem.getDesc();
                 }
@@ -48,16 +50,13 @@ public enum DelFlagEnum implements IEnum<Integer> {
         return StrUtil.EMPTY;
     }
 
-    public static DelFlagEnum toEnum(int code) {
-        for (DelFlagEnum enumItem : values()) {
-            if (enumItem.code == code) {
-                return enumItem;
+    public static SexEnum toEnum(int code) {
+        for (SexEnum statusEnum : values()) {
+            if (statusEnum.code == code) {
+                return statusEnum;
             }
         }
         return null;
     }
 
-    public static String getColumn() {
-        return "del_flag";
-    }
 }

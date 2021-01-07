@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.swagger;
 
+import com.github.fanzezhen.common.core.ProjectProperty;
 import com.github.fanzezhen.common.core.constant.CommonConstant;
 import com.github.fanzezhen.common.core.constant.SysConstant;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +26,7 @@ import java.util.Set;
 @Configuration
 public class Swagger3Config implements WebMvcConfigurer {
     @Resource
-    private SwaggerProperty swaggerProperty;
+    private ProjectProperty swaggerProperty;
 
     @Bean
     public Docket createRestApi() {

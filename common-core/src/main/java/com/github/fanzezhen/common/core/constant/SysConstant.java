@@ -17,6 +17,10 @@ public interface SysConstant {
      */
     String DEFAULT_TENANT_ID = "default";
     /**
+     * 当前的项目Id的键
+     */
+    String CURRENT_PROJECT_ID_KEY = "project-id";
+    /**
      * 默认的项目Id
      */
     String DEFAULT_PROJECT_ID = "default";
@@ -37,9 +41,9 @@ public interface SysConstant {
     String CONTEXT_HEADER_PREFIX = "x-header-";
     String HEADER_TOKEN = CONTEXT_HEADER_PREFIX + "Token";
     String ENVIRONMENT_TOKEN = CONTEXT_HEADER_PREFIX + "Environment-Token";
-    String HEADER_CLIENT_ID = CONTEXT_HEADER_PREFIX + "client_id";
+    String HEADER_CLIENT_ID = CONTEXT_HEADER_PREFIX + "client-id";
     String HEADER_PLATFORM = CONTEXT_HEADER_PREFIX + "platform";
-    String HEADER_TENANT_ID = CONTEXT_HEADER_PREFIX + "tenant_id";
+    String HEADER_TENANT_ID = CONTEXT_HEADER_PREFIX + "tenant-id";
     String HEADER_TOKEN_KEY = CONTEXT_HEADER_PREFIX + "token";
     /**
      * 用户Id

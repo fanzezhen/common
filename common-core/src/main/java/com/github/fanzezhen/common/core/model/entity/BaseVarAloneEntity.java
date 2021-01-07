@@ -3,6 +3,8 @@ package com.github.fanzezhen.common.core.model.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.github.fanzezhen.common.core.enums.db.DelFlagEnum;
+import com.github.fanzezhen.common.core.enums.db.StatusEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,20 +31,20 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 public class BaseVarAloneEntity extends BaseVarEntity {
     /**
-     * 状态（0--正常；1--禁用）
+     * 状态（0--正常；1--禁用），默认 0
      */
     @Column(name = "STATUS")
     @TableField(value = "STATUS", fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty("状态（0--正常；1--禁用）")
-    private Integer status;
+    @ApiModelProperty("状态（0--正常；1--禁用），默认 0")
+    private StatusEnum status;
     /**
-     * 删除标识（1-已删除；0-未删除）
+     * 删除标识（1-已删除；0-未删除），默认 0
      */
     @TableLogic
     @Column(name = "DEL_FLAG")
     @TableField(value = "DEL_FLAG", fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty("删除标识（1-已删除；0-未删除）")
-    private Integer delFlag;
+    @ApiModelProperty("删除标识（1-已删除；0-未删除），默认 0")
+    private DelFlagEnum delFlag;
     /**
      * 更新时间
      */

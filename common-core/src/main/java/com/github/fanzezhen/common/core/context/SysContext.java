@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
-
+/**
+ * @author zezhen.fan
+ */
 public class SysContext {
     /**
      * 用于保存线程相关信息
@@ -52,11 +54,11 @@ public class SysContext {
      * @return 键下的值
      */
     public static String get(String key) {
-        Map<String, String> CONTEXT_MAP = getContextMap();
-        if (CONTEXT_MAP == null) {
+        Map<String, String> contextMap = getContextMap();
+        if (contextMap == null) {
             return null;
         }
-        return CONTEXT_MAP.get(convertKey(key));
+        return contextMap.get(convertKey(key));
     }
 
     /**
@@ -79,19 +81,19 @@ public class SysContext {
         if (value != null && value.length() > MAX_SIZE) {
             throw new RuntimeException("value is more than " + MAX_SIZE + ", can't put it into the context map");
         }
-        Map<String, String> CONTEXT_MAP = getContextMap();
-        if (CONTEXT_MAP == null) {
-            CONTEXT_MAP = new HashMap<>(16);
-            SysContext.CONTEXT_MAP.set(CONTEXT_MAP);
+        Map<String, String> contextMap = getContextMap();
+        if (contextMap == null) {
+            contextMap = new HashMap<>(16);
+            SysContext.CONTEXT_MAP.set(contextMap);
         }
-        if (CONTEXT_MAP.size() > MAX_CAPACITY) {
+        if (contextMap.size() > MAX_CAPACITY) {
             throw new RuntimeException("the context map is full, can't put anything");
         }
         if (value == null) {
-            CONTEXT_MAP.remove(convertKey(key));
+            contextMap.remove(convertKey(key));
             return null;
         }
-        return CONTEXT_MAP.put(convertKey(key), value);
+        return contextMap.put(convertKey(key), value);
     }
 
     /**
@@ -157,6 +159,14 @@ public class SysContext {
 
     public static void setAppId(String appId) {
         put(SysConstant.HEADER_APP_CODE, appId);
+    }
+
+    public static String getCurrentAppCode() {
+        return get(SysConstant.CURRENT_PROJECT_ID_KEY);
+    }
+
+    public static void setCurrentAppCode(String appCode) {
+        put(SysConstant.CURRENT_PROJECT_ID_KEY, appCode);
     }
 
     public static String getTraceId() {
