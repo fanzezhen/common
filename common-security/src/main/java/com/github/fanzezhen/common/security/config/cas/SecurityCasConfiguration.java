@@ -1,6 +1,7 @@
-package com.github.fanzezhen.common.security.cas;
+package com.github.fanzezhen.common.security.config.cas;
 
 import com.github.fanzezhen.common.core.constant.SecurityConstant;
+import com.github.fanzezhen.common.security.annotation.SecurityCasConfig;
 import com.github.fanzezhen.common.security.facade.UserDetailsServiceFacade;
 import com.github.fanzezhen.common.security.interceptor.MyFilterSecurityInterceptor;
 import com.github.fanzezhen.common.security.property.SecurityProperty;
@@ -32,10 +33,11 @@ import javax.sql.DataSource;
 /**
  * @author zezhen.fan
  */
+@SecurityCasConfig
 @Configuration
 @EnableWebSecurity
 @Slf4j
-public class CasSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityCasConfiguration extends WebSecurityConfigurerAdapter {
     @Resource
     private SecurityProperty securityProperty;
 

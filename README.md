@@ -8,6 +8,7 @@ common
     * common-mp         ：MyBatis-Plus
     * common-security   ：权限模块
     * common-swagger    ：swagger接口模块
+    * common-web        ：web模块，通用的mvc配置
    
 3. 项目介绍
    * 后端主体框架： Springboot 2
@@ -15,4 +16,4 @@ common
    * 使用java版本： jdk 11+
    
 4. 运行条件
-   * 每个模块的运行条件详见模块中的 README.md
+   * 每个模块都有启用该模块配置的注解，详见各模块中的 README.md

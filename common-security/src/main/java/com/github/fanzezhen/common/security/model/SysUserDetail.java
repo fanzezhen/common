@@ -1,7 +1,10 @@
 package com.github.fanzezhen.common.security.model;
 
+import com.github.fanzezhen.common.core.enums.db.DelFlagEnum;
+import com.github.fanzezhen.common.core.enums.db.StatusEnum;
 import com.github.fanzezhen.common.core.util.BeanConverterUtil;
 import com.github.fanzezhen.common.core.model.dto.SysUserDto;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -64,12 +67,14 @@ public class SysUserDetail extends User implements CredentialsContainer {
     /**
      * 是否删除（0--否；1--是）
      */
-    private Integer delFlag;
+    @ApiModelProperty("删除标识（1-已删除；0-未删除），默认 0")
+    private DelFlagEnum delFlag;
 
     /**
      * 状态（0--正常；1--停用）
      */
-    private Integer status;
+    @ApiModelProperty("状态（0--正常；1--禁用），默认 0")
+    private StatusEnum status;
 
     /**
      * 最后操作时间

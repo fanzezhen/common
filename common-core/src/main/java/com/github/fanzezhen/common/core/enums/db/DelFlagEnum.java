@@ -13,11 +13,11 @@ public enum DelFlagEnum implements IEnum<Integer> {
     /**
      * 未删除
      */
-    NotDeleted(0, "未删除"),
+    NOT_DELETED(0, "未删除"),
     /**
      * 已删除
      */
-    deleted(1, "已删除");
+    DELETED(1, "已删除");
 
     @EnumValue
     @JsonValue

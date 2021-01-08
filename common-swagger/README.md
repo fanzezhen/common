@@ -1,23 +1,28 @@
-swagger
+common-swagger
 ------------------------------------------   
-模块介绍
-   * 主体框架： Springboot 2
-   
-引用条件
-   * 此模块需扫描该目录结构，如：
-    
-    @SpringBootApplication(scanBasePackages = {"项目目录", "com.github.fanzezhen.common.swagger"})
-    @EnableOpenApi   
 
-   * 此模块需要获取配置参数： 
+启用配置
 
-    project.code=SYS
-    project.version=@projectVersion@
-    project.base.package=@projectBasePackage@
-    project.title=@projectTitle@
-    project.description=@projectDescription@
-    project.link.man=@projectLinkMan@
-    project.link.url=@projectLinkUrl@
-    project.link.email=@projectLinkEmail@
-    project.license=@projectLicense@
-    project.license.url=@projectLicenseUrl@
+* @EnableCommonSwaggerConfig
+
+
+    # AppCode
+    project.code=${spring.application.name}
+    # 版本
+    project.version=@project.version@
+    # 扫描包路径
+    project.base.package=@project.groupId@
+    # 项目标题
+    project.title=${spring.application.name}
+    # 项目描述
+    project.description=description
+    # 项目联系人
+    project.link.man=author
+    # 项目联系地址
+    project.link.url=https://github.com/fanzezhen/common/tree/master/common-swagger
+    # 项目联系邮箱
+    project.link.email=e-mail
+    # 项目许可
+    project.license=The Apache License
+    # 项目许可链接
+    project.license.url=https://www.apache.org/licenses/LICENSE-2.0

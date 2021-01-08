@@ -9,17 +9,21 @@
     <version>2.0.5</version>
 
     <properties>
+        <app.server>-tomcat</app.server>
+        <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
         <cn.hutool.version>5.4.7</cn.hutool.version>
         <cn.stylefeng.roses.version>2.2.13</cn.stylefeng.roses.version>
-        <com.github.fanzezhen.version>${project.version}</com.github.fanzezhen.version>
+        <com.github.fanzezhen.common.version>${project.version}</com.github.fanzezhen.common.version>
         <com.github.fanzezhen.jdk8.version>0.0.3.4</com.github.fanzezhen.jdk8.version>
+        <com.github.penggle.version>2.3.2</com.github.penggle.version>
         <com.alibaba.version>1.2.68</com.alibaba.version>
         <com.baomidou.version>3.4.1</com.baomidou.version>
-        <com.fasterxml.jackson.core.version>2.10.2</com.fasterxml.jackson.core.version>
+        <com.fasterxml.jackson.core.version>2.12.0</com.fasterxml.jackson.core.version>
         <com.fasterxml.jackson.datatype.version>2.11.2</com.fasterxml.jackson.datatype.version>
         <com.google.code.gson.version>2.8.6</com.google.code.gson.version>
         <com.google.guava.version>29.0-jre</com.google.guava.version>
         <com.oracle.version>11.2.0.3</com.oracle.version>
+        <com.zaxxer.version>3.4.5</com.zaxxer.version>
         <commons-net.version>3.6</commons-net.version>
         <eu.bitwalker.version>1.21</eu.bitwalker.version>
         <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
@@ -34,6 +38,7 @@
         <org.apache.velocity.version>2.2</org.apache.velocity.version>
         <org.aspectj.version>1.9.6</org.aspectj.version>
         <org.freemarker.version>2.3.30</org.freemarker.version>
+        <org.apereo.cas.version>6.3.0</org.apereo.cas.version>
         <org.apache.commons.commons-beanutils.version>1.9.4</org.apache.commons.commons-beanutils.version>
         <org.apache.commons.commons-collections4.version>4.4</org.apache.commons.commons-collections4.version>
         <org.apache.commons.commons-lang3.version>3.11</org.apache.commons.commons-lang3.version>
@@ -75,24 +80,49 @@
             <dependency>
                 <groupId>com.github.fanzezhen.common</groupId>
                 <artifactId>common-core</artifactId>
-                <version>${com.github.fanzezhen.version}</version>
+                <version>${com.github.fanzezhen.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fanzezhen.common</groupId>
+                <artifactId>common-exception</artifactId>
+                <version>${com.github.fanzezhen.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fanzezhen.common</groupId>
+                <artifactId>common-log</artifactId>
+                <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.fanzezhen.common</groupId>
                 <artifactId>common-mp</artifactId>
-                <version>${com.github.fanzezhen.version}</version>
+                <version>${com.github.fanzezhen.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fanzezhen.common</groupId>
+                <artifactId>common-redis</artifactId>
+                <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.fanzezhen.common</groupId>
                 <artifactId>common-security</artifactId>
-                <version>${com.github.fanzezhen.version}</version>
+                <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.fanzezhen.common</groupId>
                 <artifactId>common-swagger</artifactId>
-                <version>${com.github.fanzezhen.version}</version>
+                <version>${com.github.fanzezhen.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fanzezhen.common</groupId>
+                <artifactId>common-web</artifactId>
+                <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <!--common-->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${ch.qos.logback.version}</version>
+            </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
@@ -122,6 +152,11 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${com.google.code.gson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${com.zaxxer.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger</groupId>
@@ -197,6 +232,66 @@
                 <artifactId>poi-ooxml</artifactId>
                 <version>${org.apache.poi.version}</version>
             </dependency>
+            <!-- org.apereo.cas -->
+            <dependency>
+                <groupId>org.apereo.cas</groupId>
+                <artifactId>cas-server-core-authentication-api</artifactId>
+                <version>${org.apereo.cas.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apereo.cas</groupId>
+                <artifactId>cas-server-core-authentication-attributes</artifactId>
+                <version>${org.apereo.cas.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apereo.cas</groupId>
+                <artifactId>cas-server-core-webflow</artifactId>
+                <version>${org.apereo.cas.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apereo.cas</groupId>
+                <artifactId>cas-server-core-webflow-api</artifactId>
+                <version>${org.apereo.cas.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apereo.cas</groupId>
+                <artifactId>cas-server-core-web-api</artifactId>
+                <version>${org.apereo.cas.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apereo.cas</groupId>
+                <artifactId>cas-server-support-jdbc</artifactId>
+                <version>${org.apereo.cas.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apereo.cas</groupId>
+                <artifactId>cas-server-support-jdbc-authentication</artifactId>
+                <version>${org.apereo.cas.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apereo.cas</groupId>
+                <artifactId>cas-server-support-jdbc-drivers</artifactId>
+                <version>${org.apereo.cas.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apereo.cas</groupId>
+                <artifactId>cas-server-support-jpa-service-registry</artifactId>
+                <version>${org.apereo.cas.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apereo.cas</groupId>
+                <artifactId>cas-server-core-services-api</artifactId>
+                <version>${org.apereo.cas.version}</version>
+            </dependency>
+            <!-- 和maven-war-plugin里配置的overlays配合使用（CAS） -->
+            <dependency>
+                <groupId>org.apereo.cas</groupId>
+                <artifactId>cas-server-webapp${app.server}</artifactId>
+                <version>${org.apereo.cas.version}</version>
+                <type>war</type>
+                <scope>runtime</scope>
+            </dependency>
+
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-autoconfigure</artifactId>
@@ -249,6 +344,16 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-autoconfigure</artifactId>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-actuator</artifactId>
                 <version>${org.springframework.boot.version}</version>
             </dependency>
@@ -265,6 +370,22 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-json</artifactId>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${org.springframework.boot.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
                 <version>${org.springframework.boot.version}</version>
             </dependency>
             <dependency>
@@ -351,22 +472,6 @@
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
                 <version>${org.freemarker.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-security</artifactId>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <version>${org.springframework.boot.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-                <version>${org.springframework.boot.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -468,6 +573,17 @@
                 <groupId>org.thymeleaf.extras</groupId>
                 <artifactId>thymeleaf-extras-springsecurity5</artifactId>
                 <version>${org.thymeleaf.extras.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${redis.clients.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.penggle</groupId>
+                <artifactId>kaptcha</artifactId>
+                <version>${com.github.penggle.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.web.aspect;
+package com.github.fanzezhen.common.log.aspect;
 
 import com.alibaba.fastjson.JSON;
 import com.github.fanzezhen.common.core.context.SysContext;

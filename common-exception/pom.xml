@@ -45,7 +45,7 @@
         <dependency>
             <groupId>com.github.fanzezhen.common</groupId>
             <artifactId>common-core</artifactId>
-            <version>${com.github.fanzezhen.version}</version>
+            <version>${com.github.fanzezhen.common.version}</version>
         </dependency>
     </dependencies>
 </project>

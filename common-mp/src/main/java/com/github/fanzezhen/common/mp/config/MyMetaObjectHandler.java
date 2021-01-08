@@ -39,6 +39,6 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         }
         this.fillStrategy(metaObject, "updateTime", LocalDateTime.now());
         this.fillStrategy(metaObject, "status", StatusEnum.ENABLE.code);
-        this.fillStrategy(metaObject, "delFlag", DelFlagEnum.NotDeleted.code);
+        this.fillStrategy(metaObject, "delFlag", DelFlagEnum.NOT_DELETED.code);
     }
 }

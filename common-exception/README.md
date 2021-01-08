@@ -1,6 +1,3 @@
 common-exception
 ------------------------------------------
-公共异常处理模块
-* 使用前需配置自动注入
-
-        @SpringBootApplication(scanBasePackages = {"项目目录", "com.github.fanzezhen.common.exception.exception"})
+公共异常处理模块，请在启动器上添加启用注解@EnableCommonExceptionConfig

@@ -18,7 +18,7 @@ import java.time.Duration;
  **/
 @Configuration
 @EnableCaching
-public class CacheConfig {
+public class RedisCacheConfig {
     @Resource
     private RedisConnectionFactory redisConnectionFactory;
 

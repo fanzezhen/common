@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.security.util;
 
+import cn.hutool.crypto.digest.BCrypt;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
 import com.github.fanzezhen.common.security.model.SysUserDetail;
@@ -155,6 +156,11 @@ public class SecurityUtil {
     }
 
     public static void main(String[] args) {
+        System.out.println(BCrypt.hashpw("111111"));
+        System.out.println(BCrypt.checkpw("111111", "$2a$10$q5uDd14HgRnRFmRB5u/f4Oo/.mvP0bfnNnnwqC7iuwUZRw4gs1OTq"));
         System.out.println(encrypt("111111"));
+        System.out.println(BCrypt.checkpw("111111", "$2a$10$udn72Xru23wSzSVUo7zUbOuus.sb50GRueNCKWaIVfbckkNgMmwWm"));
+        System.out.println(encrypt("111111"));
+        System.out.println(BCrypt.checkpw("111111", "$2a$10$yL.BdfDenp2uqQm3U86PjulKCFScpbL9vO7Ml4r6TEaUev/2jqmxi"));
     }
 }

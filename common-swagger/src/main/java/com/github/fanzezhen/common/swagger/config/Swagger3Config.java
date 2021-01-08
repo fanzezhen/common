@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.swagger;
+package com.github.fanzezhen.common.swagger.config;
 
 import com.github.fanzezhen.common.core.ProjectProperty;
 import com.github.fanzezhen.common.core.constant.CommonConstant;
