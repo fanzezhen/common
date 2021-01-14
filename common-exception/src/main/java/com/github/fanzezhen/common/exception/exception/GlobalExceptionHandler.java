@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import java.util.List;
 
 /**
@@ -58,10 +60,36 @@ public class GlobalExceptionHandler {
         return ActionResult.failed(fieldErrors);
     }
 
+    /**
+     * validation exception
+     *
+     * @param exception 异常
+     * @return R
+     */
+    @ExceptionHandler({ConstraintViolationException.class})
+    @ResponseStatus(HttpStatus.OK)
+    public ActionResult<Object> bodyValidExceptionHandler(ConstraintViolationException exception) {
+        log.error("validation exception：{}", exception.getMessage(), exception);
+        return ActionResult.failed(exception);
+    }
+
+    /**
+     * validation exception
+     *
+     * @param exception 异常
+     * @return R
+     */
+    @ExceptionHandler({ValidationException.class})
+    @ResponseStatus(HttpStatus.OK)
+    public ActionResult<Object> bodyValidExceptionHandler(ValidationException exception) {
+        log.error("validation exception：{}", exception.getMessage(), exception);
+        return ActionResult.failed(exception.getMessage());
+    }
+
     @ExceptionHandler(value = {ServiceException.class})
     @ResponseStatus(HttpStatus.OK)
-    public ActionResult<Object> businessException(Exception e, HttpServletRequest request) {
+    public ActionResult<Object> businessException(ServiceException e, HttpServletRequest request) {
         log.error("request:{} Method:{} message:{}", request.getRequestURI(), request.getMethod(), e.getMessage(), e);
-        return ActionResult.failed((ServiceException) e);
+        return ActionResult.failed(e);
     }
 }

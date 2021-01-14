@@ -9,9 +9,11 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.validation.FieldError;
 
+import javax.validation.ConstraintViolationException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -33,11 +35,11 @@ public class ActionResult<T> implements Serializable {
     private T data;
     private List<ErrorInfo> errors;
 
-    public String getMsg(){
-        if (success){
+    public String getMsg() {
+        if (success) {
             return "success";
         }
-        if (CollectionUtil.isEmpty(errors)){
+        if (CollectionUtil.isEmpty(errors)) {
             return CoreExceptionEnum.SERVICE_ERROR.getMessage();
         }
         return errors.get(0).getMessage();
@@ -94,6 +96,16 @@ public class ActionResult<T> implements Serializable {
         }
         List<ErrorInfo> errorList = new ArrayList<>();
         fieldErrors.forEach(fieldError -> errorList.add(new ErrorInfo(String.valueOf(fieldError))));
+        return new ActionResult<>(errorList);
+    }
+
+    public static <T> ActionResult<T> failed(ConstraintViolationException constraintViolationException) {
+        if (CollectionUtil.isEmpty(constraintViolationException.getConstraintViolations())) {
+            return failed(constraintViolationException.getMessage());
+        }
+        List<ErrorInfo> errorList = constraintViolationException.getConstraintViolations().stream()
+                .map(constraintViolation -> new ErrorInfo(constraintViolation.getMessage()))
+                .collect(Collectors.toList());
         return new ActionResult<>(errorList);
     }
 
