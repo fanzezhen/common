@@ -12,6 +12,8 @@ common-core
     project.version=@project.version@
     # 扫描包路径
     project.base.package=@project.groupId@
+    # DTO包路径，用于使用Entity直接作为参数对数据库操作时自动识别OperateLog
+    project.dto.packages=
     # 项目标题
     project.title=${spring.application.name}
     # 项目描述

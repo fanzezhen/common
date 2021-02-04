@@ -106,9 +106,9 @@ public class SysContext {
             logger.error("key: is null, can't remove");
             return;
         }
-        Map<String, String> CONTEXT_MAP = getContextMap();
-        if (CONTEXT_MAP != null) {
-            CONTEXT_MAP.remove(convertKey(key));
+        final Map<String, String> contextMap = getContextMap();
+        if (contextMap != null) {
+            contextMap.remove(convertKey(key));
         }
     }
 

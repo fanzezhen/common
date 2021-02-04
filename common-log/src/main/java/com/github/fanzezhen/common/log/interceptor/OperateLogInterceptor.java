@@ -1,14 +1,17 @@
 package com.github.fanzezhen.common.log.interceptor;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.fanzezhen.common.core.ProjectProperty;
 import com.github.fanzezhen.common.core.context.SysContext;
 import com.github.fanzezhen.common.core.annotion.OperateLog;
 import com.github.fanzezhen.common.core.annotion.OperateLogMapper;
 import com.github.fanzezhen.common.core.dict.AbstractDict;
 import com.github.fanzezhen.common.core.enums.table.CommonFieldEnum;
+import com.github.fanzezhen.common.core.util.ReflectionUtil;
 import com.github.fanzezhen.common.log.foundation.entity.LogOperate;
 import com.github.fanzezhen.common.log.foundation.entity.LogOperateDetail;
 import com.github.fanzezhen.common.log.foundation.service.ILogOperateDetailService;
@@ -19,6 +22,7 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.*;
+import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +45,8 @@ public class OperateLogInterceptor implements Interceptor {
     private static final String MAPPER_DELETE_METHOD_PARAM_MAP_EW_KEY = "ew";
     private static final String NAME_SUFFIX_DTO = "Dto";
     private static final String NAME_SUFFIX_SERVICE_IMPL = "ServiceImpl";
+    @Resource
+    private ProjectProperty projectProperty;
     @Value("${log.operate.check-mapper:false}")
     private boolean needCheckMapper;
     @Value("${log.operate.use-microservice:false}")
@@ -50,9 +56,9 @@ public class OperateLogInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        Object result;
+        Object result = null;
         Object arg = getArg(invocation);
-        OperateLog operateLog = arg == null ? null : arg.getClass().getAnnotation(OperateLog.class);
+        OperateLog operateLog = getOperateLog(arg);
         if (operateLog == null) {
             result = invocation.proceed();
             return result;
@@ -77,24 +83,19 @@ public class OperateLogInterceptor implements Interceptor {
         if (StrUtil.isBlank(tableName)) {
             tableName = getTableNameByClass(arg.getClass());
         }
-        LogOperate logOperate = insertLog(String.valueOf(ReflectUtil.getFieldValue(arg, "id")), sqlCommandType.ordinal(), tableName);
+        LogOperate logOperate = insertLog(String.valueOf(ReflectUtil.getFieldValue(arg, "id")),
+                sqlCommandType.ordinal(), tableName, null);
         switch (sqlCommandType) {
             case INSERT:
-                dealInsertSqlCommandType(dict, operateLog, logOperate, arg);
+                result = invocation.proceed();
+                dealOnlyNewValueLog(dict, operateLog, sqlCommandType.ordinal(), arg);
                 break;
             case UPDATE:
-                String serviceBeanName = operateLog.serviceBeanName();
-                IService<?> service = null;
-                try {
-                    if (StrUtil.isBlank(serviceBeanName)) {
-                        serviceBeanName = getServiceBeanNameByClass(arg.getClass());
-                    }
-                    service = SpringUtil.getBean(serviceBeanName);
-                } catch (Throwable throwable) {
-                    log.warn("", throwable);
-                }
-                if (StrUtil.isBlank(serviceBeanName) || service == null) {
-                    dealInsertSqlCommandType(dict, operateLog, logOperate, arg);
+                IService<?> service = getService(operateLog.serviceBeanName(), arg.getClass());
+                if (service == null) {
+                    // 无法获取旧值，按照新增执行（operateType为更新）
+                    result = invocation.proceed();
+                    dealOnlyNewValueLog(dict, operateLog, sqlCommandType.ordinal(), arg);
                     break;
                 }
                 List<LogOperateDetail> detailLogList = new ArrayList<>();
@@ -129,7 +130,6 @@ public class OperateLogInterceptor implements Interceptor {
             case UNKNOWN:
             default:
         }
-        result = invocation.proceed();
         return result;
     }
 
@@ -143,13 +143,14 @@ public class OperateLogInterceptor implements Interceptor {
 
     }
 
-    private LogOperate insertLog(String bizId, int operateType, String tableName) {
+    private LogOperate insertLog(String bizId, int operateType, String tableName, String comment) {
         LogOperate logOperate = new LogOperate();
         logOperate.setBizId(bizId);
         logOperate.setTableName(tableName);
         logOperate.setOperateType(operateType);
         logOperate.setAppCode(SysContext.getCurrentAppCode());
         logOperate.setOperateUsername(SysContext.getUserName());
+        logOperate.setComment(comment);
         if (useMicroservice) {
             logRemote.addLogOperate(logOperate);
         } else {
@@ -168,7 +169,28 @@ public class OperateLogInterceptor implements Interceptor {
         }
     }
 
-    private void dealInsertSqlCommandType(AbstractDict dict, OperateLog operateLog, LogOperate logOperate, Object arg) {
+    /**
+     * 处理只有新值的日志
+     *
+     * @param dict        字典
+     * @param operateLog  日志注解
+     * @param operateType 操作类型
+     * @param arg         数据库入参
+     */
+    private void dealOnlyNewValueLog(AbstractDict dict,
+                                     OperateLog operateLog,
+                                     int operateType,
+                                     Object arg) {
+        String tableName = operateLog.tableName();
+        if (StrUtil.isBlank(tableName)) {
+            tableName = getTableNameByClass(arg.getClass());
+        }
+        String comment = null;
+        if (operateType != SqlCommandType.INSERT.ordinal()) {
+            comment = "未能成功加载旧值";
+        }
+        LogOperate logOperate = insertLog(String.valueOf(ReflectUtil.getFieldValue(arg, "id")),
+                operateType, tableName, comment);
         List<LogOperateDetail> detailLogList = new ArrayList<>();
         boolean isAllFields = operateLog.isAllFields();
         String[] fieldNames = operateLog.fieldNameFilters();
@@ -221,13 +243,42 @@ public class OperateLogInterceptor implements Interceptor {
 
     private String getTableNameByClass(Class<?> clazz) {
         return StrUtil.toUnderlineCase(StrUtil.strip(
-                StrUtil.subAfter(clazz.getName(), StrUtil.C_DOT, true), StrUtil.EMPTY,
-                "Dto"));
+                StrUtil.subAfter(clazz.getName(), StrUtil.C_DOT, true), StrUtil.EMPTY, NAME_SUFFIX_DTO));
     }
 
-    private String getServiceBeanNameByClass(Class<?> clazz) {
+    private String getServiceBeanNameByBeanClass(Class<?> clazz) {
         return StrUtil.lowerFirst(StrUtil.strip(StrUtil.subAfter(clazz.getName(), StrUtil.C_DOT, true),
                 StrUtil.EMPTY, NAME_SUFFIX_DTO)) + NAME_SUFFIX_SERVICE_IMPL;
     }
 
+    private OperateLog getOperateLog(Object arg) {
+        OperateLog operateLog = arg == null ? null : arg.getClass().getAnnotation(OperateLog.class);
+        if (operateLog == null) {
+            if (arg != null && StrUtil.isNotBlank(projectProperty.getDtoPackages())) {
+                String[] dtoPackages = projectProperty.getDtoPackages().split(",");
+                for (String dtoPackage : dtoPackages) {
+                    Reflections reflections = new Reflections(dtoPackage);
+                    for (Class<?> dtoClass : reflections.getTypesAnnotatedWith(OperateLog.class)) {
+                        if (ReflectionUtil.isSubClass(dtoClass, arg.getClass())) {
+                            arg = BeanUtil.copyProperties(arg, dtoClass);
+                            return arg.getClass().getAnnotation(OperateLog.class);
+                        }
+                    }
+                }
+            }
+        }
+        return operateLog;
+    }
+
+    private IService<?> getService(String serviceBeanName, Class<?> clazz) {
+        try {
+            if (StrUtil.isBlank(serviceBeanName)) {
+                serviceBeanName = getServiceBeanNameByBeanClass(clazz);
+            }
+            return StrUtil.isBlank(serviceBeanName) ? null : SpringUtil.getBean(serviceBeanName);
+        } catch (Throwable throwable) {
+            log.warn("", throwable);
+        }
+        return null;
+    }
 }

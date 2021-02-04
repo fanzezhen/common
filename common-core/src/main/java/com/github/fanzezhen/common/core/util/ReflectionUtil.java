@@ -252,4 +252,14 @@ public class ReflectionUtil {
             return false;
         }
     }
+
+    public static boolean isSubClass(Class clazz1, Class clazz2) {
+        for(Class parent = clazz1.getSuperclass(); parent != null; parent = parent.getSuperclass()) {
+            if (parent.getName().equals(clazz2.getName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

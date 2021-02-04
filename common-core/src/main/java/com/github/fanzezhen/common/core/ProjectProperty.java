@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Getter
 @Component
-@ConfigurationProperties("project")
+@ConfigurationProperties(prefix = "project")
 public class ProjectProperty {
     @Value("${project.code:DEMO}")
     private String appCode;
@@ -18,6 +18,8 @@ public class ProjectProperty {
     private String version;
     @Value("${project.base.package:com.github.fanzezhen}")
     private String basePackage;
+    @Value("${project.dto.packages:}")
+    private String dtoPackages;
     @Value("${project.title:DEMO}")
     private String title;
     @Value("${project.description:示例}")
