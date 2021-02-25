@@ -110,10 +110,13 @@ public abstract class AbstractGeneratorBean {
 
     public AbstractGeneratorBean setSuperEntityClass(Class<?> superEntityClass) {
         this.superEntityClass = superEntityClass;
+        if (superEntityClass == null) {
+            return this;
+        }
+        if (tableFillSet == null) {
+            tableFillSet = new HashSet<>();
+        }
         if (superEntityClass.isAssignableFrom(BaseVarEntity.class)) {
-            if (tableFillSet == null) {
-                tableFillSet = new HashSet<>();
-            }
             tableFillSet.add(new TableFill("createTime", FieldFill.INSERT));
             tableFillSet.add(new TableFill("createUserId", FieldFill.INSERT));
         }

@@ -31,9 +31,7 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * @author zhujiajun
- * @version 1.0
- * @since 2018/10/25 13:54
+ * @author zezhen.fan
  */
 @Slf4j
 @Component
@@ -219,26 +217,26 @@ public class OperateLogInterceptor implements Interceptor {
 
     @SuppressWarnings("all")
     private Object getArg(Invocation invocation) {
-        Object result = null;
+        Object arg = null;
         try {
             MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
             SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
             switch (sqlCommandType) {
                 case INSERT:
-                    result = invocation.getArgs()[1];
+                    arg = invocation.getArgs()[1];
                     break;
                 case UPDATE:
-                    result = ((Map<String, Object>) invocation.getArgs()[1]).get(MAPPER_UPDATE_METHOD_PARAM_MAP_ET_KEY);
+                    arg = ((Map<String, Object>) invocation.getArgs()[1]).get(MAPPER_UPDATE_METHOD_PARAM_MAP_ET_KEY);
                     break;
                 case DELETE:
-                    result = ((Map<String, Object>) invocation.getArgs()[1]).get(MAPPER_DELETE_METHOD_PARAM_MAP_EW_KEY);
+                    arg = ((Map<String, Object>) invocation.getArgs()[1]).get(MAPPER_DELETE_METHOD_PARAM_MAP_EW_KEY);
                     break;
                 default:
             }
         } catch (Throwable throwable) {
             log.warn("", throwable);
         }
-        return result;
+        return arg;
     }
 
     private String getTableNameByClass(Class<?> clazz) {

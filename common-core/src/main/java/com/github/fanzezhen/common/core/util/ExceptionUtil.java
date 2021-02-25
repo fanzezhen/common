@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.core.util;
 
+import cn.hutool.core.util.StrUtil;
 import cn.stylefeng.roses.kernel.model.exception.AbstractBaseExceptionEnum;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
@@ -18,5 +19,19 @@ public class ExceptionUtil {
 
     public static void throwException(AbstractBaseExceptionEnum exceptionEnum) {
         throw new ServiceException(exceptionEnum);
+    }
+
+    public static void throwIfBlank(Object param, String paramName) {
+        throwIfBlank(param, paramName, "参数不能为空");
+    }
+
+    public static void throwIfBlank(Object param, String paramName, String errMsg) {
+        if (param == null || StrUtil.isBlank(String.valueOf(param))) {
+            throwException(paramName + errMsg);
+        }
+    }
+
+    public static void throwIfBlank(Object param) {
+        throwIfBlank(param, StrUtil.EMPTY);
     }
 }

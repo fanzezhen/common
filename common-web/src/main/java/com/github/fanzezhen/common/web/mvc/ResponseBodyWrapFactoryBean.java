@@ -12,9 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author zhujiajun
- * @version 1.0
- * @since 2019-04-15 16:18
+ * @author zezhen.fan
  */
 public class ResponseBodyWrapFactoryBean implements InitializingBean {
 
