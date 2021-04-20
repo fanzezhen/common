@@ -1,8 +1,6 @@
 package com.github.fanzezhen.common.core.model.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.*;
 import com.github.fanzezhen.common.core.enums.db.DelFlagEnum;
 import com.github.fanzezhen.common.core.enums.db.StatusEnum;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,7 +12,9 @@ import lombok.experimental.Accessors;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.persistence.Column;
+import javax.persistence.Index;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
@@ -29,22 +29,35 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@Table(indexes = {
+        @Index(name = "ix_basic", columnList = "DEL_FLAG, STATUS")
+})
 public class BaseVarAloneEntity extends BaseVarEntity {
-    /**
-     * 状态（0--正常；1--禁用），默认 0
-     */
-    @Column(name = "STATUS")
-    @TableField(value = "STATUS", fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty("状态（0--正常；1--禁用），默认 0")
-    private StatusEnum status;
     /**
      * 删除标识（1-已删除；0-未删除），默认 0
      */
+    @EnumValue
     @TableLogic
     @Column(name = "DEL_FLAG")
-    @TableField(value = "DEL_FLAG", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "DEL_FLAG", fill = FieldFill.INSERT)
     @ApiModelProperty("删除标识（1-已删除；0-未删除），默认 0")
     private DelFlagEnum delFlag;
+    /**
+     * 状态（0--正常；1--禁用），默认 0
+     */
+    @EnumValue
+    @Column(name = "STATUS")
+    @TableField(value = "STATUS", fill = FieldFill.INSERT)
+    @ApiModelProperty("状态（0--正常；1--禁用），默认 0")
+    private StatusEnum status;
+    /**
+     * 数据版本号
+     */
+    @Version
+    @Column(name = "VERSION")
+    @TableField(value = "VERSION", fill = FieldFill.INSERT_UPDATE)
+    @ApiModelProperty("数据版本号，默认 0")
+    private Integer version;
     /**
      * 更新时间
      */
@@ -69,6 +82,7 @@ public class BaseVarAloneEntity extends BaseVarEntity {
     }
 
     public static String[] getFieldNames() {
-        return ArrayUtils.addAll(BaseVarEntity.getFieldNames(), "status", "del_flag", "update_time", "update_user_id");
+        return ArrayUtils.addAll(BaseVarEntity.getFieldNames(),
+                "status", "del_flag", "version", "update_time", "update_user_id");
     }
 }

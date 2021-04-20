@@ -10,6 +10,7 @@ import com.github.fanzezhen.common.core.context.SysContext;
 import com.github.fanzezhen.common.core.annotion.OperateLog;
 import com.github.fanzezhen.common.core.annotion.OperateLogMapper;
 import com.github.fanzezhen.common.core.dict.AbstractDict;
+import com.github.fanzezhen.common.core.enums.db.log.OperationLogTypeEnum;
 import com.github.fanzezhen.common.core.enums.table.CommonFieldEnum;
 import com.github.fanzezhen.common.core.util.ReflectionUtil;
 import com.github.fanzezhen.common.log.foundation.entity.LogOperate;
@@ -145,7 +146,7 @@ public class OperateLogInterceptor implements Interceptor {
         LogOperate logOperate = new LogOperate();
         logOperate.setBizId(bizId);
         logOperate.setTableName(tableName);
-        logOperate.setOperateType(operateType);
+        logOperate.setOperateType(OperationLogTypeEnum.getOrDefaultByType(operateType));
         logOperate.setAppCode(SysContext.getCurrentAppCode());
         logOperate.setOperateUsername(SysContext.getUserName());
         logOperate.setComment(comment);

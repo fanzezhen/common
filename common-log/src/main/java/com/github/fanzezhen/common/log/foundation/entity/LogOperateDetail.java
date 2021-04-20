@@ -1,11 +1,13 @@
 package com.github.fanzezhen.common.log.foundation.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.github.fanzezhen.common.core.model.entity.BaseVarEntity;
-import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 /**
  * <p>
@@ -17,8 +19,11 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ApiModel(value="LogOperateDetail对象", description="操作日志详情")
+@Table(indexes = {
+        @Index(name = "ix_app_module_type", columnList = "APP_CODE, LOG_ID")
+})
 public class LogOperateDetail extends BaseVarEntity {
-
     private static final long serialVersionUID = 1L;
 
     /**

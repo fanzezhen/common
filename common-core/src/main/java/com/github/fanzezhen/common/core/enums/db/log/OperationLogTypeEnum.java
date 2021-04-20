@@ -4,11 +4,18 @@ import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
+import java.util.Objects;
+
 /**
  * 登录日志类型枚举
+ *
  * @author zezhen.fan
  */
 public enum OperationLogTypeEnum {
+    /**
+     * 默认
+     */
+    DEFAULT(0, "默认"),
     /**
      * 新增
      */
@@ -31,5 +38,14 @@ public enum OperationLogTypeEnum {
 
     public static boolean needCompare(int type) {
         return type != ADD.type;
+    }
+
+    public static OperationLogTypeEnum getOrDefaultByType(int type) {
+        for (OperationLogTypeEnum typeEnum : OperationLogTypeEnum.values()) {
+            if (Objects.equals(typeEnum.type, type)) {
+                return typeEnum;
+            }
+        }
+        return OperationLogTypeEnum.DEFAULT;
     }
 }

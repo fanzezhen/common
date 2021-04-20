@@ -19,26 +19,24 @@ import java.time.LocalDateTime;
 public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
-        String loginUserId = SysContext.getUserId();
         log.debug("start insert fill ....");
-        // 也可以使用(3.3.0 该方法有bug请升级到之后的版本如`3.3.1.8-SNAPSHOT`)
+        String loginUserId = SysContext.getUserId();
         if (StrUtil.isNotBlank(loginUserId)) {
             this.fillStrategy(metaObject, "createUserId", loginUserId);
         }
+        this.fillStrategy(metaObject, "status", StatusEnum.ENABLE.code);
+        this.fillStrategy(metaObject, "delFlag", DelFlagEnum.NOT_DELETED.code);
         this.fillStrategy(metaObject, "createTime", LocalDateTime.now());
         this.fillStrategy(metaObject, "updateTime", LocalDateTime.now());
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        String loginUserId = SysContext.getUserId();
         log.debug("start update fill ....");
-        // 也可以使用(3.3.0 该方法有bug请升级到之后的版本如`3.3.1.8-SNAPSHOT`)
+        String loginUserId = SysContext.getUserId();
         if (StrUtil.isNotBlank(loginUserId)) {
             this.fillStrategy(metaObject, "updateUserId", loginUserId);
         }
         this.fillStrategy(metaObject, "updateTime", LocalDateTime.now());
-        this.fillStrategy(metaObject, "status", StatusEnum.ENABLE.code);
-        this.fillStrategy(metaObject, "delFlag", DelFlagEnum.NOT_DELETED.code);
     }
 }
