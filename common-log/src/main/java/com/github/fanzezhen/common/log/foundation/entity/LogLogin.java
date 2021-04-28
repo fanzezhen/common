@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.log.foundation.entity;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.github.fanzezhen.common.core.enums.db.log.LoginLogTypeEnum;
-import com.github.fanzezhen.common.core.model.entity.BaseVarEntity;
+import com.github.fanzezhen.common.core.model.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 import javax.persistence.Column;
 import javax.persistence.Index;
 import javax.persistence.Table;
+import java.math.BigInteger;
 
 /**
  * <p>
@@ -26,12 +27,10 @@ import javax.persistence.Table;
 @Table(indexes = {
         @Index(name = "ix_app_type", columnList = "APP_CODE, LOG_TYPE")
 })
-public class LogLogin extends BaseVarEntity {
+public class LogLogin extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 用户名
-     */
+    @ApiModelProperty(value = "用户名")
     private String username;
 
     /**
@@ -42,34 +41,19 @@ public class LogLogin extends BaseVarEntity {
     @ApiModelProperty(value = "日志类型")
     private LoginLogTypeEnum logType;
 
-    /**
-     * ip
-     */
-    private String ip;
+    @ApiModelProperty(value = "ip")
+    private BigInteger ip;
 
-    /**
-     * 操作系统
-     */
+    @ApiModelProperty(value = "操作系统")
     private String os;
 
-    /**
-     * 浏览器名称
-     */
+    @ApiModelProperty(value = "浏览器名称")
     private String browserName;
 
-    /**
-     * 浏览器版本
-     */
+    @ApiModelProperty(value = "浏览器版本")
     private String browserVersion;
 
-    /**
-     * 备注
-     */
+    @ApiModelProperty(value = "备注")
     private String remark;
-
-    /**
-     * 应用代码
-     */
-    private String appCode;
 
 }

@@ -108,6 +108,7 @@ public class GeneratorTool {
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix("t_");
         strategy.setLogicDeleteFieldName(generatorBean.getLogicDeleteFieldName());
+        strategy.setVersionFieldName(generatorBean.getVersionFieldName());
         strategy.setInclude(generatorBean.getTableNameStr().split(generatorBean.getTableNameSplitter()));
         mpg.setStrategy(strategy);
         // 选择 freemarker 引擎需要指定如下加，注意 pom 依赖必须有！

@@ -2,9 +2,9 @@ package com.github.fanzezhen.common.mp.generator;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.generator.config.po.TableFill;
-import com.github.fanzezhen.common.core.model.entity.BaseVarAloneEntity;
+import com.github.fanzezhen.common.core.model.entity.BaseEntity;
 import com.github.fanzezhen.common.core.model.entity.BaseVarEntity;
-import com.github.fanzezhen.common.mp.Constant;
+import com.github.fanzezhen.common.core.constant.MpConstant;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -72,6 +72,10 @@ public abstract class AbstractGeneratorBean {
      * 数据表中的逻辑删除字段
      */
     private String logicDeleteFieldName;
+    /**
+     * 数据表中的版本号字段
+     */
+    private String versionFieldName;
 
     public AbstractGeneratorBean putSuperiorModuleNames(String... moduleNames) {
         if (moduleNameList == null) {
@@ -96,15 +100,16 @@ public abstract class AbstractGeneratorBean {
     public abstract void init();
 
     public AbstractGeneratorBean() {
-        setLogicDeleteFieldName(Constant.LOGIC_DELETE_FIELD_NAME);
+        setLogicDeleteFieldName(MpConstant.LOGIC_DELETE_FIELD_NAME);
+        setVersionFieldName(MpConstant.VERSION_FIELD_NAME);
         setModuleNameList(new ArrayList<>() {{
-            add(Constant.AUTOMATED_MODULE_NAME);
+            add(MpConstant.AUTOMATED_MODULE_NAME);
         }});
-        setPackageModuleName(Constant.PACKAGE_MODULE_NAME);
-        setTableNameSplitter(Constant.DEFAULT_TABLE_NAME_SPLITTER);
-        setTableNameStr(GeneratorTool.scanner(Constant.DEFAULT_TABLE_NAME_INPUT_HINT));
-        setSuperEntityClass(com.github.fanzezhen.common.core.model.entity.BaseVarAloneEntity.class);
-        setSuperEntityColumns(BaseVarAloneEntity.getFieldNames());
+        setPackageModuleName(MpConstant.PACKAGE_MODULE_NAME);
+        setTableNameSplitter(MpConstant.DEFAULT_TABLE_NAME_SPLITTER);
+        setTableNameStr(GeneratorTool.scanner(MpConstant.DEFAULT_TABLE_NAME_INPUT_HINT));
+        setSuperEntityClass(BaseEntity.class);
+        setSuperEntityColumns(BaseEntity.getFieldNames());
         init();
     }
 
@@ -116,15 +121,16 @@ public abstract class AbstractGeneratorBean {
         if (tableFillSet == null) {
             tableFillSet = new HashSet<>();
         }
-        if (superEntityClass.isAssignableFrom(BaseVarEntity.class)) {
+        if (superEntityClass.isAssignableFrom(BaseEntity.class)) {
+            tableFillSet.add(new TableFill("delFlag", FieldFill.INSERT));
             tableFillSet.add(new TableFill("createTime", FieldFill.INSERT));
             tableFillSet.add(new TableFill("createUserId", FieldFill.INSERT));
-        }
-        if (superEntityClass.isAssignableFrom(BaseVarAloneEntity.class)) {
             tableFillSet.add(new TableFill("updateTime", FieldFill.INSERT_UPDATE));
             tableFillSet.add(new TableFill("updateUserId", FieldFill.INSERT_UPDATE));
-            tableFillSet.add(new TableFill("status", FieldFill.INSERT_UPDATE));
-            tableFillSet.add(new TableFill("delFlag", FieldFill.INSERT_UPDATE));
+        }
+        if (superEntityClass.isAssignableFrom(BaseVarEntity.class)) {
+            tableFillSet.add(new TableFill("status", FieldFill.INSERT));
+            tableFillSet.add(new TableFill("version", FieldFill.INSERT_UPDATE));
         }
         return this;
     }

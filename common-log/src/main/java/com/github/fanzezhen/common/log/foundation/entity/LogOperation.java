@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.log.foundation.entity;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.github.fanzezhen.common.core.enums.db.log.OperationLogTypeEnum;
-import com.github.fanzezhen.common.core.model.entity.BaseVarEntity;
+import com.github.fanzezhen.common.core.model.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,11 +22,11 @@ import javax.persistence.Table;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel(value="LogOperate对象", description="操作日志")
+@ApiModel(value="LogOperation对象", description="操作日志表")
 @Table(indexes = {
         @Index(name = "ix_app_module_type", columnList = "APP_CODE, MODULE, OPERATE_TYPE")
 })
-public class LogOperate extends BaseVarEntity {
+public class LogOperation extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,7 +39,7 @@ public class LogOperate extends BaseVarEntity {
     @EnumValue
     @Column(name = "OPERATE_TYPE")
     @ApiModelProperty(value = "操作类型")
-    private OperationLogTypeEnum operateType;
+    private OperationLogTypeEnum operationType;
 
     @ApiModelProperty(value = "操作模块")
     private String module;
@@ -51,10 +51,10 @@ public class LogOperate extends BaseVarEntity {
     private String deviceNum;
 
     @ApiModelProperty(value = "备注")
-    private String comment;
+    private String remark;
 
     @ApiModelProperty(value = "操作人名称")
-    private String operateUsername;
+    private String operationUsername;
 
     @ApiModelProperty(value = "APP标识")
     private String appCode;

@@ -1,6 +1,6 @@
 package com.github.fanzezhen.common.log.foundation.entity;
 
-import com.github.fanzezhen.common.core.model.entity.BaseVarEntity;
+import com.github.fanzezhen.common.core.model.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,42 +19,30 @@ import javax.persistence.Table;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel(value="LogOperateDetail对象", description="操作日志详情")
+@ApiModel(value="LogOperationDetail对象", description="操作日志详情表")
 @Table(indexes = {
         @Index(name = "ix_app_module_type", columnList = "APP_CODE, LOG_ID")
 })
-public class LogOperateDetail extends BaseVarEntity {
+public class LogOperationDetail extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 操作日志Id
-     */
+    @ApiModelProperty(value = "操作日志Id")
     private String logId;
 
-    /**
-     * 列字段
-     */
+    @ApiModelProperty(value = "列字段")
     private String tableColumn;
 
-    /**
-     * 列名称
-     */
+    @ApiModelProperty(value = "列名称")
     private String columnName;
 
-    /**
-     * oldValue
-     */
+    @ApiModelProperty(value = "oldValue")
     private String oldValue;
 
-    /**
-     * newValue
-     */
+    @ApiModelProperty(value = "newValue")
     private String newValue;
 
-    /**
-     * 备注
-     */
-    private String comment;
+    @ApiModelProperty(value = "备注")
+    private String remark;
 
     @ApiModelProperty(value = "APP标识")
     private String appCode;

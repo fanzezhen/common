@@ -1,7 +1,7 @@
 package com.github.fanzezhen.common.core.model.dto;
 
 
-import com.github.fanzezhen.common.core.model.entity.BaseVarAloneEntity;
+import com.github.fanzezhen.common.core.model.entity.BaseVarEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SysPermissionDto extends BaseVarAloneEntity {
+public class SysPermissionDto extends BaseVarEntity {
     /**
      * 上级ID
      */

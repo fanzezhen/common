@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.log.foundation.entity;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.github.fanzezhen.common.core.enums.db.log.ExceptionTypeEnum;
-import com.github.fanzezhen.common.core.model.entity.BaseVarEntity;
+import com.github.fanzezhen.common.core.model.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,13 +26,8 @@ import javax.persistence.Table;
 @Table(indexes = {
         @Index(name = "ix_app_module_type", columnList = "APP_CODE, MODULE, LOG_TYPE")
 })
-public class LogException extends BaseVarEntity {
+public class LogException extends BaseEntity {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 用户名
-     */
-    private String username;
 
     /**
      * 日志类型
@@ -42,29 +37,22 @@ public class LogException extends BaseVarEntity {
     @ApiModelProperty(value = "日志类型")
     private ExceptionTypeEnum logType;
 
-    /**
-     * 资源所属模块
-     */
+    @ApiModelProperty(value = "资源所属模块")
     private String modular;
 
-    /**
-     * 错误类名
-     */
+    @ApiModelProperty(value = "错误类名")
     private String className;
 
-    /**
-     * 错误说明
-     */
+    @ApiModelProperty(value = "错误说明")
     private String message;
 
-    /**
-     * 错误堆栈
-     */
+    @ApiModelProperty(value = "错误堆栈")
     private String stackTrace;
 
-    /**
-     * 应用代码
-     */
+    @ApiModelProperty(value = "操作人名称")
+    private String operationUsername;
+
+    @ApiModelProperty(value = "应用代码")
     private String appCode;
 
 }

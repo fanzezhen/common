@@ -1,64 +1,59 @@
 package com.github.fanzezhen.common.core.model.entity;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.Version;
+import com.github.fanzezhen.common.core.enums.db.StatusEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.ArrayUtils;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Index;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
 
 /**
  * 公共Model,将每个表都有的公共字段抽取出来
  *
- * @ MappedSuperclass注解表示不是一个完整的实体类，将不会映射到数据库表，但是它的属性都将映射到其子类的数据库字段中
  * @author zezhen.fan
+ * @ MappedSuperclass注解表示不是一个完整的实体类，将不会映射到数据库表，但是它的属性都将映射到其子类的数据库字段中
  */
 @EqualsAndHashCode(callSuper = true)
-@Data
 @MappedSuperclass
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@Table(indexes = {
+        @Index(name = "ix_basic", columnList = "DEL_FLAG, STATUS")
+})
 public class BaseVarEntity extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    @TableField(value = "ID")
-    @TableId(value = "ID", type = IdType.ASSIGN_UUID)
-    @ApiModelProperty("主键ID")
-    private String id;
 
     /**
-     * 创建时间
+     * 状态（0--正常；1--禁用），默认 0
      */
-    @Column(name = "CREATE_TIME")
-    @TableField(value = "CREATE_TIME", fill = FieldFill.INSERT)
-    @ApiModelProperty("创建时间")
-    private LocalDateTime createTime;
+    @EnumValue
+    @Column(name = "STATUS")
+    @TableField(value = "STATUS", fill = FieldFill.INSERT)
+    @ApiModelProperty("状态（0--正常；1--禁用），默认 0")
+    private StatusEnum status;
 
     /**
-     * 创建人ID
+     * 数据版本号
      */
-    @Column(name = "CREATE_USER_ID")
-    @TableField(value = "CREATE_USER_ID", fill = FieldFill.INSERT)
-    @ApiModelProperty("创建人ID")
-    private String createUserId;
-
-    public void init(BaseVarEntity baseVarEntry) {
-        this.id = baseVarEntry.getId();
-        this.createTime = baseVarEntry.getCreateTime();
-        this.createUserId = baseVarEntry.getCreateUserId();
-    }
+    @Version
+    @Column(name = "VERSION")
+    @TableField(value = "VERSION", fill = FieldFill.INSERT_UPDATE)
+    @ApiModelProperty("数据版本号，默认 0")
+    private Integer version;
 
     public static String[] getFieldNames() {
-        return new String[]{"id", "create_time", "create_user_id"};
+        return ArrayUtils.addAll(BaseEntity.getFieldNames(), "status", "version");
     }
-
 }

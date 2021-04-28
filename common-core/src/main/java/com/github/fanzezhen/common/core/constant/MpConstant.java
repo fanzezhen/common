@@ -1,9 +1,9 @@
-package com.github.fanzezhen.common.mp;
+package com.github.fanzezhen.common.core.constant;
 
 /**
  * @author zezhen.fan
  */
-public interface Constant {
+public interface MpConstant {
     /**
      * 自动化生成的模块名
      */
@@ -16,6 +16,10 @@ public interface Constant {
      * 数据表中的逻辑删除字段
      */
     String LOGIC_DELETE_FIELD_NAME = "del_flag";
+    /**
+     * 数据表中的版本号字段
+     */
+    String VERSION_FIELD_NAME = "version";
     /**
      * 输入表名的默认提示语
      */
