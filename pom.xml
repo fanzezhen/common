@@ -53,7 +53,7 @@
         <org.springframework.boot.version>2.3.7.RELEASE</org.springframework.boot.version>
         <org.springframework.cloud.version>2.2.6.RELEASE</org.springframework.cloud.version>
         <org.springframework.data.version>2.4.2</org.springframework.data.version>
-        <org.springframework.security.version>5.3.6.RELEASE</org.springframework.security.version>
+        <org.springframework.security.version>5.3.9.RELEASE</org.springframework.security.version>
         <org.springframework.social.version>1.1.6.RELEASE</org.springframework.social.version>
         <org.thymeleaf.version>3.0.11.RELEASE</org.thymeleaf.version>
         <org.thymeleaf.extras.version>3.0.4.RELEASE</org.thymeleaf.extras.version>
