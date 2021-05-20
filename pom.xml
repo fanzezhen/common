@@ -6,15 +6,15 @@
 
     <groupId>com.github.fanzezhen</groupId>
     <artifactId>common</artifactId>
-    <version>2.0.7</version>
+    <version>2.0.8</version>
 
     <properties>
+        <com.github.fanzezhen.jdk8.version>0.0.3.4</com.github.fanzezhen.jdk8.version>
+        <com.github.fanzezhen.common.version>${project.version}</com.github.fanzezhen.common.version>
         <app.server>-tomcat</app.server>
         <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
-        <cn.hutool.version>5.6.3</cn.hutool.version>
+        <cn.hutool.version>5.6.4</cn.hutool.version>
         <cn.stylefeng.roses.version>2.2.13</cn.stylefeng.roses.version>
-        <com.github.fanzezhen.common.version>${project.version}</com.github.fanzezhen.common.version>
-        <com.github.fanzezhen.jdk8.version>0.0.3.4</com.github.fanzezhen.jdk8.version>
         <com.github.penggle.version>2.3.2</com.github.penggle.version>
         <com.alibaba.version>1.2.68</com.alibaba.version>
         <com.baomidou.version>3.4.1</com.baomidou.version>
@@ -91,16 +91,6 @@
             <dependency>
                 <groupId>com.github.fanzezhen.common</groupId>
                 <artifactId>common-log</artifactId>
-                <version>${com.github.fanzezhen.common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.fanzezhen.common</groupId>
-                <artifactId>common-mp</artifactId>
-                <version>${com.github.fanzezhen.common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.fanzezhen.common</groupId>
-                <artifactId>common-redis</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
@@ -602,11 +592,9 @@
     <modules>
         <module>common-core</module>
         <module>common-leaned</module>
-        <module>common-mp</module>
         <module>common-security</module>
         <module>common-swagger</module>
         <module>common-exception</module>
-        <module>common-redis</module>
         <module>common-web</module>
         <module>common-log</module>
     </modules>

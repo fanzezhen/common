@@ -3,8 +3,9 @@ package com.github.fanzezhen.common.log.foundation.entity;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.github.fanzezhen.common.core.enums.db.log.ExceptionTypeEnum;
+import com.github.fanzezhen.common.core.enums.db.log.OperationLogTypeEnum;
 import com.github.fanzezhen.common.core.model.entity.BaseEntity;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,46 +17,51 @@ import javax.persistence.Table;
 
 /**
  * <p>
- * 异常日志表
+ * 
  * </p>
  *
  * @author fanzezhen
- * @since 2020-06-11
+ * @since 2021-01-04
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Accessors(chain = true)
+@ApiModel(value="LogOperation对象", description="操作日志表")
 @Table(indexes = {
         @Index(name = "ix_del_app_time", columnList = "del_flag, app_code, update_time")
 })
-public class LogException extends BaseEntity {
+@Accessors(chain = true)
+public class LogOperation extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 日志类型
-     */
+    @ApiModelProperty(value = "业务Id")
+    private String bizId;
+
+    @ApiModelProperty(value = "表名称")
+    private String tableName;
+
     @EnumValue
-    @Column(name = "LOG_TYPE")
-    @ApiModelProperty(value = "日志类型")
+    @Column(name = "OPERATE_TYPE")
+    @ApiModelProperty(value = "操作类型")
     @JSONField(serialzeFeatures= SerializerFeature.WriteEnumUsingToString)
-    private ExceptionTypeEnum logType;
+    private OperationLogTypeEnum operationType;
 
-    @ApiModelProperty(value = "资源所属模块")
-    private String modular;
+    @ApiModelProperty(value = "操作模块")
+    private String module;
 
-    @ApiModelProperty(value = "错误类名")
-    private String className;
+    @ApiModelProperty(value = "IP地址")
+    private String ipAddress;
 
-    @ApiModelProperty(value = "错误说明")
-    private String message;
+    @ApiModelProperty(value = "设备号")
+    private String deviceNum;
 
-    @ApiModelProperty(value = "错误堆栈")
-    private String stackTrace;
+    @ApiModelProperty(value = "备注")
+    private String remark;
 
     @ApiModelProperty(value = "操作人名称")
     private String operationUsername;
 
-    @ApiModelProperty(value = "应用代码")
+    @ApiModelProperty(value = "APP标识")
     private String appCode;
 
 }

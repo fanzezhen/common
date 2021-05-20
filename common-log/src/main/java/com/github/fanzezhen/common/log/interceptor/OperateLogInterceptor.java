@@ -13,10 +13,10 @@ import com.github.fanzezhen.common.core.dict.AbstractDict;
 import com.github.fanzezhen.common.core.enums.db.log.OperationLogTypeEnum;
 import com.github.fanzezhen.common.core.enums.table.CommonFieldEnum;
 import com.github.fanzezhen.common.core.util.ReflectionUtil;
-import com.github.fanzezhen.common.log.foundation.entity.LogOperate;
-import com.github.fanzezhen.common.log.foundation.entity.LogOperateDetail;
-import com.github.fanzezhen.common.log.foundation.service.ILogOperateDetailService;
-import com.github.fanzezhen.common.log.foundation.service.ILogOperateService;
+import com.github.fanzezhen.common.log.foundation.entity.LogOperation;
+import com.github.fanzezhen.common.log.foundation.entity.LogOperationDetail;
+import com.github.fanzezhen.common.log.foundation.service.ILogOperationDetailService;
+import com.github.fanzezhen.common.log.foundation.service.ILogOperationService;
 import com.github.fanzezhen.common.log.remote.LogRemote;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.Executor;
@@ -82,7 +82,7 @@ public class OperateLogInterceptor implements Interceptor {
         if (StrUtil.isBlank(tableName)) {
             tableName = getTableNameByClass(arg.getClass());
         }
-        LogOperate logOperate = insertLog(String.valueOf(ReflectUtil.getFieldValue(arg, "id")),
+        LogOperation logOperation = insertLog(String.valueOf(ReflectUtil.getFieldValue(arg, "id")),
                 sqlCommandType.ordinal(), tableName, null);
         switch (sqlCommandType) {
             case INSERT:
@@ -97,7 +97,7 @@ public class OperateLogInterceptor implements Interceptor {
                     dealOnlyNewValueLog(dict, operateLog, sqlCommandType.ordinal(), arg);
                     break;
                 }
-                List<LogOperateDetail> detailLogList = new ArrayList<>();
+                List<LogOperationDetail> detailLogList = new ArrayList<>();
                 //更新之前的PO参数
                 Object oldBean = service.getById((Serializable) ReflectUtil.getFieldValue(arg, CommonFieldEnum.PK.field));
                 dict.getDict().forEach((key, name) -> {
@@ -107,8 +107,8 @@ public class OperateLogInterceptor implements Interceptor {
                     Object oldFieldValue = ReflectUtil.getFieldValue(oldBean, key);
                     Object newFieldValue = ReflectUtil.getFieldValue(arg, key);
                     if (null != newFieldValue && !newFieldValue.equals(oldFieldValue)) {
-                        LogOperateDetail detailLog = new LogOperateDetail();
-                        detailLog.setLogId(logOperate.getId());
+                        LogOperationDetail detailLog = new LogOperationDetail();
+                        detailLog.setLogId(logOperation.getId());
                         String tableColumn = StrUtil.toUnderlineCase(key);
                         detailLog.setTableColumn(tableColumn);
                         detailLog.setColumnName(name);
@@ -142,29 +142,29 @@ public class OperateLogInterceptor implements Interceptor {
 
     }
 
-    private LogOperate insertLog(String bizId, int operateType, String tableName, String comment) {
-        LogOperate logOperate = new LogOperate();
-        logOperate.setBizId(bizId);
-        logOperate.setTableName(tableName);
-        logOperate.setOperateType(OperationLogTypeEnum.getOrDefaultByType(operateType));
-        logOperate.setAppCode(SysContext.getCurrentAppCode());
-        logOperate.setOperateUsername(SysContext.getUserName());
-        logOperate.setComment(comment);
+    private LogOperation insertLog(String bizId, int operateType, String tableName, String comment) {
+        LogOperation logOperation = new LogOperation();
+        logOperation.setBizId(bizId);
+        logOperation.setTableName(tableName);
+        logOperation.setOperationType(OperationLogTypeEnum.getOrDefaultByType(operateType));
+        logOperation.setAppCode(SysContext.getCurrentAppCode());
+        logOperation.setOperationUsername(SysContext.getUserName());
+        logOperation.setRemark(comment);
         if (useMicroservice) {
-            logRemote.addLogOperate(logOperate);
+            logRemote.addLogOperate(logOperation);
         } else {
-            ILogOperateService operateLogService = SpringUtil.getBean(ILogOperateService.class);
-            operateLogService.save(logOperate);
+            ILogOperationService operateLogService = SpringUtil.getBean(ILogOperationService.class);
+            operateLogService.save(logOperation);
         }
-        return logOperate;
+        return logOperation;
     }
 
-    private void addLogOperateDetailBatch(Collection<LogOperateDetail> logOperateDetails) {
-        ILogOperateDetailService operateLogDetailService = SpringUtil.getBean(ILogOperateDetailService.class);
+    private void addLogOperateDetailBatch(Collection<LogOperationDetail> logOperationDetails) {
+        ILogOperationDetailService operateLogDetailService = SpringUtil.getBean(ILogOperationDetailService.class);
         if (useMicroservice) {
-            logRemote.addLogOperateDetailBatch(logOperateDetails);
+            logRemote.addLogOperateDetailBatch(logOperationDetails);
         } else {
-            operateLogDetailService.saveBatch(logOperateDetails);
+            operateLogDetailService.saveBatch(logOperationDetails);
         }
     }
 
@@ -188,9 +188,9 @@ public class OperateLogInterceptor implements Interceptor {
         if (operateType != SqlCommandType.INSERT.ordinal()) {
             comment = "未能成功加载旧值";
         }
-        LogOperate logOperate = insertLog(String.valueOf(ReflectUtil.getFieldValue(arg, "id")),
+        LogOperation logOperation = insertLog(String.valueOf(ReflectUtil.getFieldValue(arg, "id")),
                 operateType, tableName, comment);
-        List<LogOperateDetail> detailLogList = new ArrayList<>();
+        List<LogOperationDetail> detailLogList = new ArrayList<>();
         boolean isAllFields = operateLog.isAllFields();
         String[] fieldNames = operateLog.fieldNameFilters();
         List<String> fieldNameList = Arrays.asList(fieldNames);
@@ -200,8 +200,8 @@ public class OperateLogInterceptor implements Interceptor {
             }
             Object fieldValue = ReflectUtil.getFieldValue(arg, key);
             if (null != fieldValue) {
-                LogOperateDetail detailLog = new LogOperateDetail();
-                detailLog.setLogId(logOperate.getId());
+                LogOperationDetail detailLog = new LogOperationDetail();
+                detailLog.setLogId(logOperation.getId());
                 String tableColumn = StrUtil.toUnderlineCase(key);
                 detailLog.setTableColumn(tableColumn);
                 detailLog.setColumnName(name);

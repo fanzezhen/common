@@ -26,6 +26,7 @@ tmp/
 
 # DataBase
 *.rdb
+*.pdb
 
 # log
 logs/

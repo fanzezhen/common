@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.core.model.dto;
 
 import com.github.fanzezhen.common.core.annotion.OperateLog;
 import com.github.fanzezhen.common.core.dict.SysUserDict;
-import com.github.fanzezhen.common.core.model.entity.BaseVarAloneEntity;
+import com.github.fanzezhen.common.core.model.entity.BaseVarEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +17,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @OperateLog(dictClass = SysUserDict.class, tableName = "sys_user")
-public class SysUserDto extends BaseVarAloneEntity {
+public class SysUserDto extends BaseVarEntity {
     /**
      * 单位名称
      */

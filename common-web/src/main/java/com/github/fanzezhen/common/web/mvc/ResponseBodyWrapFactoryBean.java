@@ -3,6 +3,7 @@ package com.github.fanzezhen.common.web.mvc;
 import cn.hutool.core.collection.CollectionUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
@@ -14,6 +15,7 @@ import java.util.List;
 /**
  * @author zezhen.fan
  */
+@Component
 public class ResponseBodyWrapFactoryBean implements InitializingBean {
 
     @Resource
