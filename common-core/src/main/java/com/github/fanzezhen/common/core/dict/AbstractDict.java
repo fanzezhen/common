@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 /**
  * 字典映射抽象字典类
  *
- * @author fengshuonan
+ * @author zezhen.fan
  */
 @Data
 public abstract class AbstractDict {
@@ -45,28 +45,28 @@ public abstract class AbstractDict {
     /**
      * 初始化字段英文名称和中文名称对应的字典
      *
-     * @author stylefeng
+     * @author zezhen.fan
      */
     public abstract void init();
 
     /**
      * 初始化字段中文名称和英文名称对应的字典
      *
-     * @author stylefeng
+     * @author zezhen.fan
      */
     protected abstract void initReverse();
 
     /**
      * 初始化需要被包装的字段(例如:性别为1:男,0:女,需要被包装为汉字)
      *
-     * @author stylefeng
+     * @author zezhen.fan
      */
     protected abstract void initBeWrapped();
 
     /**
      * 初始化需要被解包装的字段(例如:性别为男:1,女:0,需要被解包装为代码)
      *
-     * @author stylefeng
+     * @author zezhen.fan
      */
     protected abstract void initBeAdapter();
 

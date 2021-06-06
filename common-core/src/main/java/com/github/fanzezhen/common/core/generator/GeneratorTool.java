@@ -106,6 +106,7 @@ public class GeneratorTool {
         strategy.setTableFillList(generatorBean.getTableFillList());
         strategy.setEntityLombokModel(true);
         strategy.setControllerMappingHyphenStyle(true);
+        strategy.setChainModel(true);
         strategy.setTablePrefix("t_");
         strategy.setLogicDeleteFieldName(generatorBean.getLogicDeleteFieldName());
         strategy.setVersionFieldName(generatorBean.getVersionFieldName());

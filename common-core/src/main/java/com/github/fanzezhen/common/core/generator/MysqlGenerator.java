@@ -29,16 +29,16 @@ public class MysqlGenerator extends AbstractGeneratorBean {
      * RUN THIS
      */
     public static void main(String[] args) {
-        String dataSourceConfigUrl = "jdbc:mysql://localhost:3306/demo?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai";
+        String dataSourceConfigUrl = "jdbc:mysql://localhost:3306/iit_edc?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai";
         String dbUsername = "root";
         String dbPassword = "root";
-        String moduleParentName = "com.github.fanzezhen.common.mp";
+        String moduleParentName = "com.github.fanzezhen.common.log";
         GeneratorTool.generator(MysqlGenerator.builder().build()
                 .setAuthor("fanzezhen")
                 .setDataSourceConfigUrl(dataSourceConfigUrl)
                 .setDbUsername(dbUsername)
                 .setDbPassword(dbPassword)
-                .setSuperiorModuleNames("common-mp")
+                .setSuperiorModuleNames("common-log")
                 .setParentPackageName(moduleParentName)
                 .setSuperEntityClass(BaseEntity.class));
     }

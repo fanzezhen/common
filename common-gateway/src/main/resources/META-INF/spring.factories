@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration =\
+  ,com.github.fanzezhen.common.gateway.core.discover.eureka.GatewayAutoConfiguration\
+  ,com.github.fanzezhen.common.gateway.core.http.client.customizer.auto.HttpClientCustomAutoConfiguration\
+  ,com.github.fanzezhen.common.gateway.core.tracing.TracingConfig

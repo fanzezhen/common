@@ -6,7 +6,7 @@
 
     <groupId>com.github.fanzezhen</groupId>
     <artifactId>common</artifactId>
-    <version>2.0.8</version>
+    <version>2.1.0</version>
 
     <properties>
         <com.github.fanzezhen.jdk8.version>0.0.3.4</com.github.fanzezhen.jdk8.version>
@@ -22,11 +22,14 @@
         <com.fasterxml.jackson.datatype.version>2.11.2</com.fasterxml.jackson.datatype.version>
         <com.google.code.gson.version>2.8.6</com.google.code.gson.version>
         <com.google.guava.version>29.0-jre</com.google.guava.version>
+        <com.lmax.version>3.4.1</com.lmax.version>
         <com.oracle.version>11.2.0.3</com.oracle.version>
         <com.zaxxer.version>3.4.5</com.zaxxer.version>
         <commons-net.version>3.6</commons-net.version>
         <eu.bitwalker.version>1.21</eu.bitwalker.version>
+        <io.jaegertracing.version>1.6.0</io.jaegertracing.version>
         <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
+        <io.projectreactor.version>3.3.17.RELEASE</io.projectreactor.version>
         <io.springfox.version>3.0.0</io.springfox.version>
         <javax.annotation.version>1.3.2</javax.annotation.version>
         <javax.servlet.version>4.0.1</javax.servlet.version>
@@ -51,7 +54,7 @@
         <org.springframework.version>5.2.12.RELEASE</org.springframework.version>
         <org.springframework.batch.version>4.2.4.RELEASE</org.springframework.batch.version>
         <org.springframework.boot.version>2.3.7.RELEASE</org.springframework.boot.version>
-        <org.springframework.cloud.version>2.2.6.RELEASE</org.springframework.cloud.version>
+        <org.springframework.cloud.version>2.2.8.RELEASE</org.springframework.cloud.version>
         <org.springframework.data.version>2.4.2</org.springframework.data.version>
         <org.springframework.security.version>5.3.6.RELEASE</org.springframework.security.version>
         <org.springframework.social.version>1.1.6.RELEASE</org.springframework.social.version>
@@ -108,6 +111,16 @@
                 <artifactId>common-web</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.fanzezhen.common</groupId>
+                <artifactId>common-gateway</artifactId>
+                <version>${com.github.fanzezhen.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fanzezhen.common</groupId>
+                <artifactId>common-gateway-endpoint-auth</artifactId>
+                <version>${com.github.fanzezhen.common.version}</version>
+            </dependency>
             <!--common-->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
@@ -143,6 +156,11 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${com.google.code.gson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>${com.lmax.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.zaxxer</groupId>
@@ -197,11 +215,22 @@
                 <artifactId>javax.annotation-api</artifactId>
                 <version>${javax.annotation.version}</version>
             </dependency>
-
+            <!--io-->
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-boot-starter</artifactId>
                 <version>${io.springfox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jaegertracing</groupId>
+                <artifactId>jaeger-client</artifactId>
+                <version>${io.jaegertracing.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-test</artifactId>
+                <scope>test</scope>
+                <version>${io.projectreactor.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.springfox</groupId>
@@ -213,6 +242,7 @@
                 <artifactId>springfox-swagger-ui</artifactId>
                 <version>${io.springfox.version}</version>
             </dependency>
+            <!--net-->
             <dependency>
                 <groupId>net.lingala.zip4j</groupId>
                 <artifactId>zip4j</artifactId>
@@ -350,6 +380,18 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
+                <scope>provided</scope>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+                <optional>true</optional>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-actuator</artifactId>
                 <version>${org.springframework.boot.version}</version>
             </dependency>
@@ -385,6 +427,22 @@
                 <version>${org.springframework.boot.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-webflux</artifactId>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter</artifactId>
+                <version>${org.springframework.cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-gateway</artifactId>
+                <version>${org.springframework.cloud.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>${com.fasterxml.jackson.datatype.version}</version>
@@ -393,11 +451,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${org.slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.persistence</groupId>
-                <artifactId>persistence-api</artifactId>
-                <version>1.0.2</version>
             </dependency>
             <dependency>
                 <groupId>javax.persistence</groupId>
@@ -597,6 +650,9 @@
         <module>common-exception</module>
         <module>common-web</module>
         <module>common-log</module>
+        <module>common-gateway</module>
+        <module>common-gateway-endpoint-auth</module>
+        <module>common-gateway-sub-env</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -681,6 +737,7 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
                 </configuration>
             </plugin>
 
