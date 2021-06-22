@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.core.util;
 
+import cn.hutool.core.util.StrUtil;
 import org.springframework.util.StringUtils;
 
 import java.util.regex.Pattern;
@@ -46,7 +47,7 @@ public class NumberUtil {
      */
     @SuppressWarnings("unused")
     public static Integer chineseNumberToInteger(String chineseNumber) {
-        if (StringUtils.isEmpty(chineseNumber)) {
+        if (StrUtil.isEmpty(chineseNumber)) {
             return null;
         }
         int result = 0;

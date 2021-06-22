@@ -18,6 +18,8 @@ package com.github.fanzezhen.common.gateway.core.discover.eureka;
 
 import com.github.fanzezhen.common.gateway.core.filter.retry.FullRetryGatewayFilterFactory;
 import com.github.fanzezhen.common.gateway.core.patch.RouteDefinitionRouteLocatorWithErrorHanlde;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
@@ -35,7 +37,6 @@ import org.springframework.boot.autoconfigure.web.reactive.HttpHandlerAutoConfig
 import org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.gateway.actuate.GatewayControllerEndpoint;
 import org.springframework.cloud.gateway.config.*;
 import org.springframework.cloud.gateway.filter.*;
@@ -54,7 +55,9 @@ import org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping;
 import org.springframework.cloud.gateway.handler.predicate.*;
 import org.springframework.cloud.gateway.route.*;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.cloud.gateway.support.ConfigurationService;
 import org.springframework.cloud.gateway.support.StringToZonedDateTimeConverter;
+import org.springframework.cloud.loadbalancer.support.SimpleObjectProvider;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -67,6 +70,7 @@ import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Validator;
 import org.springframework.web.reactive.DispatcherHandler;
+import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.reactive.socket.client.ReactorNettyWebSocketClient;
 import org.springframework.web.reactive.socket.client.WebSocketClient;
 import org.springframework.web.reactive.socket.server.WebSocketService;
@@ -74,9 +78,11 @@ import org.springframework.web.reactive.socket.server.support.HandshakeWebSocket
 import reactor.core.publisher.Flux;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.resources.ConnectionProvider;
-import reactor.netty.tcp.ProxyProvider;
+import reactor.netty.transport.ProxyProvider;
 
+import javax.net.ssl.SSLException;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.cloud.gateway.config.HttpClientProperties.Pool.PoolType.DISABLED;
@@ -89,13 +95,18 @@ import static org.springframework.cloud.gateway.config.HttpClientProperties.Pool
 @ConditionalOnProperty(name = "spring.cloud.gateway.enabled", matchIfMissing = true)
 @EnableConfigurationProperties
 @AutoConfigureBefore({HttpHandlerAutoConfiguration.class, WebFluxAutoConfiguration.class})
-@AutoConfigureAfter({GatewayLoadBalancerClientAutoConfiguration.class, GatewayClassPathWarningAutoConfiguration.class})
+@AutoConfigureAfter({GatewayClassPathWarningAutoConfiguration.class})
 @ConditionalOnClass(DispatcherHandler.class)
 public class GatewayAutoConfiguration {
 
     @Bean
     public StringToZonedDateTimeConverter stringToZonedDateTimeConverter() {
         return new StringToZonedDateTimeConverter();
+    }
+
+    @Bean
+    public MeterRegistry meterRegistry() {
+        return new SimpleMeterRegistry();
     }
 
     @Bean
@@ -236,8 +247,7 @@ public class GatewayAutoConfiguration {
     public WebsocketRoutingFilter websocketRoutingFilter(WebSocketClient webSocketClient,
                                                          WebSocketService webSocketService,
                                                          ObjectProvider<List<HttpHeadersFilter>> headersFilters) {
-        return new WebsocketRoutingFilter(webSocketClient, webSocketService,
-                headersFilters);
+        return new WebsocketRoutingFilter(webSocketClient, webSocketService, headersFilters);
     }
 
     @Bean
@@ -245,24 +255,14 @@ public class GatewayAutoConfiguration {
     @ConditionalOnBean(Validator.class)
     public WeightCalculatorWebFilter weightCalculatorWebFilter(Validator validator,
                                                                ObjectProvider<RouteLocator> routeLocator) {
-        return new WeightCalculatorWebFilter(validator, routeLocator);
+        return new WeightCalculatorWebFilter(routeLocator, new ConfigurationService(
+                null, new SimpleObjectProvider<>(null), new SimpleObjectProvider<>(validator)));
     }
 
     @Bean
     public AfterRoutePredicateFactory afterRoutePredicateFactory() {
         return new AfterRoutePredicateFactory();
     }
-
-    /*
-     * @Bean //TODO: default over netty? configurable public WebClientHttpRoutingFilter
-     * webClientHttpRoutingFilter() { //TODO: WebClient bean return new
-     * WebClientHttpRoutingFilter(WebClient.routes().build()); }
-     *
-     * @Bean public WebClientWriteResponseFilter webClientWriteResponseFilter() { return
-     * new WebClientWriteResponseFilter(); }
-     */
-
-    // Predicate Factory beans
 
     @Bean
     public BeforeRoutePredicateFactory beforeRoutePredicateFactory() {
@@ -305,8 +305,8 @@ public class GatewayAutoConfiguration {
     }
 
     @Bean
-    public ReadBodyPredicateFactory readBodyPredicateFactory() {
-        return new ReadBodyPredicateFactory();
+    public ReadBodyRoutePredicateFactory readBodyRoutePredicateFactory() {
+        return new ReadBodyRoutePredicateFactory();
     }
 
     @Bean
@@ -354,7 +354,7 @@ public class GatewayAutoConfiguration {
 
     @Bean
     public ModifyResponseBodyGatewayFilterFactory modifyResponseBodyGatewayFilterFactory() {
-        return new ModifyResponseBodyGatewayFilterFactory();
+        return new ModifyResponseBodyGatewayFilterFactory(HandlerStrategies.withDefaults().messageReaders(), Collections.emptySet(), Collections.emptySet());
     }
 
     @Bean
@@ -473,44 +473,29 @@ public class GatewayAutoConfiguration {
             if (pool.getType() == DISABLED) {
                 connectionProvider = ConnectionProvider.newConnection();
             } else if (pool.getType() == FIXED) {
-                connectionProvider = ConnectionProvider.fixed(pool.getName(),
-                        pool.getMaxConnections(), pool.getAcquireTimeout());
+                connectionProvider = ConnectionProvider.create(pool.getName(), pool.getMaxConnections());
             } else {
-                connectionProvider = ConnectionProvider.elastic(pool.getName());
+                connectionProvider = ConnectionProvider.create(pool.getName());
             }
 
-            HttpClient httpClient = HttpClient.create(connectionProvider)
-                    .tcpConfiguration(tcpClient -> {
-
-                        if (properties.getConnectTimeout() != null) {
-                            tcpClient = tcpClient.option(
-                                    ChannelOption.CONNECT_TIMEOUT_MILLIS,
-                                    properties.getConnectTimeout());
-                        }
-
-                        // configure proxy if proxy host is set.
-                        HttpClientProperties.Proxy proxy = properties.getProxy();
-
-                        if (StringUtils.hasText(proxy.getHost())) {
-
-                            tcpClient = tcpClient.proxy(proxySpec -> {
-                                ProxyProvider.Builder builder = proxySpec
-                                        .type(ProxyProvider.Proxy.HTTP)
-                                        .host(proxy.getHost());
-
-                                PropertyMapper map = PropertyMapper.get();
-
-                                map.from(proxy::getPort).whenNonNull().to(builder::port);
-                                map.from(proxy::getUsername).whenHasText()
-                                        .to(builder::username);
-                                map.from(proxy::getPassword).whenHasText()
-                                        .to(password -> builder.password(s -> password));
-                                map.from(proxy::getNonProxyHostsPattern).whenHasText()
-                                        .to(builder::nonProxyHosts);
-                            });
-                        }
-                        return tcpClient;
-                    });
+            HttpClient httpClient = HttpClient.create(connectionProvider);
+            // configure proxy if proxy host is set.
+            HttpClientProperties.Proxy proxy = properties.getProxy();
+            if (StringUtils.hasText(proxy.getHost())) {
+                httpClient = httpClient.proxy(proxySpec -> {
+                    ProxyProvider.Builder builder = proxySpec
+                            .type(ProxyProvider.Proxy.HTTP)
+                            .host(proxy.getHost());
+                    PropertyMapper map = PropertyMapper.get();
+                    map.from(proxy::getPort).whenNonNull().to(builder::port);
+                    map.from(proxy::getUsername).whenHasText()
+                            .to(builder::username);
+                    map.from(proxy::getPassword).whenHasText()
+                            .to(password -> builder.password(s -> password));
+                    map.from(proxy::getNonProxyHostsPattern).whenHasText()
+                            .to(builder::nonProxyHosts);
+                });
+            }
 
             HttpClientProperties.Ssl ssl = properties.getSsl();
             if (ssl.getTrustedX509CertificatesForTrustManager().length > 0
@@ -528,11 +513,14 @@ public class GatewayAutoConfiguration {
                                 .trustManager(InsecureTrustManagerFactory.INSTANCE);
                     }
 
-                    sslContextSpec.sslContext(sslContextBuilder)
-                            .defaultConfiguration(ssl.getDefaultConfigurationType())
-                            .handshakeTimeout(ssl.getHandshakeTimeout())
-                            .closeNotifyFlushTimeout(ssl.getCloseNotifyFlushTimeout())
-                            .closeNotifyReadTimeout(ssl.getCloseNotifyReadTimeout());
+                    try {
+                        sslContextSpec.sslContext(sslContextBuilder.build())
+                                .handshakeTimeout(ssl.getHandshakeTimeout())
+                                .closeNotifyFlushTimeout(ssl.getCloseNotifyFlushTimeout())
+                                .closeNotifyReadTimeout(ssl.getCloseNotifyReadTimeout());
+                    } catch (SSLException e) {
+                        e.printStackTrace();
+                    }
                 });
             }
 

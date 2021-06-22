@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.core.util.log;
+package com.github.fanzezhen.common.log.tool;
 
 import org.springframework.lang.NonNull;
 

@@ -1,6 +1,7 @@
 package com.github.fanzezhen.common.web.mvc;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.github.fanzezhen.common.core.CommonProperty;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,8 +22,8 @@ public class ResponseBodyWrapFactoryBean implements InitializingBean {
     @Resource
     private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
-    @Value("${auto.wrap.response.ignore.urls:''}")
-    private String autoWrapResponseIgnoreUrls;
+    @Resource
+    private CommonProperty commonProperty;
 
     @Override
     public void afterPropertiesSet() {
@@ -32,13 +33,14 @@ public class ResponseBodyWrapFactoryBean implements InitializingBean {
 
     private List<HandlerMethodReturnValueHandler> decorateHandlers(List<HandlerMethodReturnValueHandler> handlers) {
         List<HandlerMethodReturnValueHandler> newHandlers = new ArrayList<>();
-        if (CollectionUtil.isEmpty(handlers)){
+        if (CollectionUtil.isEmpty(handlers)) {
             return newHandlers;
         }
         for (HandlerMethodReturnValueHandler handler : handlers) {
             if (handler instanceof RequestResponseBodyMethodProcessor) {
                 //用自己的ResponseBody包装类替换掉框架的，达到返回Result的效果
-                ResponseBodyWrapHandler decorator = new ResponseBodyWrapHandler(handler, autoWrapResponseIgnoreUrls);
+                ResponseBodyWrapHandler decorator =
+                        new ResponseBodyWrapHandler(handler, commonProperty.getAutoWrapResponseIgnoreUrls());
                 newHandlers.add(decorator);
             } else {
                 newHandlers.add(handler);

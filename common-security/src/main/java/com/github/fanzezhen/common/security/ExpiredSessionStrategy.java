@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.security.property;
+package com.github.fanzezhen.common.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;

@@ -4,7 +4,6 @@ import com.github.fanzezhen.common.gateway.core.support.response.ActionResult;
 import com.github.fanzezhen.common.gateway.core.support.response.ErrorInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
@@ -15,6 +14,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.*;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * only print 500 server error, it's global
@@ -27,24 +28,19 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
 	private Logger logger = LoggerFactory.getLogger(GlobalErrorWebExceptionHandler.class);
 
-	public GlobalErrorWebExceptionHandler(ErrorAttributes errorAttributes, ResourceProperties resourceProperties, ApplicationContext applicationContext) {
-		super(errorAttributes, resourceProperties, applicationContext);
-	}
-
 	@Override
 	protected RouterFunction<ServerResponse> getRoutingFunction(ErrorAttributes errorAttributes) {
 		return RouterFunctions.route(
 				RequestPredicates.all(), this::renderErrorResponse);
 	}
 
-	@SuppressWarnings("ThrowableNotThrown")
 	private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
 		ActionResult<Void> result = new ActionResult<>();
 		result.setSuccess(false);
 		result.addError(serverError(request));
 		return ServerResponse.status(HttpStatus.OK)
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.body(BodyInserters.fromObject(result))
+				.contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+				.body(BodyInserters.fromValue(result))
 				.doFinally((e)-> logger.error("uncaught error {}",request.uri(),this.getError(request)))
 				;
 	}

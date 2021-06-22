@@ -13,6 +13,7 @@ import reactor.netty.Connection;
 import reactor.netty.http.client.HttpClientRequest;
 import reactor.netty.http.client.HttpClientResponse;
 import reactor.util.context.Context;
+import reactor.util.context.ContextView;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -47,7 +48,7 @@ public interface Metrics {
 			SocketAddress socketAddress = conn.channel().remoteAddress();
 			if (socketAddress instanceof InetSocketAddress) {
 				String hostName = ((InetSocketAddress) socketAddress).getHostName();
-				Context ctx = req.currentContext();
+				ContextView ctx = req.currentContextView();
 				if (ctx.hasKey(KEY_TIMER)) {
 					TimerCtx timerCtx = ctx.get(KEY_TIMER);
 					timerCtx.setTags("host", hostName);
@@ -62,7 +63,7 @@ public interface Metrics {
 
 		@Override
 		public void accept(HttpClientRequest req, Connection connection) {
-			Context ctx = req.currentContext();
+			ContextView ctx = req.currentContextView();
 			if (ctx.hasKey(KEY_TIMER)) {
 				TimerCtx timerCtx = ctx.get(KEY_TIMER);
 				HttpHeaders headers = req.requestHeaders();
@@ -84,7 +85,7 @@ public interface Metrics {
 
 		@Override
 		public void accept(HttpClientRequest req, Throwable throwable) {
-			Context ctx = req.currentContext();
+			ContextView ctx = req.currentContextView();
 			if (ctx.hasKey(KEY_TIMER)) {
 				TimerCtx timerCtx = ctx.get(KEY_TIMER);
 				timerCtx.setTags("status", "reqError");
@@ -99,7 +100,7 @@ public interface Metrics {
 
 		@Override
 		public void accept(HttpClientResponse res, Throwable throwable) {
-			Context ctx = res.currentContext();
+			ContextView ctx = res.currentContextView();
 			if (ctx.hasKey(KEY_TIMER)) {
 				TimerCtx timerCtx = ctx.get(KEY_TIMER);
 				timerCtx.setTags("status", "resError");
@@ -113,7 +114,7 @@ public interface Metrics {
 
 		@Override
 		public void accept(HttpClientResponse res, Connection connection) {
-			Context ctx = res.currentContext();
+			ContextView ctx = res.currentContextView();
 			if (ctx.hasKey(KEY_TIMER)) {
 				TimerCtx timerCtx = ctx.get(KEY_TIMER);
 				timerCtx.setTags("status", res.status().code() + "");

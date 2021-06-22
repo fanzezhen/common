@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * @author zezhen.fan
  */
-@ConfigurationProperties("com.github.fanzezhen.common.gateway.auth")
+@ConfigurationProperties(prefix = "com.github.fanzezhen.common.gateway.auth")
 public class AuthProperties {
 
 	private CspTokenTransferMode cspTokenTransferMode = CspTokenTransferMode.misc;

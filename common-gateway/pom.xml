@@ -5,7 +5,7 @@
     <parent>
         <artifactId>common</artifactId>
         <groupId>com.github.fanzezhen</groupId>
-        <version>2.1.0</version>
+        <version>2.1.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -46,6 +46,12 @@
         <dependency>
             <groupId>io.jaegertracing</groupId>
             <artifactId>jaeger-client</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

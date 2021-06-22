@@ -71,7 +71,7 @@ public class CompoPredicate extends AbstractServerPredicate {
 	 */
 	@Override
 	public List<Server> getEligibleServers(List<Server> servers, Object loadBalancerKey) {
-		LBKey lbKey = (LBKey) loadBalancerKey;
+		LbKey lbKey = (LbKey) loadBalancerKey;
 		String subEnv = lbKey.getSubEnv();
 		boolean strictMode = lbKey.isStrictMode();
 		if (logger.isDebugEnabled()) {

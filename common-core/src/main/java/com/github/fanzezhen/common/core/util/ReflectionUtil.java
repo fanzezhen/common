@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.core.util;
 
+import cn.hutool.core.util.StrUtil;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
 import com.github.fanzezhen.common.core.dict.AbstractDict;
@@ -8,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -94,7 +94,7 @@ public class ReflectionUtil {
      */
     public static boolean isEmptyValue(String fieldName, Object bean) {
         Object value = getValue(fieldName, bean);
-        if (StringUtils.isEmpty(value)) {
+        if (value == null || StrUtil.isEmpty(String.valueOf(value))) {
             return true;
         }
         if (value instanceof Iterable || value instanceof Map || value instanceof Iterator ||
@@ -172,14 +172,14 @@ public class ReflectionUtil {
             HashMap<String, Object> hashMap = new HashMap<>(3);
             if (!oldFieldList.contains(field)) {
                 Object newValue = getAttribute(field, newObject).getValue();
-                if (!StringUtils.isEmpty(newValue)) {
+                if (newValue != null) {
                     hashMap.put("name", field.getName());
                     hashMap.put("oldValue", null);
                     hashMap.put("newValue", newValue);
                 }
             } else if (!newFieldList.contains(field)) {
                 Object oldValue = getAttribute(field, oldObject).getValue();
-                if (!StringUtils.isEmpty(oldValue)) {
+                if (oldValue != null) {
                     hashMap.put("name", field.getName());
                     hashMap.put("oldValue", oldValue);
                     hashMap.put("newValue", null);
@@ -187,13 +187,13 @@ public class ReflectionUtil {
             } else {
                 Object oldValue = getAttribute(field, oldObject).getValue();
                 Object newValue = getAttribute(field, newObject).getValue();
-                if (!StringUtils.isEmpty(oldValue)) {
+                if (oldValue != null) {
                     if (!oldValue.equals(newValue)) {
                         hashMap.put("name", field.getName());
                         hashMap.put("oldValue", oldValue);
                         hashMap.put("newValue", newValue);
                     }
-                } else if (!StringUtils.isEmpty(newValue)) {
+                } else if (newValue != null) {
                     hashMap.put("name", field.getName());
                     hashMap.put("oldValue", "");
                     hashMap.put("newValue", newValue);
@@ -245,7 +245,7 @@ public class ReflectionUtil {
             String capitalized = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
             Method getterMethod = bean.getClass().getMethod("get" + capitalized);
             Method setterMethod = bean.getClass().getMethod("set" + capitalized, getterMethod.getReturnType());
-            setterMethod.invoke(bean, CastUtil.cast(getterMethod.getReturnType(), value));
+            setterMethod.invoke(bean, CommonUtil.cast(getterMethod.getReturnType(), value));
             return true;
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
@@ -253,8 +253,8 @@ public class ReflectionUtil {
         }
     }
 
-    public static boolean isSubClass(Class clazz1, Class clazz2) {
-        for(Class parent = clazz1.getSuperclass(); parent != null; parent = parent.getSuperclass()) {
+    public static boolean isSubClass(Class<?> clazz1, Class<?> clazz2) {
+        for (Class<?> parent = clazz1.getSuperclass(); parent != null; parent = parent.getSuperclass()) {
             if (parent.getName().equals(clazz2.getName())) {
                 return true;
             }

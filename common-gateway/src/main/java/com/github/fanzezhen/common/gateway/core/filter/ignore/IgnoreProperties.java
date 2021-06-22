@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * @author zezhen.fan
  */
-@ConfigurationProperties("com.github.fanzezhen.common.gateway.ignore")
+@ConfigurationProperties(prefix = "com.github.fanzezhen.common.gateway.ignore")
 public class IgnoreProperties {
 
 	Map<String,String> urlMap = new HashMap<>();

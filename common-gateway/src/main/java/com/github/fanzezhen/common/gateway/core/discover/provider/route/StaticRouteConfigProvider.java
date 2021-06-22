@@ -10,11 +10,20 @@ import com.github.fanzezhen.common.gateway.intranet.CheckExtranetSignGatewayFilt
 import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.Advised;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.BindHandler;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.context.properties.bind.handler.IgnoreTopLevelConverterNotFoundBindHandler;
+import org.springframework.boot.context.properties.bind.validation.ValidationBindHandler;
+import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
+import org.springframework.boot.context.properties.source.MapConfigurationPropertySource;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.gateway.filter.FilterDefinition;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -23,7 +32,6 @@ import org.springframework.cloud.gateway.filter.factory.RewritePathGatewayFilter
 import org.springframework.cloud.gateway.handler.predicate.PathRoutePredicateFactory;
 import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinition;
-import org.springframework.cloud.gateway.support.ConfigurationUtils;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
@@ -34,10 +42,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Validator;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.cloud.gateway.filter.factory.RewritePathGatewayFilterFactory.REGEXP_KEY;
 import static org.springframework.cloud.gateway.filter.factory.RewritePathGatewayFilterFactory.REPLACEMENT_KEY;
@@ -49,7 +54,7 @@ import static org.springframework.cloud.gateway.support.NameUtils.normalizeRoute
  * @author zezhen.fan
  */
 public class StaticRouteConfigProvider implements RouteConfigProvider, BeanFactoryAware, InitializingBean {
-    private static Logger logger = LoggerFactory.getLogger(StaticRouteConfigProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(StaticRouteConfigProvider.class);
     private final DiscoverLocatorProperties properties;
     private final String routeIdPrefix;
     private final SimpleEvaluationContext simpleEvaluationContext;
@@ -312,8 +317,23 @@ public class StaticRouteConfigProvider implements RouteConfigProvider, BeanFacto
 
             Object configuration = factory.newConfig();
 
-            ConfigurationUtils.bind(configuration, properties,
-                    factory.shortcutFieldPrefix(), definition.getName(), validator);
+            Object toBind = null;
+            try {
+                toBind = AopUtils.isAopProxy((configuration)) && (configuration) instanceof Advised ?
+                        ((Advised) (configuration)).getTargetSource().getTarget() : (configuration);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (toBind == null) {
+                continue;
+            }
+            Bindable<?> bindable = Bindable.ofInstance(toBind);
+            BindHandler handler = new IgnoreTopLevelConverterNotFoundBindHandler();
+            if (validator != null) {
+                handler = new ValidationBindHandler(handler, validator);
+            }
+            List<ConfigurationPropertySource> propertySources = Collections.singletonList(new MapConfigurationPropertySource(properties));
+            (new Binder(propertySources, null, null)).bindOrCreate(factory.shortcutFieldPrefix(), bindable, handler);
 
             GatewayFilter gatewayFilter = factory.apply(configuration);
             if (logger.isDebugEnabled()) {

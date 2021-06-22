@@ -7,6 +7,9 @@ import com.netflix.loadbalancer.ZoneAvoidancePredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author zezhen.fan
+ */
 public class SubEnvRule extends PredicateBasedRule {
 
 	private static Logger logger = LoggerFactory.getLogger(SubEnvRule.class);

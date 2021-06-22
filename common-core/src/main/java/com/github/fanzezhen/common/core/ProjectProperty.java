@@ -1,37 +1,25 @@
 package com.github.fanzezhen.common.core;
 
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
  * @author zezhen.fan
  */
-@Getter
+@Data
 @Component
-@ConfigurationProperties(prefix = "project")
+@ConfigurationProperties(prefix = "com.github.fanzezhen.common.core.project")
 public class ProjectProperty {
-    @Value("${project.code:DEMO}")
-    private String appCode;
-    @Value("${project.version:1.0}")
-    private String version;
-    @Value("${project.base.package:com.github.fanzezhen}")
-    private String basePackage;
-    @Value("${project.dto.packages:}")
-    private String dtoPackages;
-    @Value("${project.title:DEMO}")
-    private String title;
-    @Value("${project.description:示例}")
-    private String description;
-    @Value("${project.link.man:fanzezhen}")
-    private String linkMan;
-    @Value("${project.link.url:https://github.com/fanzezhen/}")
-    private String linkUrl;
-    @Value("${project.link.email:fanzezhen@outlook.com}")
-    private String linkEmail;
-    @Value("${project.license:Apache License 2.0}")
-    private String license;
-    @Value("${project.license.url:http://www.apache.org/licenses/}")
-    private String licenseUrl;
+    private final String appCode = "DEMO";
+    private final String version = "1.0";
+    private final String basePackage = "com.github.fanzezhen.common";
+    private final String dtoPackages = "";
+    private final String title = "DEMO";
+    private final String description = "示例";
+    private final String linkMan = "";
+    private final String linkUrl = "";
+    private final String linkEmail = "";
+    private final String license = "Apache License 2.0";
+    private final String licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0";
 }

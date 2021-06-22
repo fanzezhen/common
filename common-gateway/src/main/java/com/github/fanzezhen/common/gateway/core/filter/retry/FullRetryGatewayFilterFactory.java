@@ -43,6 +43,7 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
 /**
  * copy from {@link org.springframework.cloud.gateway.filter.factory.RetryGatewayFilterFactory}
  * add back off support
+ *
  * @author zezhen.fan
  */
 public class FullRetryGatewayFilterFactory
@@ -170,26 +171,22 @@ public class FullRetryGatewayFilterFactory
         return apply(null, repeat, retry);
     }
 
-    public GatewayFilter apply(String routeId, Repeat<ServerWebExchange> repeat,
-                               Retry<ServerWebExchange> retry) {
+    public GatewayFilter apply(String routeId, Repeat<ServerWebExchange> repeat, Retry<ServerWebExchange> retry) {
         if (routeId != null && getPublisher() != null) {
             // send an event to enable caching
             getPublisher().publishEvent(new EnableBodyCachingEvent(this, routeId));
         }
-        return (exchange, chain) -> {
-            return chain.filter(exchange)
-                    // .logger("retry-filter", Level.INFO)
-                    .doOnSuccessOrError((aVoid, throwable) -> {
-                        int iteration = exchange
-                                .getAttributeOrDefault(RETRY_ITERATION_KEY, -1);
-                        int newIteration = iteration + 1;
-                        Span traceSpan = exchange.getAttribute(OPEN_TRACING_SPAN);
-                        if (traceSpan != null) {
-                            traceSpan.log(RETRY_ITERATION_KEY + ":" + newIteration + ";");
-                        }
-                        exchange.getAttributes().put(RETRY_ITERATION_KEY, newIteration);
-                    }).retryWhen(retry.withApplicationContext(exchange));
-        };
+        return (exchange, chain) -> chain.filter(exchange).doFinally((aVoid) -> {
+            int iteration = exchange
+                    .getAttributeOrDefault(RETRY_ITERATION_KEY, -1);
+            int newIteration = iteration + 1;
+            Span traceSpan = exchange.getAttribute(OPEN_TRACING_SPAN);
+            if (traceSpan != null) {
+                traceSpan.log(RETRY_ITERATION_KEY + ":" + newIteration + ";");
+            }
+            exchange.getAttributes().put(RETRY_ITERATION_KEY, newIteration);
+        }).retryWhen(reactor.util.retry.Retry.from((rws) ->
+                retry.withApplicationContext(exchange).apply(rws.map(reactor.util.retry.Retry.RetrySignal::failure))));
     }
 
     private void trace(String message, Object... args) {

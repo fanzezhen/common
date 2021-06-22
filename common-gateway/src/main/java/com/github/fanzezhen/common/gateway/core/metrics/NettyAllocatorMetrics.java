@@ -76,7 +76,7 @@ public class NettyAllocatorMetrics implements MeterBinder {
 		}
 
 		long numTinyAllocations() {
-			long sum = poolArenaMetrics.stream().map(PoolArenaMetric::numTinyAllocations).mapToLong(a -> a).sum();
+			long sum = 0;
 			long cur = sum - lastAllocationTiny;
 			lastAllocationTiny = sum;
 			return cur;

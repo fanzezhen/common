@@ -41,9 +41,7 @@ public class OpenTracingFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         Span http = tracer.buildSpan("serve").start();
         exchange.getAttributes().put(OPEN_TRACING_SPAN, http);
-        return chain.filter(exchange).doOnSuccessOrError((aVoid, ex) -> {
-            finishSpan(exchange, http);
-        });
+        return chain.filter(exchange).doFinally((aVoid) -> finishSpan(exchange, http));
     }
 
     private void finishSpan(ServerWebExchange exchange, Span span) {

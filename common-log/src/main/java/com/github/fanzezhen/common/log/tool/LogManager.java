@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.fanzezhen.common.core.util.log;
+package com.github.fanzezhen.common.log.tool;
 
 import java.util.TimerTask;
 import java.util.concurrent.ScheduledThreadPoolExecutor;

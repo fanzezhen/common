@@ -43,8 +43,7 @@ public class HttpClientCustomAutoConfiguration {
 
     @SuppressWarnings("Duplicates")
     @Bean
-    public HttpClient httpClient(List<TcpConfiguration> tcpConfigurations,
-                                 List<DoOnContext> doOnContexts,
+    public HttpClient httpClient(List<DoOnContext> doOnContexts,
                                  List<DoOnRequest> doOnRequests,
                                  List<DoAfterRequest> doAfterRequests,
                                  List<DoOnError.Request> doOnRequestErrors,
@@ -58,28 +57,18 @@ public class HttpClientCustomAutoConfiguration {
         if (pool.getType() == DISABLED) {
             connectionProvider = ConnectionProvider.newConnection();
         } else if (pool.getType() == FIXED) {
-            connectionProvider = ConnectionProvider.fixed(pool.getName(),
-                    pool.getMaxConnections(), pool.getAcquireTimeout());
+            connectionProvider = ConnectionProvider.create(pool.getName(), pool.getMaxConnections());
         } else {
-            connectionProvider = ConnectionProvider.elastic(pool.getName());
+            connectionProvider = ConnectionProvider.create(pool.getName());
         }
-
-        return HttpClient.create(connectionProvider)
-                .wiretap(true)
-                .tcpConfiguration(tcpClient -> {
-                    TcpClient tmpTcpClient = tcpClient;
-                    for (TcpConfiguration tcpConfiguration : tcpConfigurations) {
-                        tmpTcpClient = tcpConfiguration.apply(tmpTcpClient);
-                    }
-                    return tmpTcpClient;
-                })
-                .mapConnect((conn, boot) -> conn.subscriberContext(ctx -> {
-                    Context context = ctx;
-                    for (DoOnContext doOnContext : doOnContexts) {
-                        context = doOnContext.apply(context);
-                    }
-                    return context;
-                }))
+        HttpClient httpClient = HttpClient.create(connectionProvider).wiretap(true);
+        return httpClient.mapConnect((conn) -> conn.contextWrite(ctx -> {
+            Context context = ctx;
+            for (DoOnContext doOnContext : doOnContexts) {
+                context = doOnContext.apply(context);
+            }
+            return context;
+        }))
                 .doOnRequest((req, conn) -> {
                     for (DoOnRequest doOnRequest : doOnRequests) {
                         doOnRequest.accept(req, conn);

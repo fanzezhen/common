@@ -3,8 +3,6 @@ package com.github.fanzezhen.common.gateway.core.constant;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.Sign;
 import cn.hutool.crypto.asymmetric.SignAlgorithm;
-import com.netflix.client.config.CommonClientConfigKey;
-import com.netflix.client.config.IClientConfigKey;
 
 import java.util.Locale;
 
@@ -132,10 +130,6 @@ public interface SystemConstant {
      * sub env
      */
     String SUB_ENV_PROPERTY_KEY = "subEnv";
-    IClientConfigKey<String> SUB_ENV_CONFIG_KEY = new CommonClientConfigKey<String>(SUB_ENV_PROPERTY_KEY) {
-    };
-    IClientConfigKey<Boolean> SUB_ENV_ALLOW_CROSS_CONFIG_KEY = new CommonClientConfigKey<Boolean>("allowSubEnvCross") {
-    };
     String SUB_ENV_DEFAULT_ENV = "master";
 
     String HEADER_SUB_ENV = SystemConstant.CONTEXT_HEADER_PREFIX + "SubEnv";

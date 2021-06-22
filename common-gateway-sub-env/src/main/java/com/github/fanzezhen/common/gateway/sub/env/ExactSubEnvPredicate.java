@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 /**
  * match only when self and remote have the same subEnv,
  * return true when the subEnv is master
+ * @author zezhen.fan
  */
 public class ExactSubEnvPredicate extends BaseSubEnvPredicate {
 

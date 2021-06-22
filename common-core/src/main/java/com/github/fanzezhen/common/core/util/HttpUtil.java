@@ -175,14 +175,6 @@ public class HttpUtil {
         return result;
     }
 
-    public static ResponseData doRequest(String url, HashMap<String, String> params, String method) {
-        if (HttpMethod.GET.name().equals(method)) {
-            return doGet(url, params);
-        } else {
-            return doPost(url, params);
-        }
-    }
-
     private static StringBuilder getQueryString(Map<String, String> params) {
         StringBuilder queryString = new StringBuilder();
 

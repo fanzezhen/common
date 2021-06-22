@@ -11,11 +11,9 @@ import com.github.fanzezhen.common.gateway.core.filter.auth.factory.csp.FaqToken
 import com.github.fanzezhen.common.gateway.core.filter.ignore.IgnoreProperties;
 import com.github.fanzezhen.common.gateway.core.filter.ignore.TokenIgnoreGatewayFilterFactory;
 import com.github.fanzezhen.common.gateway.core.metrics.DefaultExcludeMeterFilter;
-import com.github.fanzezhen.common.gateway.core.metrics.NettyAllocatorMetrics;
 import com.github.fanzezhen.common.gateway.core.support.error.GlobalErrorWebExceptionHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.cloud.gateway.filter.factory.GatewayFilterFactory;
@@ -42,9 +40,6 @@ import java.util.List;
 public class GatewaySpringConfig {
     @Resource
     private ApplicationContext applicationContext;
-
-    @Resource
-    private ResourceProperties resourceProperties;
 
     @Resource
     private ServerCodecConfigurer serverCodecConfigurer;
@@ -97,25 +92,9 @@ public class GatewaySpringConfig {
     }
 
     @Bean
-    @Order(-2)
-    @DependsOn("errorAttributes")
-    @ConditionalOnBean(ErrorAttributes.class)
-    public GlobalErrorWebExceptionHandler globalErrorWebExceptionHandler(ErrorAttributes errorAttributes) {
-        GlobalErrorWebExceptionHandler exceptionHandler = new GlobalErrorWebExceptionHandler(errorAttributes, resourceProperties, applicationContext);
-        exceptionHandler.setMessageWriters(this.serverCodecConfigurer.getWriters());
-        exceptionHandler.setMessageReaders(this.serverCodecConfigurer.getReaders());
-        return exceptionHandler;
-    }
-
-    @Bean
     public RouteConfigProvider routeConfigProvider(DiscoverLocatorProperties discoverLocatorProperties,
                                                    List<GatewayFilterFactory> gatewayFilters) {
         return new StaticRouteConfigProvider(discoverLocatorProperties, gatewayFilters);
-    }
-
-    @Bean
-    public NettyAllocatorMetrics nettyAllocatorMetrics() {
-        return new NettyAllocatorMetrics();
     }
 
     @Bean

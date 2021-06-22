@@ -4,7 +4,7 @@ import com.github.fanzezhen.common.core.constant.SecurityConstant;
 import com.github.fanzezhen.common.security.annotation.SecurityConfig;
 import com.github.fanzezhen.common.security.facade.UserDetailsServiceFacade;
 import com.github.fanzezhen.common.security.interceptor.MyFilterSecurityInterceptor;
-import com.github.fanzezhen.common.security.property.SecurityProperty;
+import com.github.fanzezhen.common.security.SecurityProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas30ServiceTicketValidator;

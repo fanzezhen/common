@@ -11,41 +11,47 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+/**
+ * @author zezhen.fan
+ */
 public abstract class BaseSubEnvPredicate extends AbstractServerPredicate {
 
-	private static Logger logger = LoggerFactory.getLogger(BaseSubEnvPredicate.class);
+    private static Logger logger = LoggerFactory.getLogger(BaseSubEnvPredicate.class);
 
-	public BaseSubEnvPredicate(IRule rule) {
-		super(rule);
-	}
+    public BaseSubEnvPredicate(IRule rule) {
+        super(rule);
+    }
 
-	public BaseSubEnvPredicate(IRule rule, IClientConfig clientConfig) {
-		super(rule, clientConfig);
-	}
-
-	@Override
-	public boolean apply(PredicateKey input) {
-		return input != null
-				&& input.getServer() instanceof DiscoveryEnabledServer
-				&& predicate((DiscoveryEnabledServer) input.getServer(), (String) input.getLoadBalancerKey());
-	}
+    @Override
+    public boolean apply(PredicateKey input) {
+        return input != null
+                && input.getServer() instanceof DiscoveryEnabledServer
+                && predicate((DiscoveryEnabledServer) input.getServer(), (String) input.getLoadBalancerKey());
+    }
 
 
-	String extractRemoteSubEnv(DiscoveryEnabledServer server) {
-		String remoteSubEnv = SystemConstant.SUB_ENV_DEFAULT_ENV;
-		Map<String, String> remoteMeta = server.getInstanceInfo().getMetadata();
-		if (remoteMeta.containsKey(SystemConstant.SUB_ENV_PROPERTY_KEY)) {
-			remoteSubEnv = remoteMeta.get(SystemConstant.SUB_ENV_PROPERTY_KEY);
-			if (logger.isDebugEnabled()) {
-				logger.debug("extract info: server {}'s sub env is {}", server.getInstanceInfo().getId(), remoteSubEnv);
-			}
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("extract info: server {}' sub env is master by default",server.getInstanceInfo().getId());
-			}
-		}
-		return remoteSubEnv;
-	}
+    String extractRemoteSubEnv(DiscoveryEnabledServer server) {
+        String remoteSubEnv = SystemConstant.SUB_ENV_DEFAULT_ENV;
+        Map<String, String> remoteMeta = server.getInstanceInfo().getMetadata();
+        if (remoteMeta.containsKey(SystemConstant.SUB_ENV_PROPERTY_KEY)) {
+            remoteSubEnv = remoteMeta.get(SystemConstant.SUB_ENV_PROPERTY_KEY);
+            if (logger.isDebugEnabled()) {
+                logger.debug("extract info: server {}'s sub env is {}", server.getInstanceInfo().getId(), remoteSubEnv);
+            }
+        } else {
+            if (logger.isDebugEnabled()) {
+                logger.debug("extract info: server {}' sub env is master by default", server.getInstanceInfo().getId());
+            }
+        }
+        return remoteSubEnv;
+    }
 
-	abstract boolean predicate(DiscoveryEnabledServer server, String subEnv);
+    /**
+     * predicate
+     *
+     * @param server server
+     * @param subEnv subEnv
+     * @return boolean
+     */
+    abstract boolean predicate(DiscoveryEnabledServer server, String subEnv);
 }

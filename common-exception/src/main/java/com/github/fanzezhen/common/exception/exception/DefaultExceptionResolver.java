@@ -2,8 +2,8 @@ package com.github.fanzezhen.common.exception.exception;
 
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
+import com.github.fanzezhen.common.core.CommonProperty;
 import com.github.fanzezhen.common.core.util.HttpUtil;
-import com.github.fanzezhen.common.exception.property.ResponseProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -34,8 +34,8 @@ import java.util.Map;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Component
 public class DefaultExceptionResolver implements HandlerExceptionResolver {
-    @Resource
-    private ResponseProperty responseProperty;
+    @Resource(name = "commonProperty")
+    private CommonProperty responseProperty;
 
     private final View defaultErrorJsonView;
 

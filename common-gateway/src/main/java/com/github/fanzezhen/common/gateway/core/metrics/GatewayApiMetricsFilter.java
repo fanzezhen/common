@@ -43,9 +43,7 @@ public class GatewayApiMetricsFilter implements GlobalFilter, Ordered {
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 		Sample sample = Timer.start(meterRegistry);
 
-		return chain.filter(exchange).doOnSuccessOrError((aVoid, ex) -> {
-			endTimerRespectingCommit(exchange, sample);
-		});
+		return chain.filter(exchange).doFinally((aVoid) -> endTimerRespectingCommit(exchange, sample));
 	}
 
 	private void endTimerRespectingCommit(ServerWebExchange exchange, Sample sample) {

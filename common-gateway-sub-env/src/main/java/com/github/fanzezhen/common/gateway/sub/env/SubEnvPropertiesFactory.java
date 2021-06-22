@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * @author zezhen.fan
+ */
 public class SubEnvPropertiesFactory extends PropertiesFactory {
 
 	static final String NAMESPACE = "ribbon";

@@ -1,8 +1,8 @@
 package com.github.fanzezhen.common.security.model;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.github.fanzezhen.common.core.enums.db.DelFlagEnum;
 import com.github.fanzezhen.common.core.enums.db.StatusEnum;
-import com.github.fanzezhen.common.core.util.BeanConverterUtil;
 import com.github.fanzezhen.common.core.model.dto.SysUserDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -136,7 +136,7 @@ public class SysUserDetail extends User implements CredentialsContainer {
             log.warn("user：{} authorities 为 null", sysUserDto.getUsername());
             this.authorities = new HashSet<>();
         }
-        BeanConverterUtil.copy(sysUserDto, this);
+        BeanUtil.copyProperties(sysUserDto, this);
     }
 
     @Override

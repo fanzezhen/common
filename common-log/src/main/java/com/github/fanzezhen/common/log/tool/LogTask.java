@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.core.util.log;
+package com.github.fanzezhen.common.log.tool;
 
 import com.github.fanzezhen.common.core.util.HttpUtil;
 import com.github.fanzezhen.common.core.util.SysClientInfoUtil;

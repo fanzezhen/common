@@ -1,11 +1,13 @@
 package com.github.fanzezhen.common.gateway.core.discover.eureka;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * @author zezhen.fan
  */
-@ConfigurationProperties("com.github.fanzezhen.common.gateway.discover.locator")
+@Component
+@ConfigurationProperties(prefix = "com.github.fanzezhen.common.gateway.discover.locator")
 public class DiscoverLocatorProperties {
 
 	private String routeIdPrefix = "api-";
