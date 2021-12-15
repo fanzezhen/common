@@ -42,7 +42,7 @@ public class TokenUtil {
                 .compact();
     }
 
-    private Claims getClaimsFromToken(String token, String signKey) {
+    private static Claims getClaimsFromToken(String token, String signKey) {
         return Jwts.parser()
                 .setSigningKey(signKey)
                 .parseClaimsJws(token)
@@ -56,7 +56,7 @@ public class TokenUtil {
      * @param signKey jwt sign key, set in properties file.
      * @return Subject(username or user id).
      */
-    private String getSubjectFromToken(String token, String signKey) {
+    private static String getSubjectFromToken(String token, String signKey) {
         try {
             return getClaimsFromToken(token, signKey).getSubject();
         } catch (ExpiredJwtException e) {

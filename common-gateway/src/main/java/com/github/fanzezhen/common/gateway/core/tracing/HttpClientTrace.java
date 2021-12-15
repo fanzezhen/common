@@ -14,7 +14,6 @@ import reactor.netty.Connection;
 import reactor.netty.http.client.HttpClientRequest;
 import reactor.netty.http.client.HttpClientResponse;
 import reactor.util.context.Context;
-import reactor.util.context.ContextView;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -56,7 +55,7 @@ public interface HttpClientTrace {
 
         @Override
         public void accept(HttpClientRequest req, Connection connection) {
-            ContextView ctx = req.currentContextView();
+            Context ctx = req.currentContext();
             if (ctx.hasKey(KEY_TRACE)) {
                 TraceCtx traceCtx = ctx.get(KEY_TRACE);
                 HttpHeaders raw = req.requestHeaders();
@@ -101,7 +100,7 @@ public interface HttpClientTrace {
 
         @Override
         public void accept(HttpClientRequest req, Throwable throwable) {
-            ContextView ctx = req.currentContextView();
+            Context ctx = req.currentContext();
             if (ctx.hasKey(KEY_TRACE)) {
                 TraceCtx traceCtx = ctx.get(KEY_TRACE);
                 if (traceCtx.getSpan() != null) {
@@ -118,7 +117,7 @@ public interface HttpClientTrace {
 
         @Override
         public void accept(HttpClientResponse res, Throwable throwable) {
-            ContextView ctx = res.currentContextView();
+            Context ctx = res.currentContext();
             if (ctx.hasKey(KEY_TRACE)) {
                 TraceCtx traceCtx = ctx.get(KEY_TRACE);
                 if (traceCtx.getSpan() != null) {
@@ -135,7 +134,7 @@ public interface HttpClientTrace {
 
         @Override
         public void accept(HttpClientResponse res, Connection connection) {
-            ContextView ctx = res.currentContextView();
+            Context ctx = res.currentContext();
             if (ctx.hasKey(KEY_TRACE)) {
                 TraceCtx traceCtx = ctx.get(KEY_TRACE);
                 if (traceCtx.getSpan() != null) {

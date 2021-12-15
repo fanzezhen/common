@@ -11,15 +11,15 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "com.github.fanzezhen.common.core.project")
 public class ProjectProperty {
-    private final String appCode = "DEMO";
-    private final String version = "1.0";
-    private final String basePackage = "com.github.fanzezhen.common";
-    private final String dtoPackages = "";
-    private final String title = "DEMO";
-    private final String description = "示例";
-    private final String linkMan = "";
-    private final String linkUrl = "";
-    private final String linkEmail = "";
-    private final String license = "Apache License 2.0";
-    private final String licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0";
+    private String appCode = "DEMO";
+    private String version = "1.0";
+    private String basePackage = "com.github.fanzezhen.common";
+    private String dtoPackage = "";
+    private String title = "DEMO";
+    private String description = "示例";
+    private String linkMan = "";
+    private String linkUrl = "";
+    private String linkEmail = "";
+    private String license = "Apache License 2.0";
+    private String licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0";
 }

@@ -17,6 +17,8 @@
         <cn.stylefeng.roses.version>2.2.13</cn.stylefeng.roses.version>
         <com.github.penggle.version>2.3.2</com.github.penggle.version>
         <com.alibaba.version>1.2.68</com.alibaba.version>
+        <com.alibaba.cloud.version>2.2.7.RELEASE</com.alibaba.cloud.version>
+        <com.alibaba.csp.version>1.8.2</com.alibaba.csp.version>
         <com.baomidou.version>3.4.1</com.baomidou.version>
         <com.fasterxml.jackson.core.version>2.12.0</com.fasterxml.jackson.core.version>
         <com.fasterxml.jackson.datatype.version>2.11.2</com.fasterxml.jackson.datatype.version>
@@ -46,13 +48,15 @@
         <org.apache.commons.commons-beanutils.version>1.9.4</org.apache.commons.commons-beanutils.version>
         <org.apache.commons.commons-collections4.version>4.4</org.apache.commons.commons-collections4.version>
         <org.apache.commons.commons-lang3.version>3.11</org.apache.commons.commons-lang3.version>
+        <org.apache.logging.log4j.version>2.16.0</org.apache.logging.log4j.version>
         <org.apache.poi.version>4.1.2</org.apache.poi.version>
+        <org.apache.tomcat.embed.version>10.0.0-M7</org.apache.tomcat.embed.version>
         <org.mybatis.spring.boot.version>2.2.0</org.mybatis.spring.boot.version>
-        <org.projectlombok.version>1.18.12</org.projectlombok.version>
+        <org.projectlombok.version>1.18.22</org.projectlombok.version>
         <org.reflections.version>0.9.12</org.reflections.version>
-        <org.springframework.version>5.3.8</org.springframework.version>
-        <org.springframework.batch.version>4.3.3</org.springframework.batch.version>
-        <org.springframework.boot.version>2.5.2</org.springframework.boot.version>
+        <org.springframework.version>5.2.12.RELEASE</org.springframework.version>
+        <org.springframework.batch.version>4.2.4.RELEASE</org.springframework.batch.version>
+        <org.springframework.boot.version>2.3.9.RELEASE</org.springframework.boot.version>
         <org.springframework.cloud.version>2.2.9.RELEASE</org.springframework.cloud.version>
         <org.springframework.data.version>2.4.2</org.springframework.data.version>
         <org.springframework.security.version>5.3.6.RELEASE</org.springframework.security.version>
@@ -137,6 +141,56 @@
                 <version>${cn.hutool.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-core</artifactId>
+                <version>${com.alibaba.csp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-datasource-extension</artifactId>
+                <version>${com.alibaba.csp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-parameter-flow-control</artifactId>
+                <version>${com.alibaba.csp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-spring-cloud-gateway-adapter</artifactId>
+                <version>${com.alibaba.csp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-transport-simple-http</artifactId>
+                <version>${com.alibaba.csp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-datasource-nacos</artifactId>
+                <version>${com.alibaba.csp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>spring-boot-starter-ahas-sentinel-client</artifactId>
+                <version>${com.alibaba.csp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-sentinel-datasource</artifactId>
+                <version>${com.alibaba.cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+                <version>${com.alibaba.cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-sentinel-gateway</artifactId>
+                <version>${com.alibaba.cloud.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
                 <version>${com.fasterxml.jackson.core.version}</version>
@@ -185,6 +239,12 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${org.apache.commons.commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${org.apache.logging.log4j.version}</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>p6spy</groupId>
@@ -689,6 +749,7 @@
         <module>common-gateway</module>
         <module>common-gateway-endpoint-auth</module>
         <module>common-gateway-sub-env</module>
+        <module>common-sentinel</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -751,6 +812,15 @@
                 <maven.compiler.source>${java.version}</maven.compiler.source>
                 <maven.compiler.target>${java.version}</maven.compiler.target>
                 <maven.compiler.compilerVersion>${java.version}</maven.compiler.compilerVersion>
+                <gpg.executable>gpg</gpg.executable>
+
+                <!-- 这个就是前面需要记录下的key -->
+                <gpg.keyname>08B75F8EE029D5B29CAD118E05BD2AF3E39206E5</gpg.keyname>
+                <!-- 公钥的加密密码 -->
+                <gpg.passphrase>FZz19951106.</gpg.passphrase>
+                <gpg.executable>C:/Program Files (x86)/Gpg4win/../GnuPG/bin/gpg.exe</gpg.executable>
+                <!-- 前面pom.xml中配置了gpg的maven插件，这个目录就是你本地机器存放gpg秘钥的目录 -->
+                <gpg.homedir>C:/Users/andy/AppData/Roaming/gnupg</gpg.homedir>
             </properties>
         </profile>
     </profiles>

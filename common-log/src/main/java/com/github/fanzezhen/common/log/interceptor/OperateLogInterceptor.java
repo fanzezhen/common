@@ -253,8 +253,8 @@ public class OperateLogInterceptor implements Interceptor {
     private OperateLog getOperateLog(Object arg) {
         OperateLog operateLog = arg == null ? null : arg.getClass().getAnnotation(OperateLog.class);
         if (operateLog == null) {
-            if (arg != null && StrUtil.isNotBlank(projectProperty.getDtoPackages())) {
-                String[] dtoPackages = projectProperty.getDtoPackages().split(",");
+            if (arg != null && StrUtil.isNotBlank(projectProperty.getDtoPackage())) {
+                String[] dtoPackages = projectProperty.getDtoPackage().split(",");
                 for (String dtoPackage : dtoPackages) {
                     Reflections reflections = new Reflections(dtoPackage);
                     for (Class<?> dtoClass : reflections.getTypesAnnotatedWith(OperateLog.class)) {

@@ -78,7 +78,7 @@ import org.springframework.web.reactive.socket.server.support.HandshakeWebSocket
 import reactor.core.publisher.Flux;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.resources.ConnectionProvider;
-import reactor.netty.transport.ProxyProvider;
+import reactor.netty.tcp.ProxyProvider;
 
 import javax.net.ssl.SSLException;
 import java.security.cert.X509Certificate;
@@ -478,24 +478,38 @@ public class GatewayAutoConfiguration {
                 connectionProvider = ConnectionProvider.create(pool.getName());
             }
 
-            HttpClient httpClient = HttpClient.create(connectionProvider);
-            // configure proxy if proxy host is set.
-            HttpClientProperties.Proxy proxy = properties.getProxy();
-            if (StringUtils.hasText(proxy.getHost())) {
-                httpClient = httpClient.proxy(proxySpec -> {
-                    ProxyProvider.Builder builder = proxySpec
-                            .type(ProxyProvider.Proxy.HTTP)
-                            .host(proxy.getHost());
-                    PropertyMapper map = PropertyMapper.get();
-                    map.from(proxy::getPort).whenNonNull().to(builder::port);
-                    map.from(proxy::getUsername).whenHasText()
-                            .to(builder::username);
-                    map.from(proxy::getPassword).whenHasText()
-                            .to(password -> builder.password(s -> password));
-                    map.from(proxy::getNonProxyHostsPattern).whenHasText()
-                            .to(builder::nonProxyHosts);
-                });
-            }
+            HttpClient httpClient = HttpClient.create(connectionProvider)
+                    .tcpConfiguration(tcpClient -> {
+
+                        if (properties.getConnectTimeout() != null) {
+                            tcpClient = tcpClient.option(
+                                    ChannelOption.CONNECT_TIMEOUT_MILLIS,
+                                    properties.getConnectTimeout());
+                        }
+
+                        // configure proxy if proxy host is set.
+                        HttpClientProperties.Proxy proxy = properties.getProxy();
+
+                        if (StringUtils.hasText(proxy.getHost())) {
+
+                            tcpClient = tcpClient.proxy(proxySpec -> {
+                                ProxyProvider.Builder builder = proxySpec
+                                        .type(ProxyProvider.Proxy.HTTP)
+                                        .host(proxy.getHost());
+
+                                PropertyMapper map = PropertyMapper.get();
+
+                                map.from(proxy::getPort).whenNonNull().to(builder::port);
+                                map.from(proxy::getUsername).whenHasText()
+                                        .to(builder::username);
+                                map.from(proxy::getPassword).whenHasText()
+                                        .to(password -> builder.password(s -> password));
+                                map.from(proxy::getNonProxyHostsPattern).whenHasText()
+                                        .to(builder::nonProxyHosts);
+                            });
+                        }
+                        return tcpClient;
+                    });
 
             HttpClientProperties.Ssl ssl = properties.getSsl();
             if (ssl.getTrustedX509CertificatesForTrustManager().length > 0

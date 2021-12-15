@@ -1,0 +1,95 @@
+#版本号
+version: "3"
+#服务
+services:
+  mysql:
+    container_name: mysql        # 指定容器的名称
+    hostname: mysql
+    image: mysql:8.0.27                   # 指定镜像和版本
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_ROOT_HOST: "%"
+    command:
+      --max_connections=1000
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --default-authentication-plugin=mysql_native_password
+    volumes:
+      - "./mysql/data:/var/lib/mysql"           # 挂载数据目录
+      - "./mysql/config:/etc/mysql/conf.d"      # 挂载配置文件目录
+
+  #服务名称
+  redis:
+    #镜像名: 仓库/标签:版本
+    image: redis:alpine
+    container_name: redis
+    hostname: redis
+    restart: always
+    # 暴露端口信息
+    ports:
+      - "6379"
+
+  consul:
+    container_name: consul
+    image: consul
+    hostname: consul
+    restart: always
+    ports:
+      - "8500:8500"
+
+  zookeeper:
+    image: zookeeper
+    container_name: zookeeper
+    restart: always
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zookeeper:2888:3888;2181
+
+  nacos:
+    image: nacos/nacos-server:latest
+    container_name: nacos
+    restart: always
+    hostname: nacos
+    ports:
+      - "8848:8848"
+    environment:
+      PREFER_HOST_MODE: hostname
+      MODE: standalone
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_DATABASE_NUM: 1
+      MYSQL_SERVICE_HOST: mysql
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_DB_NAME: nacos
+      MYSQL_SERVICE_USER: root
+      MYSQL_SERVICE_PASSWORD: root
+    volumes:
+      - ./app/nacos/standalone-logs:/home/nacos/logs
+      - ./app/nacos/init.d:/home/nacos/init.d/
+    depends_on:
+      - mysql
+
+  #服务名称
+  sentinel-dashboard:
+    #镜像名: 仓库/标签:版本
+    image: bladex/sentinel-dashboard
+    container_name: sentinel-dashboard
+    restart: always
+    # 暴露端口信息
+    ports:
+      - "8858:8858"
+
+  #服务名称
+  eureka-server:
+    #镜像名: 仓库/标签:版本
+    image: taskbeez/eureka-server:master
+    container_name: eureka-server
+    restart: always
+    ports:
+      - "8761:8761"

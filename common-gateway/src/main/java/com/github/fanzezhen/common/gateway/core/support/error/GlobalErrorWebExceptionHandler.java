@@ -2,8 +2,10 @@ package com.github.fanzezhen.common.gateway.core.support.error;
 
 import com.github.fanzezhen.common.gateway.core.support.response.ActionResult;
 import com.github.fanzezhen.common.gateway.core.support.response.ErrorInfo;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
@@ -28,12 +30,16 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
 	private Logger logger = LoggerFactory.getLogger(GlobalErrorWebExceptionHandler.class);
 
-	@Override
-	protected RouterFunction<ServerResponse> getRoutingFunction(ErrorAttributes errorAttributes) {
-		return RouterFunctions.route(
-				RequestPredicates.all(), this::renderErrorResponse);
+	public GlobalErrorWebExceptionHandler(ErrorAttributes errorAttributes, ResourceProperties resourceProperties, ApplicationContext applicationContext) {
+		super(errorAttributes, resourceProperties, applicationContext);
 	}
 
+	@Override
+	protected RouterFunction<ServerResponse> getRoutingFunction(ErrorAttributes errorAttributes) {
+		return RouterFunctions.route(RequestPredicates.all(), this::renderErrorResponse);
+	}
+
+	@NotNull
 	private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
 		ActionResult<Void> result = new ActionResult<>();
 		result.setSuccess(false);

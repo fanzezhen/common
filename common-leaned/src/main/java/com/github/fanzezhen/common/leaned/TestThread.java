@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.leaned;
 
+import cn.hutool.core.thread.ThreadUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -60,12 +61,23 @@ public class TestThread implements Runnable {
         int l = 10;
         for (int i = 0; i < l; i++) {
             TestThread t = new TestThread(i);
-            threadPool.execute(new TestThread(i));
+            threadPool.execute(t);
             System.out.println("线程池中活跃的线程数： " + threadPool.getPoolSize());
             if (queue.size() > 0) {
                 System.out.println("队列中阻塞的线程数" + queue.size());
             }
         }
         threadPool.shutdown();
+        ThreadPoolExecutor threadPoolExecutor = ThreadUtil.newExecutor(5, 10);
+        for (int i = 0; i < l; i++) {
+            int finalI = i;
+            threadPoolExecutor.execute(()-> {
+                ThreadUtil.sleep(1000);
+                System.out.println("test-" + finalI);
+            });
+            System.out.println("getQueueSize:" + threadPoolExecutor.getQueue().size());
+            System.out.println("getActiveCount:" + threadPoolExecutor.getActiveCount());
+        }
+        threadPoolExecutor.shutdown();
     }
 }

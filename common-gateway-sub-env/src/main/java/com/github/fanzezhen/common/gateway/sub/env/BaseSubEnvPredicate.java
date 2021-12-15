@@ -1,6 +1,5 @@
 package com.github.fanzezhen.common.gateway.sub.env;
 
-import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.AbstractServerPredicate;
 import com.netflix.loadbalancer.IRule;
 import com.netflix.loadbalancer.PredicateKey;

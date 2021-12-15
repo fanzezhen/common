@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "com.github.fanzezhen.common.core.swagger")
+@ConfigurationProperties(prefix = "com.github.fanzezhen.common.swagger")
 public class SwaggerProperty {
     private List<SwaggerRequestParameter> headerRequestParameterList;
 }

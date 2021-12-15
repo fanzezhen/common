@@ -1,6 +1,5 @@
 package com.github.fanzezhen.common.gateway.sub.env;
 
-import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.IRule;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
 import com.github.fanzezhen.common.gateway.core.constant.SystemConstant;
@@ -17,10 +16,6 @@ public class MasterFallBackPredicate extends BaseSubEnvPredicate {
 
 	public MasterFallBackPredicate(IRule rule) {
 		super(rule);
-	}
-
-	public MasterFallBackPredicate(IRule rule, IClientConfig clientConfig) {
-		super(rule, clientConfig);
 	}
 
 	@Override

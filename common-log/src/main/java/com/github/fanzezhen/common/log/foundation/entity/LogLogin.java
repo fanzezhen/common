@@ -77,7 +77,7 @@ public class LogLogin extends BaseEntity {
                 this.ipBytes = InetAddress.getByName(ip).getAddress();
             }
         } catch (UnknownHostException e) {
-            log.warn("IP地址解析失败：{}", ip);
+            log.warn("IP地址解析失败：{}", ip, e);
         }
     }
 
@@ -106,7 +106,7 @@ public class LogLogin extends BaseEntity {
         try {
             this.ipBytes = InetAddress.getByName(ipv4).getAddress();
         } catch (Throwable throwable) {
-            log.warn("setIpv4 failed: {}", ipv4);
+            log.warn("setIpv4 failed: {}", ipv4, throwable);
         }
     }
 
@@ -131,7 +131,7 @@ public class LogLogin extends BaseEntity {
         try {
             this.ipBytes = InetAddress.getByName(ipv6).getAddress();
         } catch (Throwable throwable) {
-            log.warn("setIpv6 failed: {}", ipv6);
+            log.warn("setIpv6 failed: {}", ipv6, throwable);
         }
     }
 

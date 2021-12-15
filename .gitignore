@@ -12,6 +12,7 @@
 
 # Temporary files
 out
+build
 target
 conf_dev
 *.pyc
@@ -30,6 +31,8 @@ tmp/
 
 # log
 logs/
+app/mysql/data
+app/nacos/standalone-logs
 
 
 # others
