@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.fanzezhen</groupId>
     <artifactId>common</artifactId>
-    <version>2.1.1</version>
+    <groupId>com.github.fanzezhen</groupId>
+    <version>2.1.2</version>
 
     <properties>
         <com.github.fanzezhen.jdk8.version>0.0.3.4</com.github.fanzezhen.jdk8.version>
@@ -20,8 +20,7 @@
         <com.alibaba.cloud.version>2.2.7.RELEASE</com.alibaba.cloud.version>
         <com.alibaba.csp.version>1.8.2</com.alibaba.csp.version>
         <com.baomidou.version>3.4.1</com.baomidou.version>
-        <com.fasterxml.jackson.core.version>2.12.0</com.fasterxml.jackson.core.version>
-        <com.fasterxml.jackson.datatype.version>2.11.2</com.fasterxml.jackson.datatype.version>
+        <com.fasterxml.jackson.version>2.13.1</com.fasterxml.jackson.version>
         <com.google.code.gson.version>2.8.6</com.google.code.gson.version>
         <com.google.guava.version>29.0-jre</com.google.guava.version>
         <com.lmax.version>3.4.1</com.lmax.version>
@@ -40,21 +39,22 @@
         <nz.net.ultraq.thymeleaf.version>2.4.1</nz.net.ultraq.thymeleaf.version>
         <mysql.version>8.0.20</mysql.version>
         <net.lingala.zip4j.version>2.6.2</net.lingala.zip4j.version>
-        <org.slf4j.version>1.7.30</org.slf4j.version>
         <org.apache.velocity.version>2.2</org.apache.velocity.version>
         <org.aspectj.version>1.9.6</org.aspectj.version>
         <org.freemarker.version>2.3.30</org.freemarker.version>
         <org.apereo.cas.version>6.3.5</org.apereo.cas.version>
+        <org.aspectj.version>1.9.6</org.aspectj.version>
         <org.apache.commons.commons-beanutils.version>1.9.4</org.apache.commons.commons-beanutils.version>
         <org.apache.commons.commons-collections4.version>4.4</org.apache.commons.commons-collections4.version>
-        <org.apache.commons.commons-lang3.version>3.11</org.apache.commons.commons-lang3.version>
+        <org.apache.commons.commons-lang3.version>3.12.0</org.apache.commons.commons-lang3.version>
         <org.apache.logging.log4j.version>2.16.0</org.apache.logging.log4j.version>
         <org.apache.poi.version>4.1.2</org.apache.poi.version>
         <org.apache.tomcat.embed.version>10.0.0-M7</org.apache.tomcat.embed.version>
         <org.mybatis.spring.boot.version>2.2.0</org.mybatis.spring.boot.version>
         <org.projectlombok.version>1.18.22</org.projectlombok.version>
         <org.reflections.version>0.9.12</org.reflections.version>
-        <org.springframework.version>5.2.12.RELEASE</org.springframework.version>
+        <org.slf4j.version>1.7.32</org.slf4j.version>
+        <org.springframework.version>5.2.13.RELEASE</org.springframework.version>
         <org.springframework.batch.version>4.2.4.RELEASE</org.springframework.batch.version>
         <org.springframework.boot.version>2.3.9.RELEASE</org.springframework.boot.version>
         <org.springframework.cloud.version>2.2.9.RELEASE</org.springframework.cloud.version>
@@ -65,7 +65,7 @@
         <org.thymeleaf.extras.version>3.0.4.RELEASE</org.thymeleaf.extras.version>
         <p6spy.version>3.9.1</p6spy.version>
         <redis.clients.version>3.5.2</redis.clients.version>
-        <spring-cloud.version>2020.0.0</spring-cloud.version>
+        <spring-cloud.version>2020.0.3</spring-cloud.version>
         <spring-cloud-starter-eureka-server.version>1.4.7</spring-cloud-starter-eureka-server.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -91,7 +91,17 @@
             </dependency>
             <dependency>
                 <groupId>com.github.fanzezhen.common</groupId>
+                <artifactId>common-cache</artifactId>
+                <version>${com.github.fanzezhen.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fanzezhen.common</groupId>
                 <artifactId>common-exception</artifactId>
+                <version>${com.github.fanzezhen.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fanzezhen.common</groupId>
+                <artifactId>common-mp</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
@@ -102,6 +112,11 @@
             <dependency>
                 <groupId>com.github.fanzezhen.common</groupId>
                 <artifactId>common-security</artifactId>
+                <version>${com.github.fanzezhen.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fanzezhen.common</groupId>
+                <artifactId>common-sentinel</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
@@ -124,12 +139,12 @@
                 <artifactId>common-gateway-endpoint-auth</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
-            <!--common-->
             <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${ch.qos.logback.version}</version>
+                <groupId>com.github.fanzezhen.common</groupId>
+                <artifactId>common-gateway-sub-env</artifactId>
+                <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
+            <!--HuTool-->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
@@ -139,6 +154,17 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-core</artifactId>
                 <version>${cn.hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-log</artifactId>
+                <version>${cn.hutool.version}</version>
+            </dependency>
+            <!--alibaba-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${com.alibaba.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba.csp</groupId>
@@ -186,24 +212,24 @@
                 <version>${com.alibaba.cloud.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-alibaba-sentinel-gateway</artifactId>
-                <version>${com.alibaba.cloud.version}</version>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-parameter-names</artifactId>
+                <version>${com.fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>${com.fasterxml.jackson.core.version}</version>
+                <version>${com.fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>${com.fasterxml.jackson.core.version}</version>
+                <version>${com.fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${com.fasterxml.jackson.core.version}</version>
+                <version>${com.fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
@@ -236,15 +262,14 @@
                 <version>2.0.1.Final</version>
             </dependency>
             <dependency>
+                <groupId>javax.annotation</groupId>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>${javax.annotation.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${org.apache.commons.commons-lang3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>${org.apache.logging.log4j.version}</version>
-                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>p6spy</groupId>
@@ -256,12 +281,6 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>javax.annotation</groupId>
-                <artifactId>javax.annotation-api</artifactId>
-                <version>${javax.annotation.version}</version>
             </dependency>
             <!--io-->
             <dependency>
@@ -307,7 +326,7 @@
                 <artifactId>poi-ooxml</artifactId>
                 <version>${org.apache.poi.version}</version>
             </dependency>
-            <!-- org.apereo.cas -->
+            <!-- cas -->
             <dependency>
                 <groupId>org.apereo.cas</groupId>
                 <artifactId>cas-server-core-authentication-api</artifactId>
@@ -358,7 +377,7 @@
                 <artifactId>cas-server-core-services-api</artifactId>
                 <version>${org.apereo.cas.version}</version>
             </dependency>
-            <!-- 和maven-war-plugin里配置的overlays配合使用（CAS） -->
+            <!-- 与maven-war-plugin里配置的overlays配合使用（CAS） -->
             <dependency>
                 <groupId>org.apereo.cas</groupId>
                 <artifactId>cas-server-webapp${app.server}</artifactId>
@@ -366,16 +385,20 @@
                 <type>war</type>
                 <scope>runtime</scope>
             </dependency>
-
             <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-autoconfigure</artifactId>
-                <version>${org.mybatis.spring.boot.version}</version>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjrt</artifactId>
+                <version>${org.aspectj.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
                 <version>${org.reflections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${org.slf4j.version}</version>
             </dependency>
             <!--spring-->
             <dependency>
@@ -414,6 +437,11 @@
                 <artifactId>spring-batch-core</artifactId>
                 <version>${org.springframework.batch.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot</artifactId>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
             <!-- actuator 组件是Spring Boot的监控组件，actuator一旦应用，在启动的时候，会发布一系列的URL服务。包含一个shutdown服务，代表优雅关闭
                 当Spring Boot 应用中的actuator组件接收到shutdown请求的时候，会触发优雅关闭。
                 如果当前应用中有Eureka Client的集成，则会触发Eureka Client向Eureka Server发起一个shutdown优雅停服的请求 -->
@@ -436,6 +464,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
                 <scope>provided</scope>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-logging</artifactId>
+                <scope>compile</scope>
                 <version>${org.springframework.boot.version}</version>
             </dependency>
             <dependency>
@@ -499,24 +533,13 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
-                <version>${com.fasterxml.jackson.datatype.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${org.slf4j.version}</version>
+                <version>${com.fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.persistence</groupId>
                 <artifactId>javax.persistence-api</artifactId>
                 <version>${javax.persistence.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${com.alibaba.version}</version>
-            </dependency>
-            <!--mybatis-->
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus</artifactId>
@@ -547,32 +570,6 @@
                 <artifactId>guava</artifactId>
                 <version>${com.google.guava.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.netflix.ribbon</groupId>
-                <artifactId>ribbon</artifactId>
-                <version>${com.netflix.ribbon.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.netflix.ribbon</groupId>
-                <artifactId>ribbon-core</artifactId>
-                <version>${com.netflix.ribbon.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.netflix.ribbon</groupId>
-                <artifactId>ribbon-eureka</artifactId>
-                <version>${com.netflix.ribbon.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.netflix.ribbon</groupId>
-                <artifactId>ribbon-httpclient</artifactId>
-                <version>${com.netflix.ribbon.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.netflix.ribbon</groupId>
-                <artifactId>ribbon-loadbalancer</artifactId>
-                <version>${com.netflix.ribbon.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>eu.bitwalker</groupId>
                 <artifactId>UserAgentUtils</artifactId>
@@ -724,7 +721,6 @@
                 <artifactId>thymeleaf-extras-springsecurity5</artifactId>
                 <version>${org.thymeleaf.extras.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>redis.clients</groupId>
                 <artifactId>jedis</artifactId>
@@ -740,7 +736,6 @@
 
     <modules>
         <module>common-core</module>
-        <module>common-leaned</module>
         <module>common-security</module>
         <module>common-swagger</module>
         <module>common-exception</module>
@@ -750,19 +745,21 @@
         <module>common-gateway-endpoint-auth</module>
         <module>common-gateway-sub-env</module>
         <module>common-sentinel</module>
+        <module>common-redis</module>
+        <module>common-mp</module>
     </modules>
 
     <packaging>pom</packaging>
-    <name>${project.groupId}:${project.artifactId}</name>
+    <name>${project.groupId}.${project.artifactId}</name>
     <url>https://github.com/fanzezhen/${project.artifactId}</url>
-    <description>${project.artifactId}</description>
+    <description>Commonly used</description>
 
     <!-- 代码库 -->
     <scm>
         <tag>master</tag>
-        <url>https://github.com/fanzezhen/${project.artifactId}.git</url>
-        <connection>scm:git:git@github.com:fanzezhen/${project.artifactId}.git</connection>
-        <developerConnection>scm:git:git@github.com:fanzezhen/${project.artifactId}.git</developerConnection>
+        <url>https://github.com/fanzezhen/common.git</url>
+        <connection>scm:git:git@github.com:fanzezhen/common.git</connection>
+        <developerConnection>scm:git:git@github.com:fanzezhen/common.git</developerConnection>
     </scm>
 
     <!-- 开发者信息 -->
@@ -815,9 +812,9 @@
                 <gpg.executable>gpg</gpg.executable>
 
                 <!-- 这个就是前面需要记录下的key -->
-                <gpg.keyname>08B75F8EE029D5B29CAD118E05BD2AF3E39206E5</gpg.keyname>
+                <gpg.keyname>7B8AED5BE39079F4D5CFEFFEC64C39C38F920A8F</gpg.keyname>
                 <!-- 公钥的加密密码 -->
-                <gpg.passphrase>FZz19951106.</gpg.passphrase>
+                <gpg.passphrase>zmd19951005</gpg.passphrase>
                 <gpg.executable>C:/Program Files (x86)/Gpg4win/../GnuPG/bin/gpg.exe</gpg.executable>
                 <!-- 前面pom.xml中配置了gpg的maven插件，这个目录就是你本地机器存放gpg秘钥的目录 -->
                 <gpg.homedir>C:/Users/andy/AppData/Roaming/gnupg</gpg.homedir>
@@ -890,6 +887,7 @@
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>${maven-deploy-plugin.version}</version>
                 <executions>
@@ -912,6 +910,8 @@
                     <!-- 这个id不要乱设置，需要和后面的settings.xml中的server的id保持一致 -->
                     <serverId>oss</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <!-- 如果希望发布后自动执行close和release操作，此处可以调整为true -->
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
                 <executions>
                     <execution>

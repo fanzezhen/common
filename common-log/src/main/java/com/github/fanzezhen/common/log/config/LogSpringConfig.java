@@ -5,11 +5,13 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /**
  * @author zezhen.fan
  */
 @Configuration
+@Import(cn.hutool.extra.spring.SpringUtil.class)
 @ComponentScan("com.github.fanzezhen.common.log")
 @EntityScan({"com.github.fanzezhen.common.log.foundation.entity"})
 @MapperScan({"com.github.fanzezhen.common.log.foundation.mapper"})

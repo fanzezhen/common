@@ -1,23 +1,22 @@
 package com.github.fanzezhen.common.security.facade;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
 import com.alibaba.fastjson.JSON;
-import com.github.fanzezhen.common.core.constant.CacheConstants;
+import com.github.fanzezhen.common.core.constant.CacheConstant;
 import com.github.fanzezhen.common.core.constant.SecurityConstant;
 import com.github.fanzezhen.common.core.enums.auth.RoleTypeEnum;
-import com.github.fanzezhen.common.core.model.dto.SysPermissionDto;
-import com.github.fanzezhen.common.core.model.dto.SysUserDto;
+import com.github.fanzezhen.common.mp.model.dto.SysPermissionDto;
+import com.github.fanzezhen.common.mp.model.dto.SysUserDto;
 import com.github.fanzezhen.common.core.model.response.ActionResult;
 import com.github.fanzezhen.common.core.model.response.ErrorInfo;
 import com.github.fanzezhen.common.security.facade.remote.UserDetailsRemote;
 import com.github.fanzezhen.common.security.model.SysUserDetail;
-import com.github.fanzezhen.common.core.ProjectProperty;
+import com.github.fanzezhen.common.core.property.ProjectProperty;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.compress.utils.Lists;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -52,15 +51,15 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
     }
 
     @Override
-    @Cacheable(value = CacheConstants.USER_DETAILS, key = "#username")
+    @Cacheable(value = CacheConstant.USER_DETAILS, key = "#username")
     public SysUserDetail loadUserByUsername(String username) throws UsernameNotFoundException {
         //用户，用于判断权限，请注意此用户名和方法参数中的username一致；BCryptPasswordEncoder是用来演示加密使用。
         SysUserDto sysUserDto = userDetailsRemote.loadUserByUsername(username, projectProperty.getAppCode()).getData();
-        if (sysUserDto != null && StringUtils.isNotBlank(sysUserDto.getUsername())) {
+        if (sysUserDto != null && StrUtil.isNotBlank(sysUserDto.getUsername())) {
             //生成环境是查询数据库获取username的角色用于后续权限判断（如：张三 admin)
             Set<GrantedAuthority> grantedAuthorities;
             Set<String> grantedAuthorityNameSet = new HashSet<>();
-            if (!CollectionUtils.sizeIsEmpty(sysUserDto.getRoleTypeSets())) {
+            if (!CollUtil.isEmpty(sysUserDto.getRoleTypeSets())) {
                 // 判断SPECIAL_ADMIN， 超级管理员拥有所有权限
                 for (SysPermissionDto sysPermissionDto :
                         sysUserDto.getRoleTypeSets().contains(RoleTypeEnum.SPECIAL_ADMIN.getType()) ?
@@ -85,14 +84,14 @@ public class UserDetailsServiceFacadeImpl implements UserDetailsServiceFacade {
     }
 
     @Override
-    @Cacheable(value = CacheConstants.PERMISSION_DETAILS, key = "#appCode")
+    @Cacheable(value = CacheConstant.PERMISSION_DETAILS, key = "#appCode")
     public List<SysPermissionDto> listAllPermissionDto(String appCode) {
         String errMsg = "调用微服务获取权限列表失败：";
         ActionResult<List<SysPermissionDto>> sysPermissionDtoListResult = userDetailsRemote.listPermission(appCode);
         if (sysPermissionDtoListResult != null) {
             if (sysPermissionDtoListResult.isSuccess()) {
                 List<SysPermissionDto> data = sysPermissionDtoListResult.getData();
-                return data == null ? Lists.newArrayList() : data;
+                return data == null ? new ArrayList<>(0) : data;
             } else {
                 if (CollectionUtil.isNotEmpty(sysPermissionDtoListResult.getErrors())) {
                     ErrorInfo errorInfo = sysPermissionDtoListResult.getErrors().get(0);

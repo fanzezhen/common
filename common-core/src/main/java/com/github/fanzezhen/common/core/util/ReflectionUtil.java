@@ -1,12 +1,14 @@
 package com.github.fanzezhen.common.core.util;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
 import com.github.fanzezhen.common.core.dict.AbstractDict;
 import com.github.fanzezhen.common.core.model.bean.AttributeBean;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -92,14 +94,29 @@ public class ReflectionUtil {
      * @param bean      实体
      * @return boolean
      */
+    @SuppressWarnings("unchecked")
     public static boolean isEmptyValue(String fieldName, Object bean) {
         Object value = getValue(fieldName, bean);
         if (value == null || StrUtil.isEmpty(String.valueOf(value))) {
             return true;
         }
-        if (value instanceof Iterable || value instanceof Map || value instanceof Iterator ||
-                value instanceof Object[] || value instanceof Enumeration || value instanceof Array) {
-            return CollectionUtils.sizeIsEmpty(getValue(fieldName, bean));
+        if (value instanceof Iterable) {
+            return CollUtil.isEmpty((Iterable<Object>) value);
+        }
+        if (value instanceof Iterator) {
+            return CollUtil.isEmpty((Iterator<Object>) value);
+        }
+        if (value instanceof Enumeration) {
+            return CollUtil.isEmpty((Enumeration<Object>) value);
+        }
+        if (value instanceof Map) {
+            return MapUtil.isEmpty((Map<Object, Object>) value);
+        }
+        if (value instanceof Object[]) {
+            return ArrayUtil.isEmpty((Object[]) value);
+        }
+        if (value instanceof Array) {
+            return ArrayUtil.isEmpty(value);
         }
         return false;
     }

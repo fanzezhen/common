@@ -1,14 +1,13 @@
 package com.github.fanzezhen.common.log.foundation.entity;
 
 import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.github.fanzezhen.common.core.enums.db.log.LoginLogTypeEnum;
-import com.github.fanzezhen.common.core.model.entity.BaseEntity;
-import com.google.common.primitives.Ints;
-import com.google.common.primitives.Longs;
+import com.github.fanzezhen.common.mp.enums.log.LoginLogTypeEnum;
+import com.github.fanzezhen.common.mp.model.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -87,10 +86,10 @@ public class LogLogin extends BaseEntity {
             int ipv4LongLength = 8;
             int ipv6Length = 16;
             if (ipBytes.length == ipv4IntLength) {
-                return NetUtil.longToIpv4(Ints.fromByteArray(ipBytes));
+                return NetUtil.longToIpv4(ByteUtil.bytesToInt(ipBytes));
             }
             if (ipBytes.length == ipv4LongLength) {
-                return NetUtil.longToIpv4(Longs.fromByteArray(ipBytes));
+                return NetUtil.longToIpv4(ByteUtil.bytesToLong(ipBytes));
             }
             if (ipBytes.length == ipv6Length) {
                 return NetUtil.bigIntegerToIPv6(new BigInteger(ipBytes));
@@ -115,10 +114,10 @@ public class LogLogin extends BaseEntity {
             int ipv4IntLength = 4;
             int ipv4LongLength = 8;
             if (ipBytes.length == ipv4IntLength) {
-                return NetUtil.longToIpv4(Ints.fromByteArray(ipBytes));
+                return NetUtil.longToIpv4(ByteUtil.bytesToInt(ipBytes));
             }
             if (ipBytes.length == ipv4LongLength) {
-                return NetUtil.longToIpv4(Longs.fromByteArray(ipBytes));
+                return NetUtil.longToIpv4(ByteUtil.bytesToLong(ipBytes));
             }
         }
         return null;

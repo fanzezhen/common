@@ -96,7 +96,7 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
                                 return write405(exchange);
                             }
                             //no data, 405
-                            Map<String, Object> userData = SerializeUtils.fromJson(tokenJson, new TypeReference<Map<String, Object>>() {
+                            Map<String, Object> userData = SerializeUtils.fromJson(tokenJson, new TypeReference<>() {
                             });
                             if (userData == null) {
                                 logger.info("unable to deserialize session info");

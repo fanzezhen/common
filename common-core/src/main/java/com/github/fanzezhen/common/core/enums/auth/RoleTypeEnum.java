@@ -1,7 +1,7 @@
 package com.github.fanzezhen.common.core.enums.auth;
 
+import cn.hutool.core.collection.CollUtil;
 import com.github.fanzezhen.common.core.constant.SecurityConstant;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.*;
 
@@ -71,7 +71,7 @@ public enum RoleTypeEnum {
 
     public static Set<String> securityRoleTypeCodeSetByType(Collection<? extends Integer> types) {
         Set<String> roleTypeCodeSet = new HashSet<>();
-        if (CollectionUtils.sizeIsEmpty(types)) {
+        if (CollUtil.isEmpty(types)) {
             return roleTypeCodeSet;
         }
         for (RoleTypeEnum roleTypeEnum : values()) {

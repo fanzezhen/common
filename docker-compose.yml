@@ -21,6 +21,8 @@ services:
     volumes:
       - "./mysql/data:/var/lib/mysql"           # 挂载数据目录
       - "./mysql/config:/etc/mysql/conf.d"      # 挂载配置文件目录
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
 
   #服务名称
   redis:
@@ -31,7 +33,10 @@ services:
     restart: always
     # 暴露端口信息
     ports:
-      - "6379"
+      - "6379:6379"
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
 
   consul:
     container_name: consul
@@ -40,6 +45,9 @@ services:
     restart: always
     ports:
       - "8500:8500"
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
 
   zookeeper:
     image: zookeeper
@@ -51,6 +59,9 @@ services:
     environment:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=zookeeper:2888:3888;2181
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
 
   nacos:
     image: nacos/nacos-server:latest
@@ -72,6 +83,8 @@ services:
     volumes:
       - ./app/nacos/standalone-logs:/home/nacos/logs
       - ./app/nacos/init.d:/home/nacos/init.d/
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
     depends_on:
       - mysql
 
@@ -84,6 +97,9 @@ services:
     # 暴露端口信息
     ports:
       - "8858:8858"
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
 
   #服务名称
   eureka-server:
@@ -93,3 +109,6 @@ services:
     restart: always
     ports:
       - "8761:8761"
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro

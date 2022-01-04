@@ -5,17 +5,15 @@ import com.netflix.loadbalancer.IRule;
 import com.netflix.loadbalancer.PredicateKey;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
 import com.github.fanzezhen.common.gateway.core.constant.SystemConstant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
 /**
  * @author zezhen.fan
  */
+@Slf4j
 public abstract class BaseSubEnvPredicate extends AbstractServerPredicate {
-
-    private static Logger logger = LoggerFactory.getLogger(BaseSubEnvPredicate.class);
 
     public BaseSubEnvPredicate(IRule rule) {
         super(rule);
@@ -34,12 +32,12 @@ public abstract class BaseSubEnvPredicate extends AbstractServerPredicate {
         Map<String, String> remoteMeta = server.getInstanceInfo().getMetadata();
         if (remoteMeta.containsKey(SystemConstant.SUB_ENV_PROPERTY_KEY)) {
             remoteSubEnv = remoteMeta.get(SystemConstant.SUB_ENV_PROPERTY_KEY);
-            if (logger.isDebugEnabled()) {
-                logger.debug("extract info: server {}'s sub env is {}", server.getInstanceInfo().getId(), remoteSubEnv);
+            if (log.isDebugEnabled()) {
+                log.debug("extract info: server {}'s sub env is {}", server.getInstanceInfo().getId(), remoteSubEnv);
             }
         } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("extract info: server {}' sub env is master by default", server.getInstanceInfo().getId());
+            if (log.isDebugEnabled()) {
+                log.debug("extract info: server {}' sub env is master by default", server.getInstanceInfo().getId());
             }
         }
         return remoteSubEnv;

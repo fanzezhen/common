@@ -1,6 +1,6 @@
 package com.github.fanzezhen.common.security.facade;
 
-import com.github.fanzezhen.common.core.model.dto.SysPermissionDto;
+import com.github.fanzezhen.common.mp.model.dto.SysPermissionDto;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetailsService;

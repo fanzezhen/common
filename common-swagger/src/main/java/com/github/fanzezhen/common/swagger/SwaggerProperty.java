@@ -11,7 +11,7 @@ import java.util.List;
  * @author zezhen.fan
  */
 @Data
-@Component
+@Component("FzzSwaggerProperty")
 @ConfigurationProperties(prefix = "com.github.fanzezhen.common.swagger")
 public class SwaggerProperty {
     private List<SwaggerRequestParameter> headerRequestParameterList;

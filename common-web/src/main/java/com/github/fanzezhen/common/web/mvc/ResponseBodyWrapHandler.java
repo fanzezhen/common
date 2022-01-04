@@ -1,10 +1,9 @@
 package com.github.fanzezhen.common.web.mvc;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.github.fanzezhen.common.core.constant.CommonConstant;
 import com.github.fanzezhen.common.core.model.response.ActionResult;
-import com.google.common.collect.Sets;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -26,7 +25,7 @@ public class ResponseBodyWrapHandler implements HandlerMethodReturnValueHandler 
 
     public ResponseBodyWrapHandler(HandlerMethodReturnValueHandler delegate, String autoWrapResponseIgnoreUrls) {
         this.delegate = delegate;
-        this.autoWrapResponseIgnoreUrlSet = Sets.newHashSet(autoWrapResponseIgnoreUrls.split(","));
+        this.autoWrapResponseIgnoreUrlSet = CollUtil.newHashSet(autoWrapResponseIgnoreUrls.split(","));
     }
 
     @Override
@@ -49,8 +48,9 @@ public class ResponseBodyWrapHandler implements HandlerMethodReturnValueHandler 
                 // 以下代码已兼容requestUri为空的情况，所以忽略空指针警告
                 @SuppressWarnings("all")
                 String requestUri = request.getRequestURI();
-                if (StrUtil.contains(requestUri, CommonConstant.SEPARATOR_URL)) {
-                    requestUri = requestUri.substring(0, requestUri.indexOf("?"));
+                String separator = "?";
+                if (StrUtil.contains(requestUri, separator)) {
+                    requestUri = requestUri.substring(0, requestUri.indexOf(separator));
                 }
                 // 对特殊的URL不进行统一包装结果处理
                 if (CollectionUtil.contains(autoWrapResponseIgnoreUrlSet, requestUri)) {

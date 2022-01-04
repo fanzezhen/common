@@ -32,7 +32,7 @@ common-core
 MyBatis-Plus
 
     # 枚举配置， 支持统配符 * 或者 ; 分割
-    mybatis-plus.type-enums-package=com.github.fanzezhen.common.core.enums.db
+    mybatis-plus.type-enums-package=com.github.fanzezhen.common.mp.enums
     # 逻辑删除配置
     mybatis-plus.global-config.db-config.logic-delete-field: delFlag  # 全局逻辑删除的实体字段名(since 3.3.0)
     mybatis-plus.global-config.db-config.logic-delete-value: 1 # 逻辑已删除值(默认为 1)

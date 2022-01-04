@@ -1,9 +1,8 @@
 package com.github.fanzezhen.common.web.mvc;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.github.fanzezhen.common.core.CommonProperty;
+import com.github.fanzezhen.common.core.property.CommonProperty;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
