@@ -19,13 +19,14 @@ package com.github.fanzezhen.common.gateway.sub.env;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.collect.Lists;
 import com.netflix.loadbalancer.AbstractServerPredicate;
 import com.netflix.loadbalancer.PredicateKey;
 import com.netflix.loadbalancer.Server;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -38,13 +39,12 @@ import java.util.List;
  *
  * @author awang
  */
+@Slf4j
 public class CompoPredicate extends AbstractServerPredicate {
-
-	private static Logger logger = LoggerFactory.getLogger(CompoPredicate.class);
 
 	private AbstractServerPredicate delegate;
 
-	private List<AbstractServerPredicate> fallbacks = Lists.newArrayList();
+	private final List<AbstractServerPredicate> fallbacks = new ArrayList<>();
 
 	private int minimalFilteredServers = 1;
 
@@ -74,8 +74,8 @@ public class CompoPredicate extends AbstractServerPredicate {
 		LbKey lbKey = (LbKey) loadBalancerKey;
 		String subEnv = lbKey.getSubEnv();
 		boolean strictMode = lbKey.isStrictMode();
-		if (logger.isDebugEnabled()) {
-			logger.debug("{} lb key {}", this.clientName, loadBalancerKey);
+		if (log.isDebugEnabled()) {
+			log.debug("{} lb key {}", this.clientName, loadBalancerKey);
 		}
 		List<Server> result = super.getEligibleServers(servers, subEnv);
 		if (!strictMode) {
@@ -91,7 +91,7 @@ public class CompoPredicate extends AbstractServerPredicate {
 
 	public static class Builder {
 
-		private CompoPredicate toBuild;
+		private final CompoPredicate toBuild;
 
 		Builder(String clientName, AbstractServerPredicate primaryPredicate) {
 			toBuild = new CompoPredicate();

@@ -1,10 +1,9 @@
 package com.github.fanzezhen.common.core.context;
 
 import cn.hutool.core.util.StrUtil;
-import com.github.fanzezhen.common.core.ProjectProperty;
+import com.github.fanzezhen.common.core.property.ProjectProperty;
 import com.github.fanzezhen.common.core.constant.SysConstant;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +38,7 @@ public class SysContextFilter implements Filter {
             Enumeration<String> headerNames = request.getHeaderNames();
             while (headerNames.hasMoreElements()) {
                 String curHeader = headerNames.nextElement();
-                if (StringUtils.startsWithIgnoreCase(curHeader, SysConstant.CONTEXT_HEADER_PREFIX)) {
+                if (StrUtil.startWithIgnoreCase(curHeader, SysConstant.CONTEXT_HEADER_PREFIX)) {
                     String headerVal = request.getHeader(curHeader);
                     String requestUri = request.getRequestURI();
                     if (StrUtil.equalsIgnoreCase(curHeader, SysConstant.HEADER_USER_ID)) {

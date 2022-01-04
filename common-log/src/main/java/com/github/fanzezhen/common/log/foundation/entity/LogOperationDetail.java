@@ -1,6 +1,6 @@
 package com.github.fanzezhen.common.log.foundation.entity;
 
-import com.github.fanzezhen.common.core.model.entity.BaseEntity;
+import com.github.fanzezhen.common.mp.model.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

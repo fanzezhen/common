@@ -1,0 +1,11 @@
+{
+  "properties": [
+    {
+      "sourceType": "com.github.fanzezhen.common.core.aop.NoRepeatedAop",
+      "name": "com.github.fanzezhen.common.core.common.no-repeated.cache-service-bean",
+      "defaultValue": "FzzCacheServiceImpl",
+      "description": "NoRepeatedAop（禁止重复点击）中缓存服务的bean名称.",
+      "type": "java.lang.String"
+    }
+  ]
+}

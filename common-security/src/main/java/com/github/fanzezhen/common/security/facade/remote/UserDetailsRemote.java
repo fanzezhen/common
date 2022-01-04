@@ -1,7 +1,7 @@
 package com.github.fanzezhen.common.security.facade.remote;
 
-import com.github.fanzezhen.common.core.model.dto.SysPermissionDto;
-import com.github.fanzezhen.common.core.model.dto.SysUserDto;
+import com.github.fanzezhen.common.mp.model.dto.SysPermissionDto;
+import com.github.fanzezhen.common.mp.model.dto.SysUserDto;
 import com.github.fanzezhen.common.core.model.response.ActionResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

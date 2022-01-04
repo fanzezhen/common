@@ -2,8 +2,7 @@ package com.github.fanzezhen.common.core.context;
 
 import cn.hutool.core.util.StrUtil;
 import com.github.fanzezhen.common.core.constant.SysConstant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.ZoneOffset;
 import java.util.HashMap;
@@ -13,13 +12,12 @@ import java.util.TimeZone;
 /**
  * @author zezhen.fan
  */
+@Slf4j
 public class SysContext {
     /**
      * 用于保存线程相关信息
      */
     private final transient static ThreadLocal<Map<String, String>> CONTEXT_MAP = new ThreadLocal<>();
-
-    private static final Logger logger = LoggerFactory.getLogger(SysContext.class);
 
     /**
      * context map 最大容量
@@ -72,7 +70,7 @@ public class SysContext {
      */
     public static String put(String key, String value) {
         if (key == null) {
-            logger.error("key: is null, can't put it into the context map");
+            log.error("key: is null, can't put it into the context map");
             return value;
         }
         if (key.length() > MAX_SIZE) {
@@ -103,7 +101,7 @@ public class SysContext {
      */
     public static void remove(String key) {
         if (key == null) {
-            logger.error("key: is null, can't remove");
+            log.error("key: is null, can't remove");
             return;
         }
         final Map<String, String> contextMap = getContextMap();
@@ -298,7 +296,7 @@ public class SysContext {
      */
     public static void clean(String key) {
         if (key == null) {
-            logger.error("key is null,can't remove");
+            log.error("key is null,can't remove");
             return;
         }
         Map<String, String> map = CONTEXT_MAP.get();

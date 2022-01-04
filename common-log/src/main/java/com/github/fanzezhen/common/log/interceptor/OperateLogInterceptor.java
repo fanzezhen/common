@@ -5,13 +5,13 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.github.fanzezhen.common.core.ProjectProperty;
+import com.github.fanzezhen.common.core.property.ProjectProperty;
 import com.github.fanzezhen.common.core.context.SysContext;
 import com.github.fanzezhen.common.core.annotion.OperateLog;
 import com.github.fanzezhen.common.core.annotion.OperateLogMapper;
 import com.github.fanzezhen.common.core.dict.AbstractDict;
-import com.github.fanzezhen.common.core.enums.db.log.OperationLogTypeEnum;
-import com.github.fanzezhen.common.core.enums.table.CommonFieldEnum;
+import com.github.fanzezhen.common.mp.enums.log.OperationLogTypeEnum;
+import com.github.fanzezhen.common.mp.enums.TableFieldEnum;
 import com.github.fanzezhen.common.core.util.ReflectionUtil;
 import com.github.fanzezhen.common.log.foundation.entity.LogOperation;
 import com.github.fanzezhen.common.log.foundation.entity.LogOperationDetail;
@@ -99,7 +99,7 @@ public class OperateLogInterceptor implements Interceptor {
                 }
                 List<LogOperationDetail> detailLogList = new ArrayList<>();
                 //更新之前的PO参数
-                Object oldBean = service.getById((Serializable) ReflectUtil.getFieldValue(arg, CommonFieldEnum.PK.field));
+                Object oldBean = service.getById((Serializable) ReflectUtil.getFieldValue(arg, TableFieldEnum.PK.field));
                 dict.getDict().forEach((key, name) -> {
                     if (!isAllFields && !fieldNameList.contains(key)) {
                         return;

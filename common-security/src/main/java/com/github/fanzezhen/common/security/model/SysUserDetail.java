@@ -1,9 +1,9 @@
 package com.github.fanzezhen.common.security.model;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.github.fanzezhen.common.core.enums.db.DelFlagEnum;
-import com.github.fanzezhen.common.core.enums.db.StatusEnum;
-import com.github.fanzezhen.common.core.model.dto.SysUserDto;
+import com.github.fanzezhen.common.mp.enums.DelFlagEnum;
+import com.github.fanzezhen.common.mp.enums.StatusEnum;
+import com.github.fanzezhen.common.mp.model.dto.SysUserDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;

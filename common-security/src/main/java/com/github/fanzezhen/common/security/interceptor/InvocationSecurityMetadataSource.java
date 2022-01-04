@@ -1,9 +1,9 @@
 package com.github.fanzezhen.common.security.interceptor;
 
 import com.github.fanzezhen.common.core.constant.SecurityConstant;
-import com.github.fanzezhen.common.core.model.dto.SysPermissionDto;
+import com.github.fanzezhen.common.mp.model.dto.SysPermissionDto;
 import com.github.fanzezhen.common.security.facade.UserDetailsServiceFacade;
-import com.github.fanzezhen.common.core.ProjectProperty;
+import com.github.fanzezhen.common.core.property.ProjectProperty;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;

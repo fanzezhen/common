@@ -1,8 +1,8 @@
 package com.github.fanzezhen.common.swagger.config;
 
 import cn.hutool.core.collection.CollUtil;
-import com.github.fanzezhen.common.core.ProjectProperty;
-import com.github.fanzezhen.common.core.constant.CommonConstant;
+import cn.hutool.core.util.StrUtil;
+import com.github.fanzezhen.common.core.property.ProjectProperty;
 import com.github.fanzezhen.common.core.constant.SysConstant;
 import com.github.fanzezhen.common.core.model.bean.SwaggerRequestParameter;
 import com.github.fanzezhen.common.swagger.SwaggerProperty;
@@ -37,7 +37,7 @@ public class Swagger3Config implements WebMvcConfigurer {
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.OAS_30)
-                .pathMapping(CommonConstant.SEPARATOR_DIR)
+                .pathMapping(StrUtil.SLASH)
                 // 是否开启swagger配置，生产环境需关闭
                 .enable(true)
                 .apiInfo(this.apiInfo())

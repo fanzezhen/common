@@ -2,7 +2,6 @@ package com.github.fanzezhen.common.log.aspect;
 
 import com.alibaba.fastjson.JSON;
 import com.github.fanzezhen.common.core.context.SysContext;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -13,6 +12,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,7 +50,7 @@ public class LogAspect {
         log.info("UserId         : {}", SysContext.getUserId());
         log.info("Username       : {}", SysContext.getUserName());
         // 打印请求入参
-        List<Object> args = Lists.newArrayList(joinPoint.getArgs().length);
+        List<Object> args = new ArrayList<>(joinPoint.getArgs().length);
         for (Object arg : joinPoint.getArgs()) {
             if (arg instanceof HttpServletRequest || arg instanceof HttpServletResponse) {
                 continue;

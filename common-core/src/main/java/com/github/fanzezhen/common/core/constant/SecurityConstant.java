@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.core.constant;
 
 import cn.hutool.core.util.ArrayUtil;
 
-import java.util.Arrays;
+import java.io.File;
 
 /**
  * @author zezhen.fan
@@ -23,6 +23,7 @@ public interface SecurityConstant {
      * 资源接口匹配格式
      */
     String OAUTH_MATCHERS = "/oauth/**";
+    String ADMIN_ADDRESS_PATTERN = "/admin/**";
     /**
      * 开放接口匹配格式
      */
@@ -77,6 +78,53 @@ public interface SecurityConstant {
      * 权限对应在session中的key
      */
     String PERMISSION_SESSION_KEY = "SECURITY_PERMISSION_ATTR";
+    /**
+     * 项目目录
+     */
+    String PROJECT_PATH = System.getProperty("user.dir") + File.separator;
+    /**
+     * 临时文件夹
+     */
+    String TMP_FOLDER = "tmp";
+    /**
+     * 临时文件夹全路径
+     */
+    String TMP_PATH = PROJECT_PATH + TMP_FOLDER + File.separator;
+    /**
+     * 默认密码
+     */
+    String DEFAULT_USER_PASSWORD = "111111";
+    /**
+     * 路径分隔符
+     */
+    String SEPARATOR_DIR = "/";
+    /**
+     * URL分隔符
+     */
+    String SEPARATOR_URL = "?";
+    /**
+     * 编码格式
+     */
+    String CODED_FORMAT = "UTF-8";
+
+    String DEFAULT_DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    String DEFAULT_DATE_MINUTE_PATTERN = "yyyy-MM-dd HH:mm";
+    String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
+    String MINIMALISM_DATE_DATE_PATTERN = "yyyyMMdd";
+    String DEFAULT_DATE_HYPHEN = "-";
+
+    /**
+     * 登录失败时，用来判断是返回json数据还是跳转html页面
+     */
+    boolean LOGIN_FAILED_RETURN_JSON = true;
+    /**
+     * 登录失败时，用来判断是返回json数据还是跳转html页面
+     */
+    boolean LOGIN_SUCCESS_RETURN_JSON = true;
+
+    String LOGIN_FAILED_MESSAGE = "登录失败！";
+    String OAUTH_ADDRESS_PATTERN = "/oauth/**";
+    String PERMISSION_DEFAULT_PID = "0";
 
     /**
      * 不校验权限的接口
