@@ -37,7 +37,7 @@
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <javax.persistence.version>2.2</javax.persistence.version>
         <nz.net.ultraq.thymeleaf.version>2.4.1</nz.net.ultraq.thymeleaf.version>
-        <mysql.version>8.0.20</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <net.lingala.zip4j.version>2.6.2</net.lingala.zip4j.version>
         <org.apache.velocity.version>2.2</org.apache.velocity.version>
         <org.aspectj.version>1.9.6</org.aspectj.version>
