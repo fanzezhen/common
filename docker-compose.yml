@@ -1,11 +1,16 @@
 #版本号
 version: "3"
+networks:
+  common: #网络名称
+    driver: bridge      #桥接模式
+    attachable: true      #允许独立的网络连接到该网络上
+
 #服务
 services:
   mysql:
     container_name: mysql        # 指定容器的名称
     hostname: mysql
-    image: mysql:8.0.27                   # 指定镜像和版本
+    image: mysql:8                 # 指定镜像和版本
     restart: always
     ports:
       - "3306:3306"
@@ -13,16 +18,26 @@ services:
       TZ: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: "dev"
+      MYSQL_USER: "dev"
+      MYSQL_PASSWORD: "dev"
     command:
-      --max_connections=1000
+      --max_connections=64
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_general_ci
+      --innodb_rollback_on_timeout='ON'
+      --default-time-zone='+8:00'
       --default-authentication-plugin=mysql_native_password
+    privileged: true
     volumes:
-      - "./mysql/data:/var/lib/mysql"           # 挂载数据目录
-      - "./mysql/config:/etc/mysql/conf.d"      # 挂载配置文件目录
+      - ./app/mysql/conf:/etc/mysql/conf.d:ro
+      - ./app/mysql/init:/docker-entrypoint-initdb.d:ro
+      - ./app/mysql/data:/var/lib/mysql
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - /etc/hosts:/etc/hosts:ro
+    networks:
+      - common
+    
 
   #服务名称
   redis:
@@ -35,19 +50,30 @@ services:
     ports:
       - "6379:6379"
     volumes:
+      - ./app/redis:/usr/local/etc/redis:ro
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - /etc/hosts:/etc/hosts:ro
+    command:
+      docker-entrypoint.sh redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - common
 
-  consul:
-    container_name: consul
-    image: consul
-    hostname: consul
+  #服务名称
+  redis-insight:
+    #镜像名: 仓库/标签:版本
+    image: redislabs/redisinsight:latest
+    container_name: redis-insight
+    hostname: redis-insight
     restart: always
+    # 暴露端口信息
     ports:
-      - "8500:8500"
+      - "8001:8001"
     volumes:
+      - ./app/redis-insight/db:/db
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - /etc/hosts:/etc/hosts:ro
+    networks:
+      - common
 
   zookeeper:
     image: zookeeper
@@ -62,6 +88,89 @@ services:
     volumes:
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - /etc/hosts:/etc/hosts:ro
+    networks:
+      - common
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: always
+    hostname: nginx
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./app/nginx:/etc/nginx
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
+    command: [ nginx-debug, '-g', 'daemon off;' ]
+    networks:
+      - common
+
+  consul:
+    container_name: consul
+    image: consul
+    hostname: consul
+    restart: always
+    ports:
+      - "8500:8500"
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
+    networks:
+      - common
+
+  eureka-v1:
+    container_name: eureka-v1
+    image: springcloud/eureka
+    hostname: eureka-v1
+    restart: always
+    ports:
+      - "18761:8761"
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
+    networks:
+      - common
+
+  #服务名称
+  eureka-server:
+    #镜像名: 仓库/标签:版本
+    image: taskbeez/eureka-server:master
+    container_name: eureka-server
+    restart: always
+    ports:
+      - "8761:8761"
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
+    networks:
+      - common
+
+  jhipster-registry:
+    container_name: jhipster-registry
+    image: jhipster/jhipster-registry:latest
+    hostname: jhipster-registry
+    restart: always
+    ports:
+      - "8761:8761"
+    volumes:
+      - ./app/jhipster-registry/config:/vault/config
+      - ./app/jhipster-registry/data:/vault/file
+      - ./app/jhipster-registry/logs:/vault/logs
+    environment:
+      # - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      # - JAVA_OPTS=-Dfile.encoding=UTF-8
+      - eureka.server.enable-self-preservation=false
+      - SPRING_PROFILES_ACTIVE=dev,swagger
+      - SPRING_SECURITY_USER_PASSWORD=admin
+      - JHIPSTER_REGISTRY_PASSWORD=admin
+      - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=native
+      - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_LOCATIONS=file:/vault/config/
+      # - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=git
+      # - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_URI=https://github.com/jhipster/jhipster-registry/
+      # - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_PATHS=central-config
+    networks:
+      - common
 
   nacos:
     image: nacos/nacos-server:latest
@@ -80,6 +189,7 @@ services:
       MYSQL_SERVICE_DB_NAME: nacos
       MYSQL_SERVICE_USER: root
       MYSQL_SERVICE_PASSWORD: root
+      MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     volumes:
       - ./app/nacos/standalone-logs:/home/nacos/logs
       - ./app/nacos/init.d:/home/nacos/init.d/
@@ -87,6 +197,8 @@ services:
       - /etc/hosts:/etc/hosts:ro
     depends_on:
       - mysql
+    networks:
+      - common
 
   #服务名称
   sentinel-dashboard:
@@ -100,15 +212,5 @@ services:
     volumes:
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - /etc/hosts:/etc/hosts:ro
-
-  #服务名称
-  eureka-server:
-    #镜像名: 仓库/标签:版本
-    image: taskbeez/eureka-server:master
-    container_name: eureka-server
-    restart: always
-    ports:
-      - "8761:8761"
-    volumes:
-      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
-      - /etc/hosts:/etc/hosts:ro
+    networks:
+      - common

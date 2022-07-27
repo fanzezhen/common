@@ -16,7 +16,6 @@ build
 target
 conf_dev
 *.pyc
-*.conf
 tmp/
 
 # OSX temp files
@@ -28,10 +27,11 @@ tmp/
 # DataBase
 *.rdb
 *.pdb
+app/mysql/data
+app/redis-insight/db
 
 # log
 logs/
-app/mysql/data
 app/nacos/standalone-logs
 
 

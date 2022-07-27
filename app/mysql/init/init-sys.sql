@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS base DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;
-use base;
+CREATE DATABASE IF NOT EXISTS demo DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;
+use demo;
 drop table if exists sys_app;
 
 drop table if exists sys_dict;

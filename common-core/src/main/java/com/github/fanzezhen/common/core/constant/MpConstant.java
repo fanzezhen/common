@@ -5,17 +5,15 @@ package com.github.fanzezhen.common.core.constant;
  */
 public interface MpConstant {
     /**
-     * 自动化生成的模块名
-     */
-    String AUTOMATED_MODULE_NAME = "foundation";
-    /**
      * 默认的包内文件夹名
      */
-    String PACKAGE_MODULE_NAME = "foundation";
+    String DEFAULT_DIR_JAVA = "/src/main/java";
+    String DEFAULT_DIR_MAPPER = "/src/main/resources/mapper/";
     /**
      * 数据表中的逻辑删除字段
      */
-    String LOGIC_DELETE_FIELD_NAME = "del_flag";
+    String DEFAULT_LOGIC_DELETE_COLUMN_NAME = "del_flag";
+    String DEFAULT_FORMAT_FILE_NAME = "%sPo";
     /**
      * 数据表中的版本号字段
      */
@@ -24,8 +22,5 @@ public interface MpConstant {
      * 输入表名的默认提示语
      */
     String DEFAULT_TABLE_NAME_INPUT_HINT = "表名";
-    /**
-     * 输入表名的默认分隔符
-     */
-    String DEFAULT_TABLE_NAME_SPLITTER = ",";
+    String[] DEFAULT_IGNORE_TABLE_PREFIX = new String[]{"t_", "c_"};
 }

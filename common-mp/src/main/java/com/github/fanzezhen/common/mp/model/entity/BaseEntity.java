@@ -13,6 +13,7 @@ import lombok.experimental.Accessors;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * 公共Model,将每个表都有的公共字段抽取出来
@@ -29,7 +30,6 @@ public class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    @TableField(value = "ID")
     @TableId(value = "ID", type = IdType.ASSIGN_UUID)
     @ApiModelProperty("主键ID")
     private String id;
@@ -58,7 +58,7 @@ public class BaseEntity implements Serializable {
     @Column(name = "DEL_FLAG")
     @TableField(value = "DEL_FLAG", fill = FieldFill.INSERT)
     @ApiModelProperty("删除标识（1-已删除；0-未删除），默认 0")
-    @JSONField(serialzeFeatures= SerializerFeature.WriteEnumUsingToString)
+    @JSONField(serialzeFeatures = SerializerFeature.WriteEnumUsingToString)
     private DelFlagEnum delFlag;
 
     /**
@@ -76,6 +76,10 @@ public class BaseEntity implements Serializable {
     @TableField(value = "UPDATE_USER_ID", fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty("更新者ID")
     private String updateUserId;
+
+    public boolean isDeleted() {
+        return delFlag != null && Objects.equals(DelFlagEnum.DELETED.code, delFlag.code);
+    }
 
     public void init(BaseEntity baseVarEntry) {
         this.id = baseVarEntry.getId();

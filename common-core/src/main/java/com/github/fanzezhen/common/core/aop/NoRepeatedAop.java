@@ -1,9 +1,15 @@
 package com.github.fanzezhen.common.core.aop;
 
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson.JSON;
-import com.github.fanzezhen.common.core.annotion.NoRepeated;
+import com.alibaba.fastjson.JSONObject;
+import com.github.fanzezhen.common.core.annotion.NoRepeat;
+import com.github.fanzezhen.common.core.context.SysContext;
+import com.github.fanzezhen.common.core.enums.NoRepeatTypeEnum;
 import com.github.fanzezhen.common.core.service.CacheService;
 import com.github.fanzezhen.common.core.util.ExceptionUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +49,7 @@ public class NoRepeatedAop {
     /**
      * 要处理的方法，包名+类名+方法名
      */
-    @Pointcut("@annotation(com.github.fanzezhen.common.core.annotion.NoRepeated)")
+    @Pointcut("@annotation(com.github.fanzezhen.common.core.annotion.NoRepeat)")
     public void cut() {
     }
 
@@ -54,30 +60,77 @@ public class NoRepeatedAop {
      */
     @Before("cut()")
     public void doBefore(JoinPoint joinPoint) {
-        String key = null;
-        String value = null;
-        NoRepeated noRepeated = null;
+        String key;
+        String value;
+        NoRepeat noRepeat;
         try {
-            noRepeated = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(NoRepeated.class);
-            if (noRepeated == null || !noRepeated.isTimeoutCheck()) {
+            noRepeat = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(NoRepeat.class);
+            if (noRepeat == null || !NoRepeatTypeEnum.TIME.equals(noRepeat.type())) {
                 return;
             }
-            String md5 = SecureUtil.md5(JSON.toJSONString(Arrays.stream(joinPoint.getArgs()).filter(arg -> !(arg instanceof HttpServletRequest)).collect(toList())));
-            key = springApplicationName + env + "noRepeated-timeout：" + md5;
+            key = getKey(joinPoint, noRepeat);
             value = cacheService.get(key);
         } catch (Throwable throwable) {
-            log.warn("noRepeated check failed exception", throwable);
+            log.error("noRepeated check failed exception", throwable);
+            return;
         }
         if (!StrUtil.isEmpty(value)) {
             ExceptionUtil.throwException("请勿重复提交");
         }
         try {
-            if (noRepeated != null && noRepeated.isTimeoutCheck()) {
-                cacheService.put(key, String.valueOf(System.currentTimeMillis()), noRepeated.timeoutMillis());
-            }
+            cacheService.put(key, String.valueOf(System.currentTimeMillis()), noRepeat.timeoutMillis());
         } catch (Throwable throwable) {
-            log.warn("noRepeated put failed exception", throwable);
+            log.error("noRepeated put failed exception", throwable);
         }
+    }
+
+    private String getKey(JoinPoint joinPoint, NoRepeat noRepeat) {
+        Object[] args = joinPoint.getArgs();
+        String className = joinPoint.getTarget().getClass().getName();
+        String methodName = joinPoint.getSignature().getName();
+        JSONObject param = new JSONObject();
+        String[] headerArgs = noRepeat.headerArgs();
+        if (ArrayUtil.isNotEmpty(headerArgs)) {
+            for (String headerKey : headerArgs) {
+                if (StrUtil.isBlank(headerKey)) {
+                    continue;
+                }
+                param.put(headerKey, SysContext.get(headerKey));
+            }
+        }
+        String[] paramArgs = noRepeat.paramArgs();
+        if (ArrayUtil.isNotEmpty(paramArgs) && ArrayUtil.isNotEmpty(args)) {
+            for (String validArg : paramArgs) {
+                if (StrUtil.isBlank(validArg)) {
+                    continue;
+                }
+                String[] fieldParts = validArg.split("\\.");
+                if (ArrayUtil.isEmpty(fieldParts)) {
+                    continue;
+                }
+                if (NumberUtil.isInteger(fieldParts[0])) {
+                    int i = Integer.parseInt(fieldParts[0]);
+                    if (i < args.length) {
+                        Object o = args[i];
+                        if (fieldParts.length > 1) {
+                            for (int j = 1; j < fieldParts.length; j++) {
+                                o = ReflectUtil.getFieldValue(o, fieldParts[j]);
+                            }
+                        }
+                        param.put(validArg, o);
+                    }
+                }
+            }
+        }
+        String paramStr;
+        if (param.isEmpty()) {
+            paramStr = JSON.toJSONString(Arrays.stream(args).filter(arg -> !(arg instanceof HttpServletRequest)).collect(toList()));
+        } else {
+            paramStr = param.toJSONString();
+        }
+        String md5 = SecureUtil.md5(paramStr);
+        log.info(env + springApplicationName + "-noRepeat-" + className + methodName + noRepeat.type() + noRepeat.timeoutMillis() + paramStr + md5);
+        return env + springApplicationName + "-noRepeat-" + className + methodName + md5;
     }
 
     /**
@@ -89,27 +142,27 @@ public class NoRepeatedAop {
         Object result;
         String key = null;
         String value = null;
-        NoRepeated noRepeated = null;
+        NoRepeat noRepeat = null;
+        boolean isTransaction = false;
         try {
-            noRepeated = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(NoRepeated.class);
-            if (noRepeated != null && noRepeated.isTransactionLockCheck()) {
-                String md5 = SecureUtil.md5(JSON.toJSONString(Arrays.stream(joinPoint.getArgs()).filter(arg ->
-                        !(arg instanceof HttpServletRequest)).collect(toList())));
-                key = springApplicationName + env + "noRepeated-transaction：" + md5;
+            noRepeat = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(NoRepeat.class);
+            isTransaction = noRepeat != null && NoRepeatTypeEnum.TRANSACTION.equals(noRepeat.type());
+            if (isTransaction) {
+                key = getKey(joinPoint, noRepeat);
                 value = cacheService.get(key);
             }
         } catch (Throwable throwable) {
-            log.warn("noRepeated check failed exception", throwable);
+            log.error("noRepeated check failed exception", throwable);
         }
         if (!StrUtil.isEmpty(value)) {
-            ExceptionUtil.throwException("请勿重复提交");
+            ExceptionUtil.throwException("系统繁忙，请勿重复提交");
         }
         try {
-            if (noRepeated != null && noRepeated.isTransactionLockCheck()) {
-                cacheService.put(key, String.valueOf(System.currentTimeMillis()), noRepeated.timeoutMillis());
+            if (isTransaction) {
+                cacheService.put(key, String.valueOf(System.currentTimeMillis()), noRepeat.timeoutMillis());
             }
         } catch (Throwable throwable) {
-            log.warn("noRepeated put failed exception", throwable);
+            log.error("noRepeated put failed exception", throwable);
         }
         try {
             result = joinPoint.proceed();

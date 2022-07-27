@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 /**
- * 登录日志类型枚举
+ * 异常类型枚举
  * @author zezhen.fan
  */
 public enum ExceptionTypeEnum {
