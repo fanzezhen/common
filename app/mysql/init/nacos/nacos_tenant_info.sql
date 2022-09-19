@@ -1,0 +1,1 @@
+INSERT INTO nacos.tenant_info (id, kp, tenant_id, tenant_name, tenant_desc, create_source, gmt_create, gmt_modified) VALUES (1, '1', 'dev', 'DEV', '开发环境', 'nacos', 1663557462082, 1663557462082);

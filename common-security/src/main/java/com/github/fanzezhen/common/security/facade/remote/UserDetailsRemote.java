@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author zezhen.fan
  */
-@FeignClient(url = "${security.remote.sys.url:}", name = "${security.remote.sys.name:sys-public}", path = "${security.remote.sys.path:/public}")
+@FeignClient(url = "${security.remote.sys.url:}", name = "${security.remote.sys.name:demo-sys-public}", path = "${security.remote.sys.path:/public}")
 public interface UserDetailsRemote {
 
     /**

@@ -17,7 +17,7 @@
         <cn.stylefeng.roses.version>2.2.13</cn.stylefeng.roses.version>
         <com.github.penggle.version>2.3.2</com.github.penggle.version>
         <com.alibaba.version>1.2.68</com.alibaba.version>
-        <com.alibaba.cloud.version>2.2.7.RELEASE</com.alibaba.cloud.version>
+        <com.alibaba.cloud.version>2.2.9.RELEASE</com.alibaba.cloud.version>
         <com.alibaba.csp.version>1.8.2</com.alibaba.csp.version>
         <com.baomidou.version>3.5.2</com.baomidou.version>
         <com.fasterxml.jackson.version>2.13.1</com.fasterxml.jackson.version>
@@ -51,6 +51,7 @@
         <org.apache.logging.log4j.version>2.16.0</org.apache.logging.log4j.version>
         <org.apache.poi.version>4.1.2</org.apache.poi.version>
         <org.apache.tomcat.embed.version>10.0.0-M7</org.apache.tomcat.embed.version>
+        <org.hibernate.validator.version>6.2.5.Final</org.hibernate.validator.version>
         <org.mybatis.spring.boot.version>2.2.0</org.mybatis.spring.boot.version>
         <org.projectlombok.version>1.18.22</org.projectlombok.version>
         <org.reflections.version>0.9.12</org.reflections.version>
@@ -88,11 +89,6 @@
             <dependency>
                 <groupId>com.github.fanzezhen.common</groupId>
                 <artifactId>common-core</artifactId>
-                <version>${com.github.fanzezhen.common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.fanzezhen.common</groupId>
-                <artifactId>common-cache</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
@@ -144,6 +140,16 @@
                 <groupId>com.github.fanzezhen.common</groupId>
                 <artifactId>common-gateway-sub-env</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>${com.alibaba.cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${com.alibaba.cloud.version}</version>
             </dependency>
             <!--HuTool-->
             <dependency>
@@ -396,6 +402,11 @@
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjrt</artifactId>
                 <version>${org.aspectj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${org.hibernate.validator.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.reflections</groupId>
