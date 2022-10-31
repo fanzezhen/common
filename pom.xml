@@ -16,7 +16,7 @@
         <cn.hutool.version>5.7.3</cn.hutool.version>
         <cn.stylefeng.roses.version>2.2.13</cn.stylefeng.roses.version>
         <com.github.penggle.version>2.3.2</com.github.penggle.version>
-        <com.alibaba.version>1.2.68</com.alibaba.version>
+        <com.alibaba.version>1.2.83</com.alibaba.version>
         <com.alibaba.boot.version>0.2.12</com.alibaba.boot.version>
         <com.alibaba.cloud.version>2.2.9.RELEASE</com.alibaba.cloud.version>
         <com.alibaba.csp.version>1.8.5</com.alibaba.csp.version>
