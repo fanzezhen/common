@@ -64,7 +64,7 @@
         <org.springframework.data.version>2.4.2</org.springframework.data.version>
         <org.springframework.security.version>5.3.6.RELEASE</org.springframework.security.version>
         <org.springframework.social.version>1.1.6.RELEASE</org.springframework.social.version>
-        <org.thymeleaf.version>3.0.11.RELEASE</org.thymeleaf.version>
+        <org.thymeleaf.version>3.0.13.RELEASE</org.thymeleaf.version>
         <org.thymeleaf.extras.version>3.0.4.RELEASE</org.thymeleaf.extras.version>
         <p6spy.version>3.9.1</p6spy.version>
         <redis.clients.version>3.5.2</redis.clients.version>
