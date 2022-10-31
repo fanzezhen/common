@@ -15,6 +15,7 @@
  */
 package com.github.fanzezhen.common.sentinel;
 
+import cn.hutool.setting.dialect.Props;
 import com.alibaba.csp.sentinel.datasource.FileRefreshableDataSource;
 import com.alibaba.csp.sentinel.datasource.FileWritableDataSource;
 import com.alibaba.csp.sentinel.datasource.ReadableDataSource;
@@ -30,6 +31,7 @@ import com.alibaba.csp.sentinel.slots.system.SystemRule;
 import com.alibaba.csp.sentinel.slots.system.SystemRuleManager;
 import com.alibaba.csp.sentinel.transport.util.WritableDataSourceRegistry;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,11 +57,24 @@ public class FileDataSourceInit implements InitFunc {
     public void init() throws Exception {
         // A fake path.
         String ruleDir = System.getProperty("user.dir") + File.separator + "sentinel" + File.separator + "rules";
-        log.info("init ruleDir={}", ruleDir);
+        Props props = null;
+        try {
+            props = new Props("sentinel.properties");
+        } catch (Throwable throwable) {
+            log.warn("", throwable);
+        }
+        log.info("init ruleDir={}, props={}", ruleDir, JSONObject.toJSONString(props));
         String flowRuleFile = "FlowRule.json";
         String degradeRuleFile = "DegradeRule.json";
         String systemRuleFile = "SystemRule.json";
         String authorityRuleFile = "AuthorityRule.json";
+        if (props != null) {
+            ruleDir = props.getStr("com.github.fanzezhen.common.core.common.sentinel.file.dir", ruleDir);
+            flowRuleFile = props.getStr("com.github.fanzezhen.common.core.common.sentinel.file.flow-rule", "FlowRule.json");
+            degradeRuleFile = props.getStr("com.github.fanzezhen.common.core.common.sentinel.file.degrade-rule", "DegradeRule.json");
+            systemRuleFile = props.getStr("com.github.fanzezhen.common.core.common.sentinel.file.system-rule", "SystemRule.json");
+            authorityRuleFile = props.getStr("com.github.fanzezhen.common.core.common.sentinel.file.authority-rule", "AuthorityRule.json");
+        }
         String flowRulePath = ruleDir + File.separator + flowRuleFile;
         String degradeRulePath = ruleDir + File.separator + degradeRuleFile;
         String systemRulePath = ruleDir + File.separator + systemRuleFile;
