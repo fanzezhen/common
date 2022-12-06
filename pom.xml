@@ -28,7 +28,7 @@
         <com.netflix.ribbon.version>2.7.18</com.netflix.ribbon.version>
         <com.oracle.version>11.2.0.3</com.oracle.version>
         <com.zaxxer.version>3.4.5</com.zaxxer.version>
-        <commons-net.version>3.6</commons-net.version>
+        <commons-net.version>3.9.0</commons-net.version>
         <eu.bitwalker.version>1.21</eu.bitwalker.version>
         <io.jaegertracing.version>1.6.0</io.jaegertracing.version>
         <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
