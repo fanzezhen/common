@@ -2,9 +2,9 @@ package com.github.fanzezhen.common.log.tool;
 
 import com.github.fanzezhen.common.core.util.HttpUtil;
 import com.github.fanzezhen.common.core.util.SysClientInfoUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimerTask;

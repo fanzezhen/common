@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.gateway.config;
 
 import com.github.fanzezhen.common.gateway.core.discover.choose.Chooser;
 import com.github.fanzezhen.common.gateway.core.discover.choose.HttpExposeChooser;
-import com.github.fanzezhen.common.gateway.core.discover.eureka.DiscoverLocatorProperties;
+import com.github.fanzezhen.common.gateway.core.discover.DiscoverLocatorProperties;
 import com.github.fanzezhen.common.gateway.core.discover.provider.route.RouteConfigProvider;
 import com.github.fanzezhen.common.gateway.core.discover.provider.route.StaticRouteConfigProvider;
 import com.github.fanzezhen.common.gateway.core.filter.auth.AuthProperties;
@@ -11,15 +11,12 @@ import com.github.fanzezhen.common.gateway.core.filter.auth.factory.csp.FaqToken
 import com.github.fanzezhen.common.gateway.core.filter.ignore.IgnoreProperties;
 import com.github.fanzezhen.common.gateway.core.filter.ignore.TokenIgnoreGatewayFilterFactory;
 import com.github.fanzezhen.common.gateway.core.metrics.DefaultExcludeMeterFilter;
-import com.github.fanzezhen.common.gateway.core.support.error.GlobalErrorWebExceptionHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.cloud.gateway.filter.factory.GatewayFilterFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
-import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;

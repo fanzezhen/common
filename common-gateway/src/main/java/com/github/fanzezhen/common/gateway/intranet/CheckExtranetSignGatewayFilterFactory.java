@@ -1,14 +1,12 @@
 package com.github.fanzezhen.common.gateway.intranet;
 
 
-import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.asymmetric.SignAlgorithm;
-import com.github.fanzezhen.common.gateway.core.constant.SystemConstant;
+import com.github.fanzezhen.common.gateway.core.constant.CommonGatewayConstant;
 import com.github.fanzezhen.common.gateway.core.support.I18nUtil;
 import com.github.fanzezhen.common.gateway.core.support.SerializeUtils;
 import com.github.fanzezhen.common.gateway.core.support.StringUtil;
-import com.github.fanzezhen.common.gateway.core.support.response.ActionResult;
-import com.github.fanzezhen.common.gateway.core.support.response.ErrorInfo;
+import com.github.fanzezhen.common.core.model.response.ActionResult;
+import com.github.fanzezhen.common.core.model.response.ErrorInfo;
 import io.opentracing.Span;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,14 +21,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
-
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-
-import static com.github.fanzezhen.common.gateway.core.constant.GatewayAttribute.OPEN_TRACING_SPAN;
 
 /**
  * @author fanzezhen
@@ -65,7 +56,7 @@ public class CheckExtranetSignGatewayFilterFactory extends AbstractGatewayFilter
                 String nonce = request.getHeaders().get(NONCE).get(0);
                 String sign = request.getHeaders().get("sign").get(0);
                 String data = nonce + request.getPath() + signKey;
-                boolean isSign = SystemConstant.SIGN.verify(data.getBytes(StandardCharsets.UTF_8), sign.getBytes(StandardCharsets.UTF_8));
+                boolean isSign = CommonGatewayConstant.SIGN.verify(data.getBytes(StandardCharsets.UTF_8), sign.getBytes(StandardCharsets.UTF_8));
                 if (isSign) {
                     return chain.filter(exchange);
                 }
@@ -79,7 +70,7 @@ public class CheckExtranetSignGatewayFilterFactory extends AbstractGatewayFilter
 
 
     public Mono<Void> write420(ServerWebExchange exchange) {
-        Span span = exchange.getAttribute(OPEN_TRACING_SPAN);
+        Span span = exchange.getAttribute(CommonGatewayConstant.OPEN_TRACING_SPAN);
         if (span != null) {
             logger.warn("no tracing span");
             span.log("write420;");
@@ -94,7 +85,7 @@ public class CheckExtranetSignGatewayFilterFactory extends AbstractGatewayFilter
      * todo move to a different module
      */
     public Mono<Void> write421(String tenantId, ServerWebExchange exchange) {
-        Span span = exchange.getAttribute(OPEN_TRACING_SPAN);
+        Span span = exchange.getAttribute(CommonGatewayConstant.OPEN_TRACING_SPAN);
         if (span != null) {
             logger.warn("no tracing span");
             span.log("write421;");
@@ -109,15 +100,13 @@ public class CheckExtranetSignGatewayFilterFactory extends AbstractGatewayFilter
     /**
      * todo move to a different module
      */
-    public Mono<ActionResult> authFail(String tenantId, String errorCode, String defaultMsg, String locale) {
+    public Mono<ActionResult<?>> authFail(String tenantId, String errorCode, String defaultMsg, String locale) {
         return reactiveStringRedisTemplate.opsForValue().get(I18nUtil.buildI18Key(tenantId, "global", errorCode, locale))
                 .defaultIfEmpty("")
                 .map(i18nValue -> {
                     String errorMsg = StringUtil.isBlank(i18nValue) ? defaultMsg : i18nValue;
                     ErrorInfo errorInfo = new ErrorInfo(errorCode, errorMsg);
-                    ActionResult<Void> result = new ActionResult<>();
-                    result.addError(errorInfo);
-                    return result;
+                    return ActionResult.failed(errorInfo);
                 });
     }
 

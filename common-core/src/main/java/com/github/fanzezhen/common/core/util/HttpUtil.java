@@ -1,11 +1,11 @@
 package com.github.fanzezhen.common.core.util;
 
 import cn.stylefeng.roses.kernel.model.response.ResponseData;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.*;
 import java.net.http.HttpClient;

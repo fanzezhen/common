@@ -1,11 +1,12 @@
 package com.github.fanzezhen.common.gateway.core.support.error;
 
-import com.github.fanzezhen.common.gateway.core.support.response.ActionResult;
-import com.github.fanzezhen.common.gateway.core.support.response.ErrorInfo;
+import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
+import com.github.fanzezhen.common.core.model.response.ActionResult;
+import com.github.fanzezhen.common.core.model.response.ErrorInfo;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
@@ -30,7 +31,7 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
 	private Logger logger = LoggerFactory.getLogger(GlobalErrorWebExceptionHandler.class);
 
-	public GlobalErrorWebExceptionHandler(ErrorAttributes errorAttributes, ResourceProperties resourceProperties, ApplicationContext applicationContext) {
+	public GlobalErrorWebExceptionHandler(ErrorAttributes errorAttributes, WebProperties.Resources resourceProperties, ApplicationContext applicationContext) {
 		super(errorAttributes, resourceProperties, applicationContext);
 	}
 
@@ -41,9 +42,7 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
 	@NotNull
 	private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
-		ActionResult<Void> result = new ActionResult<>();
-		result.setSuccess(false);
-		result.addError(serverError(request));
+		ActionResult<Void> result =ActionResult.failed(serverError(request));
 		return ServerResponse.status(HttpStatus.OK)
 				.contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
 				.body(BodyInserters.fromValue(result))
@@ -53,10 +52,9 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
 	public ErrorInfo serverError(ServerRequest request){
 		Object obj = request.exchange().getAttribute(ERROR_ATTRIBUTE);
-		if(obj instanceof ResponseStatusException){
-			ResponseStatusException responseStatusException = (ResponseStatusException) obj;
-			return new ErrorInfo(responseStatusException.getStatus().value() +"",responseStatusException.getStatus().name());
+		if(obj instanceof ResponseStatusException responseStatusException){
+			return new ErrorInfo(responseStatusException);
 		}
-		return new ErrorInfo("500", "server error");
+		return new ErrorInfo(CoreExceptionEnum.SERVICE_ERROR);
 	}
 }

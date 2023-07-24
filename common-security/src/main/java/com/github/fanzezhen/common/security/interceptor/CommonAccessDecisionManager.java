@@ -16,7 +16,7 @@ import java.util.Collection;
  * @date 17/1/19
  */
 @Component
-public class MyAccessDecisionManager implements AccessDecisionManager {
+public class CommonAccessDecisionManager implements AccessDecisionManager {
 
     /**
      * decide 方法是判定是否拥有权限的决策方法，
@@ -33,7 +33,7 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
 
-        if (null == configAttributes || configAttributes.size() <= 0) {
+        if (null == configAttributes || configAttributes.size() == 0) {
             return;
         }
         ConfigAttribute c;

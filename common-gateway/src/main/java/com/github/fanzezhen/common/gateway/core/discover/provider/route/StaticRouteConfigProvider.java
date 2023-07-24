@@ -1,13 +1,13 @@
 package com.github.fanzezhen.common.gateway.core.discover.provider.route;
 
-import com.github.fanzezhen.common.gateway.core.discover.eureka.DiscoverLocatorProperties;
+import com.github.fanzezhen.common.gateway.core.discover.DiscoverLocatorProperties;
 import com.github.fanzezhen.common.gateway.core.filter.ignore.IgnoreProperties;
 import com.github.fanzezhen.common.gateway.core.filter.ignore.TokenIgnoreGatewayFilterFactory;
 import com.github.fanzezhen.common.gateway.core.filter.retry.FullRetryGatewayFilterFactory;
 import com.github.fanzezhen.common.gateway.extranet.AddSignHeaderAndChangeRequestUriFactory;
 import com.github.fanzezhen.common.gateway.core.tracing.AddTraceHeaderGatewayFilterFactory;
 import com.github.fanzezhen.common.gateway.intranet.CheckExtranetSignGatewayFilterFactory;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
@@ -16,12 +16,10 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.bind.handler.IgnoreTopLevelConverterNotFoundBindHandler;
-import org.springframework.boot.context.properties.bind.validation.ValidationBindHandler;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
 import org.springframework.boot.context.properties.source.MapConfigurationPropertySource;
 import org.springframework.cloud.client.ServiceInstance;
@@ -39,8 +37,8 @@ import org.springframework.expression.ParseException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.Validator;
 
+import javax.annotation.Resource;
 import java.net.URI;
 import java.util.*;
 
@@ -59,13 +57,10 @@ public class StaticRouteConfigProvider implements RouteConfigProvider, BeanFacto
     private final String routeIdPrefix;
     private final SimpleEvaluationContext simpleEvaluationContext;
     private final Map<String, GatewayFilterFactory> gatewayFilterFactories = new HashMap<>();
-    @Autowired
+    @Resource
     private IgnoreProperties ignoreProperties;
     private BeanFactory beanFactory;
     private final static String ROUTE_ID_INTRANET_PREFIX = "intranet-";
-
-    @Autowired
-    private Validator validator;
 
     public StaticRouteConfigProvider(DiscoverLocatorProperties properties, List<GatewayFilterFactory> gatewayFilterFactories) {
         this.properties = properties;
@@ -329,9 +324,6 @@ public class StaticRouteConfigProvider implements RouteConfigProvider, BeanFacto
             }
             Bindable<?> bindable = Bindable.ofInstance(toBind);
             BindHandler handler = new IgnoreTopLevelConverterNotFoundBindHandler();
-            if (validator != null) {
-                handler = new ValidationBindHandler(handler, validator);
-            }
             List<ConfigurationPropertySource> propertySources = Collections.singletonList(new MapConfigurationPropertySource(properties));
             (new Binder(propertySources, null, null)).bindOrCreate(factory.shortcutFieldPrefix(), bindable, handler);
 

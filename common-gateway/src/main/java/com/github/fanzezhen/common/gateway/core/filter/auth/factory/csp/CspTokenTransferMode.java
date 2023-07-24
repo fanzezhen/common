@@ -1,7 +1,7 @@
 package com.github.fanzezhen.common.gateway.core.filter.auth.factory.csp;
 
-import com.github.fanzezhen.common.gateway.core.constant.SystemConstant;
-import org.apache.commons.lang.StringUtils;
+import cn.hutool.core.util.StrUtil;
+import com.github.fanzezhen.common.core.constant.SysConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpCookie;
@@ -42,8 +42,8 @@ public enum CspTokenTransferMode {
                 logger.debug("TokenTransferMode use parameter");
             }
             MultiValueMap<String, String> queryParams = request.getQueryParams();
-            String first = queryParams.getFirst(SystemConstant.tokenName());
-            return StringUtils.isNotBlank(first) ? Optional.of(first) : Optional.empty();
+            String first = queryParams.getFirst(SysConstant.HEADER_TOKEN_KEY);
+            return StrUtil.isNotBlank(first) ? Optional.of(first) : Optional.empty();
         }
     },
     /**

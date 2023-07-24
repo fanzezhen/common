@@ -1,26 +1,28 @@
-package com.github.fanzezhen.common.security.config;
+package com.github.fanzezhen.common.security.config.cas;
 
 import com.github.fanzezhen.common.core.constant.SecurityConstant;
 import com.github.fanzezhen.common.security.annotation.SecurityConfig;
 import com.github.fanzezhen.common.security.facade.UserDetailsServiceFacade;
-import com.github.fanzezhen.common.security.interceptor.MyFilterSecurityInterceptor;
+import com.github.fanzezhen.common.security.interceptor.CommonFilterSecurityInterceptor;
 import com.github.fanzezhen.common.security.SecurityProperty;
 import lombok.extern.slf4j.Slf4j;
-import org.jasig.cas.client.session.SingleSignOutFilter;
-import org.jasig.cas.client.validation.Cas30ServiceTicketValidator;
+import org.apereo.cas.client.session.SingleSignOutFilter;
+import org.apereo.cas.client.validation.Cas30ServiceTicketValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -37,7 +39,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 @Slf4j
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration {
     @Resource
     private SecurityProperty securityProperty;
 
@@ -45,11 +47,43 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private DataSource dataSource;
 
     @Resource
-    private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
+    private CommonFilterSecurityInterceptor commonFilterSecurityInterceptor;
 
     @Resource
     private UserDetailsServiceFacade userDetailsServiceFacade;
 
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.ignoringRequestMatchers(SecurityConstant.CSRF_IGNORING_ANT_MATCHERS))
+                .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+                .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/user").failureUrl("/login?error"))
+                .logout(LogoutConfigurer::permitAll)
+                // 配置安全策略
+                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
+                        .requestMatchers(SecurityConstant.IGNORING_ANT_MATCHERS).permitAll()
+                        .requestMatchers(securityProperty.getIgnoringAntMatchers()).permitAll()
+                        .anyRequest().authenticated()
+                ).authenticationProvider(casAuthenticationProvider())
+                .addFilter(casAuthenticationFilter())
+                .addFilterBefore(casLogoutFilter(), LogoutFilter.class)
+                .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
+                .addFilterBefore(commonFilterSecurityInterceptor, FilterSecurityInterceptor.class)
+        ;
+        return http.build();
+    }
+    @Bean
+    public CasAuthenticationFilter casAuthenticationFilter() {
+        CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
+        // 配置CAS服务器URL等信息
+        casAuthenticationFilter.setServiceProperties(serviceProperties());
+        casAuthenticationFilter.setFilterProcessesUrl(securityProperty.getAppLoginUrl());
+        return casAuthenticationFilter;
+    }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationManagerBuilder auth) throws Exception {
+        return auth.build();
+    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -78,18 +112,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         casAuthenticationEntryPoint.setServiceProperties(serviceProperties());
         return casAuthenticationEntryPoint;
     }
-
-    /**
-     * CAS认证过滤器
-     */
-    @Bean
-    public CasAuthenticationFilter casAuthenticationFilter() throws Exception {
-        CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
-        casAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        casAuthenticationFilter.setFilterProcessesUrl(securityProperty.getAppLoginUrl());
-        return casAuthenticationFilter;
-    }
-
     /**
      * 指定service相关信息
      */
@@ -106,8 +128,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public SingleSignOutFilter singleSignOutFilter() {
+        SingleSignOutFilter.setLogoutCallbackPath(securityProperty.getServerUrl());
         SingleSignOutFilter singleSignOutFilter = new SingleSignOutFilter();
-        singleSignOutFilter.setLogoutCallbackPath(securityProperty.getServerUrl());
         singleSignOutFilter.setIgnoreInitConfiguration(true);
         return singleSignOutFilter;
     }
@@ -135,47 +157,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         casAuthenticationProvider.setTicketValidator(new Cas30ServiceTicketValidator(securityProperty.getServerUrl()));
         casAuthenticationProvider.setKey("casAuthenticationProviderKey");
         return casAuthenticationProvider;
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        super.configure(web);
-    }
-
-    /**
-     * 定义认证规则,管理帐号/密码
-     */
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        super.configure(auth);
-        auth.authenticationProvider(casAuthenticationProvider());
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().ignoringAntMatchers(SecurityConstant.CSRF_IGNORING_ANT_MATCHERS);
-        http.headers().frameOptions().sameOrigin().xssProtection().block(true);
-        http
-                // 定义logout不需要验证
-                .logout().permitAll()
-                .and()
-                // 配置安全策略
-                .authorizeRequests()
-                // 不拦截
-                .antMatchers(SecurityConstant.IGNORING_ANT_MATCHERS).permitAll()
-                // 不拦截自定义的业务请求
-                .antMatchers(securityProperty.getIgnoringAntMatchers()).permitAll()
-                // 其他没有限定的请求，登录后才允许访问
-                .anyRequest().authenticated()
-        ;
-
-        // 权限控制
-        http.exceptionHandling().authenticationEntryPoint(casAuthenticationEntryPoint())
-                .and()
-                .addFilter(casAuthenticationFilter())
-                .addFilterBefore(casLogoutFilter(), LogoutFilter.class)
-                .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
-        http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
     }
 
 }

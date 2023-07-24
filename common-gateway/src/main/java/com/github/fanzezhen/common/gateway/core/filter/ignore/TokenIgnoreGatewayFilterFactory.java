@@ -1,7 +1,8 @@
 package com.github.fanzezhen.common.gateway.core.filter.ignore;
 
 
-import com.github.fanzezhen.common.gateway.core.constant.GatewayAttribute;
+import com.github.fanzezhen.common.gateway.core.constant.CommonGatewayConstant;
+
 import com.github.fanzezhen.common.gateway.core.support.BinderUtil;
 import com.github.fanzezhen.common.gateway.core.support.StringUtil;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class TokenIgnoreGatewayFilterFactory extends AbstractGatewayFilterFactor
 			if (logger.isDebugEnabled()) {
 				logger.debug("path {} toIgnore {} ignoreUrl {}", path, toIgnore, config.ignoreUrls);
 			}
-			exchange.getAttributes().put(GatewayAttribute.IS_URL_TOKEN_IGNORED, toIgnore);
+			exchange.getAttributes().put(CommonGatewayConstant.IS_URL_TOKEN_IGNORED, toIgnore);
 			return chain.filter(exchange);
 		});
 	}

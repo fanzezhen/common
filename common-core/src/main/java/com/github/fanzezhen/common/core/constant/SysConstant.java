@@ -36,45 +36,45 @@ public interface SysConstant {
     String HEADER_NGINX_REAL_IP = "X-Real-IP";
     String HEADER_USER_AGENT = "User-Agent";
     /***************公共header********************/
-    String CONTEXT_HEADER_PREFIX = "x-header-";
-    String HEADER_TOKEN = CONTEXT_HEADER_PREFIX + "Token";
-    String ENVIRONMENT_TOKEN = CONTEXT_HEADER_PREFIX + "Environment-Token";
+    String CONTEXT_HEADER_PREFIX = "common-";
+    String HEADER_TOKEN = CONTEXT_HEADER_PREFIX + "token";
     String HEADER_CLIENT_ID = CONTEXT_HEADER_PREFIX + "client-id";
     String HEADER_PLATFORM = CONTEXT_HEADER_PREFIX + "platform";
-    String HEADER_TENANT_ID = CONTEXT_HEADER_PREFIX + "tenant-id";
     String HEADER_TOKEN_KEY = CONTEXT_HEADER_PREFIX + "token";
-    /**
-     * 用户Id
-     */
-    String HEADER_USER_ID = CONTEXT_HEADER_PREFIX + "UserId";
-    /**
-     * 用户账号
-     */
-    String HEADER_ACCOUNT_ID = CONTEXT_HEADER_PREFIX + "AccountId";
-    /**
-     * 用户名称
-     */
-    String HEADER_ACCOUNT_NAME = CONTEXT_HEADER_PREFIX + "AccountName";
-    /**
-     * 用户姓名
-     */
-    String HEADER_USER_NAME = CONTEXT_HEADER_PREFIX + "UserName";
-    /**
-     * 客户端IP
-     */
-    String HEADER_USER_IP = CONTEXT_HEADER_PREFIX + "UserIp";
+    String HEADER_TOKEN_ENV = CONTEXT_HEADER_PREFIX + "Token-env";
+    String HEADER_TENANT_ID = CONTEXT_HEADER_PREFIX + "tenant-id";
     /**
      * 项目Id
      */
-    String HEADER_PROJECT_ID = CONTEXT_HEADER_PREFIX + "ProjectId";
+    String HEADER_PROJECT_ID = CONTEXT_HEADER_PREFIX + "project-id";
+    /**
+     * 用户Id
+     */
+    String HEADER_USER_ID = CONTEXT_HEADER_PREFIX + "user-id";
+    /**
+     * 用户姓名
+     */
+    String HEADER_USER_NAME = CONTEXT_HEADER_PREFIX + "user-name";
+    /**
+     * 客户端IP
+     */
+    String HEADER_USER_IP = CONTEXT_HEADER_PREFIX + "user-ip";
+    /**
+     * 用户账号
+     */
+    String HEADER_ACCOUNT_ID = CONTEXT_HEADER_PREFIX + "account-id";
+    /**
+     * 用户名称
+     */
+    String HEADER_ACCOUNT_NAME = CONTEXT_HEADER_PREFIX + "account-name";
     /**
      * 应用Id
      */
-    String HEADER_APP_CODE = CONTEXT_HEADER_PREFIX + "AppCode";
+    String HEADER_APP_CODE = CONTEXT_HEADER_PREFIX + "app-code";
     /**
      * 区域和语言
      */
-    String HEADER_LOCALE = CONTEXT_HEADER_PREFIX + "Locale";
+    String HEADER_LOCALE = CONTEXT_HEADER_PREFIX + "locale";
     /**
      * 时区
      */

@@ -16,8 +16,8 @@
 
 package com.github.fanzezhen.common.gateway.extranet;
 
-import com.github.fanzezhen.common.gateway.core.constant.SystemConstant;
-import com.github.fanzezhen.common.gateway.core.discover.eureka.DiscoverLocatorProperties;
+import com.github.fanzezhen.common.gateway.core.constant.CommonGatewayConstant;
+import com.github.fanzezhen.common.gateway.core.discover.DiscoverLocatorProperties;
 import io.opentracing.Span;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +28,7 @@ import org.springframework.web.server.ServerWebExchange;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Optional;
-
-import static com.github.fanzezhen.common.gateway.core.constant.GatewayAttribute.OPEN_TRACING_SPAN;
 
 /**
  * @author Spencer Gibb
@@ -58,7 +53,7 @@ public class AddSignHeaderAndChangeRequestUriFactory
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
-            Span http = exchange.getAttribute(OPEN_TRACING_SPAN);
+            Span http = exchange.getAttribute(CommonGatewayConstant.OPEN_TRACING_SPAN);
             if (http == null) {
                 logger.warn("no tracing span");
                 return chain.filter(exchange);
@@ -68,7 +63,7 @@ public class AddSignHeaderAndChangeRequestUriFactory
             Long nonce = System.currentTimeMillis();
             String data = String.valueOf(nonce) + req.getPath() + properties.getSecurity();
             builder.header("nonce", String.valueOf(nonce));
-            builder.header("sign", new String(SystemConstant.SIGN.sign(data.getBytes(StandardCharsets.UTF_8))));
+            builder.header("sign", new String(CommonGatewayConstant.SIGN.sign(data.getBytes(StandardCharsets.UTF_8))));
             return chain.filter(exchange.mutate().request(builder.build()).build());
         };
     }

@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.gateway.core.discover.eureka;
+package com.github.fanzezhen.common.gateway.core.discover;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

@@ -11,7 +11,9 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.filter.NettyWriteResponseFilter;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -63,10 +65,10 @@ public class GatewayApiMetricsFilter implements GlobalFilter, Ordered {
 
 		String httpStatusCodeStr = "NA";
 
-		String httpMethod = exchange.getRequest().getMethodValue();
+		HttpMethod httpMethod = exchange.getRequest().getMethod();
 
 
-		HttpStatus statusCode = exchange.getResponse().getStatusCode();
+		HttpStatusCode statusCode = exchange.getResponse().getStatusCode();
 		if (statusCode != null) {
 			httpStatusCodeStr = String.valueOf(statusCode.value());
 		}
@@ -75,7 +77,7 @@ public class GatewayApiMetricsFilter implements GlobalFilter, Ordered {
 		// TODO refactor to allow Tags provider like in MetricsWebFilter
 		Route route = exchange.getAttribute(GATEWAY_ROUTE_ATTR);
 
-		Tags tags = Tags.of("httpStatusCode", httpStatusCodeStr, "routeId", route.getId(), "httpMethod", httpMethod);
+		Tags tags = Tags.of("httpStatusCode", httpStatusCodeStr, "routeId", route.getId(), "httpMethod", httpMethod.name());
 
 		if (log.isTraceEnabled()) {
 			log.trace("gateway.requests tags: " + tags);

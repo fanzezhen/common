@@ -1,6 +1,6 @@
 package com.github.fanzezhen.common.gateway.config;
 
-import com.github.fanzezhen.common.gateway.core.discover.eureka.DiscoverLocatorProperties;
+import com.github.fanzezhen.common.gateway.core.discover.DiscoverLocatorProperties;
 import com.github.fanzezhen.common.gateway.core.discover.provider.route.RouteConfigProvider;
 import com.github.fanzezhen.common.gateway.extranet.AddSignHeaderAndChangeRequestUriFactory;
 import com.github.fanzezhen.common.gateway.extranet.DiscoverClientExtranetRouteDefinitionLocator;

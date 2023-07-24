@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.gateway.core.tracing;
 
+import com.github.fanzezhen.common.gateway.core.constant.CommonGatewayConstant;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import org.apache.commons.logging.Log;
@@ -9,13 +10,13 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.filter.NettyWriteResponseFilter;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
 
-import static com.github.fanzezhen.common.gateway.core.constant.GatewayAttribute.OPEN_TRACING_SPAN;
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR;
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR;
 
@@ -40,7 +41,7 @@ public class OpenTracingFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         Span http = tracer.buildSpan("serve").start();
-        exchange.getAttributes().put(OPEN_TRACING_SPAN, http);
+        exchange.getAttributes().put(CommonGatewayConstant.OPEN_TRACING_SPAN, http);
         return chain.filter(exchange).doFinally((aVoid) -> finishSpan(exchange, http));
     }
 
@@ -62,8 +63,8 @@ public class OpenTracingFilter implements GlobalFilter, Ordered {
         Route route = exchange.getAttribute(GATEWAY_ROUTE_ATTR);
         span.setTag("gateway.route", route.getId());
         span.setTag("gateway.url", path);
-        String httpMethod = exchange.getRequest().getMethodValue();
-        span.log("htt method " + httpMethod);
+        HttpMethod httpMethod = exchange.getRequest().getMethod();
+        span.log("htt method " + httpMethod.name());
         span.finish();
     }
 

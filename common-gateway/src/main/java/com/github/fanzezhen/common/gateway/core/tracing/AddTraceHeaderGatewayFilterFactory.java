@@ -16,7 +16,8 @@
 
 package com.github.fanzezhen.common.gateway.core.tracing;
 
-import com.github.fanzezhen.common.gateway.core.constant.GatewayAttribute;
+import com.github.fanzezhen.common.gateway.core.constant.CommonGatewayConstant;
+
 import io.jaegertracing.internal.JaegerSpanContext;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
@@ -28,10 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 
 /**
@@ -48,7 +45,7 @@ public class AddTraceHeaderGatewayFilterFactory
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
-            Span http = exchange.getAttribute(GatewayAttribute.OPEN_TRACING_SPAN);
+            Span http = exchange.getAttribute(CommonGatewayConstant.OPEN_TRACING_SPAN);
             if (http == null) {
                 logger.warn("no tracing span");
                 return chain.filter(exchange);

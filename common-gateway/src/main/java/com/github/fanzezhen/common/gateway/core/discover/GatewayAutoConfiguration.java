@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.fanzezhen.common.gateway.core.discover.eureka;
+package com.github.fanzezhen.common.gateway.core.discover;
 
 import com.github.fanzezhen.common.gateway.core.filter.retry.FullRetryGatewayFilterFactory;
 import com.github.fanzezhen.common.gateway.core.patch.RouteDefinitionRouteLocatorWithErrorHanlde;
@@ -55,9 +55,7 @@ import org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping;
 import org.springframework.cloud.gateway.handler.predicate.*;
 import org.springframework.cloud.gateway.route.*;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
-import org.springframework.cloud.gateway.support.ConfigurationService;
 import org.springframework.cloud.gateway.support.StringToZonedDateTimeConverter;
-import org.springframework.cloud.loadbalancer.support.SimpleObjectProvider;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -68,7 +66,6 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.Environment;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.Validator;
 import org.springframework.web.reactive.DispatcherHandler;
 import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.reactive.socket.client.ReactorNettyWebSocketClient;
@@ -78,7 +75,7 @@ import org.springframework.web.reactive.socket.server.support.HandshakeWebSocket
 import reactor.core.publisher.Flux;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.resources.ConnectionProvider;
-import reactor.netty.tcp.ProxyProvider;
+import reactor.netty.transport.ProxyProvider;
 
 import javax.net.ssl.SSLException;
 import java.security.cert.X509Certificate;
@@ -248,15 +245,6 @@ public class GatewayAutoConfiguration {
                                                          WebSocketService webSocketService,
                                                          ObjectProvider<List<HttpHeadersFilter>> headersFilters) {
         return new WebsocketRoutingFilter(webSocketClient, webSocketService, headersFilters);
-    }
-
-    @Bean
-    @DependsOn("validator")
-    @ConditionalOnBean(Validator.class)
-    public WeightCalculatorWebFilter weightCalculatorWebFilter(Validator validator,
-                                                               ObjectProvider<RouteLocator> routeLocator) {
-        return new WeightCalculatorWebFilter(routeLocator, new ConfigurationService(
-                null, new SimpleObjectProvider<>(null), new SimpleObjectProvider<>(validator)));
     }
 
     @Bean

@@ -1,10 +1,10 @@
 package com.github.fanzezhen.common.gateway.core.support;
 
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +58,7 @@ public class SerializeUtils {
 
     public static <X> X fromJson(String jsonStr, Class<X> x) {
         try {
-            if (StringUtils.isBlank(jsonStr)) {
+            if (StrUtil.isBlank(jsonStr)) {
                 return null;
             }
             return MAPPER.readValue(jsonStr, x);
@@ -70,7 +70,7 @@ public class SerializeUtils {
 
     public static <X> X fromJson(String jsonStr, TypeReference<X> valueTypeRef) {
         try {
-            if (StringUtils.isBlank(jsonStr)) {
+            if (StrUtil.isBlank(jsonStr)) {
                 return null;
             }
             return MAPPER.readValue(jsonStr, valueTypeRef);

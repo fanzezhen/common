@@ -1,17 +1,16 @@
 package com.github.fanzezhen.common.gateway.core.filter.auth.factory.csp;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.github.fanzezhen.common.gateway.core.constant.GatewayAttribute;
-import com.github.fanzezhen.common.gateway.core.constant.SystemConstant;
+import com.github.fanzezhen.common.core.constant.SysConstant;
+import com.github.fanzezhen.common.core.model.response.ErrorInfo;
+import com.github.fanzezhen.common.gateway.core.constant.CommonGatewayConstant;
 import com.github.fanzezhen.common.gateway.core.filter.auth.AuthProperties;
 import com.github.fanzezhen.common.gateway.core.support.I18nUtil;
 import com.github.fanzezhen.common.gateway.core.support.SerializeUtils;
-import com.github.fanzezhen.common.gateway.core.support.StringUtil;
-import com.github.fanzezhen.common.gateway.core.support.response.ActionResult;
-import com.github.fanzezhen.common.gateway.core.support.response.ErrorInfo;
+import com.github.fanzezhen.common.core.model.response.ActionResult;
 import io.opentracing.Span;
-import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -34,8 +33,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.Duration;
 import java.util.*;
-
-import static com.github.fanzezhen.common.gateway.core.constant.GatewayAttribute.OPEN_TRACING_SPAN;
 
 
 /**
@@ -61,7 +58,7 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
-            Boolean ignored = exchange.getAttribute(GatewayAttribute.IS_URL_TOKEN_IGNORED);
+            Boolean ignored = exchange.getAttribute(CommonGatewayConstant.IS_URL_TOKEN_IGNORED);
             if (ignored != null) {
                 if (ignored) {
                     if (logger.isDebugEnabled()) {
@@ -71,7 +68,7 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
                 }
             } else {
                 if (logger.isDebugEnabled()) {
-                    logger.debug("GatewayAttribute.IS_URL_TOKEN_IGNORED is not set");
+                    logger.debug("CommonGatewayConstant.IS_URL_TOKEN_IGNORED is not set");
                 }
             }
             ServerHttpRequest request = exchange.getRequest();
@@ -91,7 +88,7 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
                         })
                         .flatMap(tokenJson -> {
                             //no json, 405
-                            if (StringUtils.isBlank(tokenJson)) {
+                            if (StrUtil.isBlank(tokenJson)) {
                                 logger.info("unable to retrieve session info");
                                 return write405(exchange);
                             }
@@ -105,19 +102,19 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
                             String tenantId = (String) userData.get("tenantId");
                             //kick
                             String tokenStatus = (String) userData.get("tokenStatus");
-                            if (StringUtil.equalsIgnoreCase(tokenStatus, USER_DATA_KEY_KICK)) {
+                            if (StrUtil.equalsIgnoreCase(tokenStatus, USER_DATA_KEY_KICK)) {
                                 logger.info("kick {}", token);
                                 return write406(tenantId, exchange);
                             }
-                            String envToken = getHeader(request, SystemConstant.ENVIRONMENT_TOKEN);
-                            boolean hasEnvToken = StringUtil.isNotBlank(envToken)
+                            String envToken = getHeader(request, SysConstant.HEADER_TOKEN_ENV);
+                            boolean hasEnvToken = StrUtil.isNotBlank(envToken)
                                     && (!"null".equalsIgnoreCase(envToken))
                                     && (!"undefined".equalsIgnoreCase(envToken));
                             if (logger.isDebugEnabled()) {
                                 logger.debug("has env token {}, val {}", hasEnvToken, hasEnvToken ? envToken : "");
                             }
                             ServerHttpRequest.Builder mutate = request.mutate();
-                            mutate.header(SystemConstant.HEADER_TOKEN, token);
+                            mutate.header(SysConstant.HEADER_TOKEN, token);
                             extractForwardedValues(request, mutate);
                             mutateCommonFromCookie(mutate, request, userData);
                             extendCookie(redisTokenKey, (String) userData.get("platform"));
@@ -166,7 +163,7 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
                     return Mono.just(defaultNilList);
                 });
         return tokenMapMono.zipWith(checkEnvMono, (tokenInfo, checked) -> {
-            if (StringUtil.isBlank(checked)) {
+            if (StrUtil.isBlank(checked)) {
                 logger.info("unable to find the env token {} in current cookie {}", envToken, token);
                 return -1;
             }
@@ -175,23 +172,23 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
             String appId = panicGet(tokenInfo, 2);
             String userId = panicGet(tokenInfo, 3);
 
-            if (StringUtil.isBlank(envTenantId)) {
+            if (StrUtil.isBlank(envTenantId)) {
                 logger.info("cannot find env tenant id {}", envToken);
                 return -1;
             }
-            if (StringUtil.isBlank(appId)) {
+            if (StrUtil.isBlank(appId)) {
                 logger.info("cannot find env app id {}", envToken);
                 return -1;
             }
 
-            mutate.header(SystemConstant.HEADER_TENANT_ID, envTenantId);
-            mutate.header(SystemConstant.HEADER_APP_ID, appId);
+            mutate.header(SysConstant.HEADER_TENANT_ID, envTenantId);
+            mutate.header(SysConstant.HEADER_APP_CODE, appId);
 
-            if (StringUtil.isNotBlank(userId)) {
-                mutate.header(SystemConstant.HEADER_USER_ID, userId);
+            if (StrUtil.isNotBlank(userId)) {
+                mutate.header(SysConstant.HEADER_USER_ID, userId);
             }
-            if (StringUtil.isNotBlank(projectId)) {
-                mutate.header(SystemConstant.HEADER_PROJECT_ID, projectId);
+            if (StrUtil.isNotBlank(projectId)) {
+                mutate.header(SysConstant.HEADER_PROJECT_ID, projectId);
             }
             return 1;
         }).flatMap(ret -> {
@@ -250,7 +247,7 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
     }
 
     public Mono<Void> write405(ServerWebExchange exchange) {
-        Span span = exchange.getAttribute(OPEN_TRACING_SPAN);
+        Span span = exchange.getAttribute(CommonGatewayConstant.OPEN_TRACING_SPAN);
         if (span != null) {
             logger.warn("no tracing span");
             span.log("write405;");
@@ -262,7 +259,7 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
     }
 
     public Mono<Void> write406(String tenantId, ServerWebExchange exchange) {
-        Span span = exchange.getAttribute(OPEN_TRACING_SPAN);
+        Span span = exchange.getAttribute(CommonGatewayConstant.OPEN_TRACING_SPAN);
         if (span != null) {
             logger.warn("no tracing span");
             span.log("write406;");
@@ -274,7 +271,7 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
     }
 
     public Mono<Void> write407(ServerWebExchange exchange) {
-        Span span = exchange.getAttribute(OPEN_TRACING_SPAN);
+        Span span = exchange.getAttribute(CommonGatewayConstant.OPEN_TRACING_SPAN);
         if (span != null) {
             logger.warn("no tracing span");
             span.log("write407;");
@@ -288,12 +285,12 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
     private ServerHttpRequest.Builder mutateCoreFromCookie(ServerHttpRequest.Builder builder, Map<String, Object> userData) {
         String userId = (String) userData.get("userId");
         if (userId != null) {
-            builder = builder.header(SystemConstant.HEADER_USER_ID, userId);
+            builder = builder.header(SysConstant.HEADER_USER_ID, userId);
         }
 
         String tenantId = (String) userData.get("tenantId");
         if (tenantId != null) {
-            builder = builder.header(SystemConstant.HEADER_TENANT_ID, tenantId);
+            builder = builder.header(SysConstant.HEADER_TENANT_ID, tenantId);
         }
         return builder;
     }
@@ -301,41 +298,41 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
     private ServerHttpRequest.Builder mutateCommonFromCookie(ServerHttpRequest.Builder mutate, ServerHttpRequest request, Map<String, Object> userData) {
         String accountId = (String) userData.get("accountId");
         if (accountId != null) {
-            mutate = mutate.header(SystemConstant.HEADER_ACCOUNT_ID, accountId);
+            mutate = mutate.header(SysConstant.HEADER_ACCOUNT_ID, accountId);
         }
         try {
             String accountName = (String) userData.get("accountName");
             if (accountName != null) {
-                mutate = mutate.header(SystemConstant.HEADER_ACCOUNT_NAME, URLEncoder.encode(accountName, "utf-8"));
+                mutate = mutate.header(SysConstant.HEADER_ACCOUNT_NAME, URLEncoder.encode(accountName, "utf-8"));
             }
             String userName = (String) userData.get("userName");
             if (userName != null) {
-                mutate = mutate.header(SystemConstant.HEADER_USER_NAME, URLEncoder.encode(userName, "utf-8"));
+                mutate = mutate.header(SysConstant.HEADER_USER_NAME, URLEncoder.encode(userName, "utf-8"));
             }
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException("encoding failed");
         }
         String platform = (String) userData.get("platform");
         if (platform != null) {
-            mutate = mutate.header(SystemConstant.HEADER_PLATFORM, platform);
+            mutate = mutate.header(SysConstant.HEADER_PLATFORM, platform);
         }
         String device = (String) userData.get("device");
         if (device != null) {
-            mutate = mutate.header(SystemConstant.HEADER_DEVICE, device);
+            mutate = mutate.header(SysConstant.HEADER_DEVICE, device);
         }
         //语言特殊处理一下，如果用户信息中设置了语言，就用用户信息中设置的语言，否则用cookie中的locale值
         String locale = (String) userData.get("languageType");
-        String localHeader = SystemConstant.CONTEXT_HEADER_PREFIX + "Locale";
+        String localHeader = SysConstant.CONTEXT_HEADER_PREFIX + "Locale";
         String local = "locale";
-        if (StringUtils.isNotBlank(locale)) {
+        if (StrUtil.isNotBlank(locale)) {
             mutate = mutate.header(localHeader, locale);
-        } else if (StringUtils.isNotBlank(getCookieValue(request, local))) {
+        } else if (StrUtil.isNotBlank(getCookieValue(request, local))) {
             mutate = mutate.header(localHeader, getCookieValue(request, "locale"));
         }
         //用户时区
         String timeZone = (String) userData.get("timeZone");
-        if (StringUtils.isNotBlank(timeZone)) {
-            mutate = mutate.header(SystemConstant.CONTEXT_HEADER_PREFIX + "TimeZone", timeZone);
+        if (StrUtil.isNotBlank(timeZone)) {
+            mutate = mutate.header(SysConstant.CONTEXT_HEADER_PREFIX + "TimeZone", timeZone);
         }
         return mutate;
     }
@@ -356,7 +353,7 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
             return mutate;
         }
         String ip = values.get(0);
-        return mutate.header(SystemConstant.HEADER_USER_IP, StringUtils.trim(ip));
+        return mutate.header(SysConstant.HEADER_USER_IP, StrUtil.trim(ip));
     }
 
     private String getCookieValue(ServerHttpRequest request, String locale) {
@@ -384,15 +381,13 @@ public class CspTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<C
 
     }
 
-    public Mono<ActionResult> authFail(String tenantId, String errorCode, String defaultMsg, String locale) {
+    public Mono<ActionResult<?>> authFail(String tenantId, String errorCode, String defaultMsg, String locale) {
         return reactiveStringRedisTemplate.opsForValue().get(I18nUtil.buildI18Key(tenantId, "global", errorCode, locale))
                 .defaultIfEmpty("")
                 .map(i18nValue -> {
-                    String errorMsg = StringUtil.isBlank(i18nValue) ? defaultMsg : i18nValue;
+                    String errorMsg = StrUtil.isBlank(i18nValue) ? defaultMsg : i18nValue;
                     ErrorInfo errorInfo = new ErrorInfo(errorCode, errorMsg);
-                    ActionResult<Void> result = new ActionResult<>();
-                    result.addError(errorInfo);
-                    return result;
+                    return ActionResult.failed(errorInfo);
                 });
     }
 

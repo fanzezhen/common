@@ -16,6 +16,7 @@
 
 package com.github.fanzezhen.common.gateway.core.filter.retry;
 
+import com.github.fanzezhen.common.gateway.core.constant.CommonGatewayConstant;
 import io.opentracing.Span;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatus.Series;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.util.Assert;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.retry.*;
@@ -36,7 +38,6 @@ import java.time.Duration;
 import java.util.*;
 import java.util.function.Predicate;
 
-import static com.github.fanzezhen.common.gateway.core.constant.GatewayAttribute.OPEN_TRACING_SPAN;
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.CLIENT_RESPONSE_HEADER_NAMES;
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_ALREADY_ROUTED_ATTR;
 
@@ -97,7 +98,7 @@ public class FullRetryGatewayFilterFactory
                 if (exceedsMaxIterations(exchange, retryConfig)) {
                     return false;
                 }
-                HttpStatus statusCode = exchange.getResponse().getStatusCode();
+                HttpStatusCode statusCode = exchange.getResponse().getStatusCode();
                 boolean retryableStatusCode = retryConfig.getStatuses()
                         .contains(statusCode);
                 // null status code
@@ -105,7 +106,7 @@ public class FullRetryGatewayFilterFactory
                     // network exception?
                     // try the series
                     retryableStatusCode = retryConfig.getSeries().stream()
-                            .anyMatch(series -> statusCode.series().equals(series));
+                            .anyMatch(series -> statusCode.value()==series.value());
                 }
                 trace("retryableStatusCode: %b, statusCode %s, configured statuses %s, configured series %s",
                         retryableStatusCode, statusCode, retryConfig.getStatuses(),
@@ -180,7 +181,7 @@ public class FullRetryGatewayFilterFactory
             int iteration = exchange
                     .getAttributeOrDefault(RETRY_ITERATION_KEY, -1);
             int newIteration = iteration + 1;
-            Span traceSpan = exchange.getAttribute(OPEN_TRACING_SPAN);
+            Span traceSpan = exchange.getAttribute(CommonGatewayConstant.OPEN_TRACING_SPAN);
             if (traceSpan != null) {
                 traceSpan.log(RETRY_ITERATION_KEY + ":" + newIteration + ";");
             }

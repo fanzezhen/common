@@ -1,13 +1,13 @@
 package com.github.fanzezhen.common.gateway.core.filter.auth.factory.csp;
 
 
-import com.github.fanzezhen.common.gateway.core.constant.GatewayAttribute;
+import cn.hutool.core.util.StrUtil;
+import com.github.fanzezhen.common.core.model.response.ErrorInfo;
+import com.github.fanzezhen.common.gateway.core.constant.CommonGatewayConstant;
 import com.github.fanzezhen.common.gateway.core.support.I18nUtil;
 import com.github.fanzezhen.common.gateway.core.support.SerializeUtils;
 import com.github.fanzezhen.common.gateway.core.support.StringUtil;
-import com.github.fanzezhen.common.gateway.core.support.response.ActionResult;
-import com.github.fanzezhen.common.gateway.core.support.response.ErrorInfo;
-import org.apache.commons.lang.StringUtils;
+import com.github.fanzezhen.common.core.model.response.ActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -45,7 +45,7 @@ public class FaqTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<F
 	@Override
 	public GatewayFilter apply(Config config) {
 		return (exchange, chain) -> {
-			Boolean ignored = exchange.getAttribute(GatewayAttribute.IS_URL_TOKEN_IGNORED);
+			Boolean ignored = exchange.getAttribute(CommonGatewayConstant.IS_URL_TOKEN_IGNORED);
 			if (ignored != null) {
 				if (ignored) {
 					if (logger.isDebugEnabled()) {
@@ -62,7 +62,7 @@ public class FaqTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<F
 			ServerHttpRequest request = exchange.getRequest();
 			Optional<String> tokenP = CspTokenTransferMode.cookie.getToken(request);
 			String token = getCookieValue(request, null);
-			if (StringUtil.isBlank(token)) {
+			if (StrUtil.isBlank(token)) {
 				logger.info("empty token");
 				return write405(exchange);
 			}
@@ -75,7 +75,7 @@ public class FaqTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<F
 							return Mono.just("");
 						})
 						.flatMap(tokenJson -> {
-							if (StringUtils.isBlank(tokenJson)) {
+							if (StrUtil.isBlank(tokenJson)) {
 								logger.info("unable to retrieve session info");
 								return write405(exchange);
 							}
@@ -123,11 +123,9 @@ public class FaqTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<F
 		return reactiveStringRedisTemplate.opsForValue().get(I18nUtil.buildI18Key(tenantId, "global", errorCode, locale))
 				.defaultIfEmpty("")
 				.map(i18nValue -> {
-					String errorMsg = StringUtil.isBlank(i18nValue) ? defaultMsg : i18nValue;
+					String errorMsg = StrUtil.isBlank(i18nValue) ? defaultMsg : i18nValue;
 					ErrorInfo errorInfo = new ErrorInfo(errorCode, errorMsg);
-					ActionResult<Void> result = new ActionResult<>();
-					result.addError(errorInfo);
-					return result;
+					return ActionResult.failed(errorInfo);
 				});
 	}
 

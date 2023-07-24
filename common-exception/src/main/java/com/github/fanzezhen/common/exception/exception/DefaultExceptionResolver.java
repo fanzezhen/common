@@ -4,11 +4,13 @@ import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
 import com.github.fanzezhen.common.core.property.CommonProperty;
 import com.github.fanzezhen.common.core.util.HttpUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.annotation.Order;
-import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,8 +21,6 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,19 +54,15 @@ public class DefaultExceptionResolver implements HandlerExceptionResolver {
     }
 
     @Override
-    public ModelAndView resolveException(HttpServletRequest request,
-                                         HttpServletResponse response,
-                                         Object handler,
-                                         @NonNull Exception exception) {
-        log.error("请求" + request.getRequestURI() + "发生异常", exception);
+    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) {
+        log.error("请求" + request.getRequestURI() + "发生异常", ex);
         int errorStatus = HttpServletResponse.SC_OK;
         response.setStatus(errorStatus);
         ModelAndView modelAndView;
         if (responseProperty.isResponseJson()) {
-            return jsonResponse(exception);
+            return jsonResponse(ex);
         }
-        if (handler instanceof HandlerMethod) {
-            HandlerMethod handlerMethod = (HandlerMethod) handler;
+        if (handler instanceof HandlerMethod handlerMethod) {
             // 检查是否存在ResponseBody注解
             ResponseBody responseBody = handlerMethod.getMethodAnnotation(ResponseBody.class);
             if (responseBody == null) {
@@ -74,17 +70,17 @@ public class DefaultExceptionResolver implements HandlerExceptionResolver {
             }
             if (responseBody != null || HttpUtil.isAjaxRequest(request)) {
                 // 判断是否存在jsonp注解
-                modelAndView = jsonResponse(exception);
+                modelAndView = jsonResponse(ex);
             } else {
-                modelAndView = viewResponse(response, exception);
+                modelAndView = viewResponse(response, ex);
             }
         } else {
             // 其他类型handler
             // 判断同步请求还是异步请求
             if (HttpUtil.isAjaxRequest(request)) {
-                modelAndView = jsonResponse(exception);
+                modelAndView = jsonResponse(ex);
             } else {
-                modelAndView = viewResponse(response, exception);
+                modelAndView = viewResponse(response, ex);
             }
         }
         return modelAndView;
@@ -108,8 +104,7 @@ public class DefaultExceptionResolver implements HandlerExceptionResolver {
 
     public Map<String, Object> newExceptionResp(Exception exception) {
         Map<String, Object> error = new HashMap<>(2);
-        if (exception instanceof ServiceException) {
-            ServiceException serviceException = ((ServiceException) exception);
+        if (exception instanceof ServiceException serviceException) {
             error.put("msg", serviceException.getErrorMessage());
             error.put("code", serviceException.getCode());
         } else if (exception instanceof IllegalArgumentException) {

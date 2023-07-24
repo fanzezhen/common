@@ -8,7 +8,7 @@ import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.fanzezhen.common.core.annotion.NoRepeat;
-import com.github.fanzezhen.common.core.context.SysContext;
+import com.github.fanzezhen.common.core.context.SysContextHolder;
 import com.github.fanzezhen.common.core.enums.NoRepeatTypeEnum;
 import com.github.fanzezhen.common.core.service.CacheService;
 import com.github.fanzezhen.common.core.util.ExceptionUtil;
@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 import static java.util.stream.Collectors.toList;
@@ -95,7 +95,7 @@ public class NoRepeatedAop {
                 if (StrUtil.isBlank(headerKey)) {
                     continue;
                 }
-                param.put(headerKey, SysContext.get(headerKey));
+                param.put(headerKey, SysContextHolder.get(headerKey));
             }
         }
         String[] paramArgs = noRepeat.paramArgs();

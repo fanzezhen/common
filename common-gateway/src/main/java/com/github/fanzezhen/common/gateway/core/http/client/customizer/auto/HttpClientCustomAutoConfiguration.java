@@ -62,7 +62,7 @@ public class HttpClientCustomAutoConfiguration {
             connectionProvider = ConnectionProvider.create(pool.getName());
         }
         HttpClient httpClient = HttpClient.create(connectionProvider).wiretap(true);
-        return httpClient.mapConnect((conn, boot) -> conn.contextWrite(ctx -> {
+        return httpClient.mapConnect((conn) -> conn.contextWrite(ctx -> {
             Context context = ctx;
             for (DoOnContext doOnContext : doOnContexts) {
                 context = doOnContext.apply(context);

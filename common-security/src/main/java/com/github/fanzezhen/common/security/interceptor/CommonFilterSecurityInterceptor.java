@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.security.interceptor;
 
+import jakarta.servlet.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
@@ -9,7 +10,6 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.servlet.*;
 import java.io.IOException;
 
 /**
@@ -18,15 +18,15 @@ import java.io.IOException;
  * @date 17/1/19
  */
 @Component
-public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor implements Filter {
+public class CommonFilterSecurityInterceptor extends AbstractSecurityInterceptor implements Filter {
 
 
     @Resource
     private FilterInvocationSecurityMetadataSource securityMetadataSource;
 
     @Autowired
-    public void setMyAccessDecisionManager(MyAccessDecisionManager myAccessDecisionManager) {
-        super.setAccessDecisionManager(myAccessDecisionManager);
+    public void setMyAccessDecisionManager(CommonAccessDecisionManager commonAccessDecisionManager) {
+        super.setAccessDecisionManager(commonAccessDecisionManager);
     }
 
 

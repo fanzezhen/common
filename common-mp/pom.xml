@@ -5,17 +5,12 @@
     <parent>
         <artifactId>common</artifactId>
         <groupId>com.github.fanzezhen</groupId>
-        <version>2.1.3</version>
+        <version>3.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.fanzezhen.common</groupId>
     <artifactId>common-mp</artifactId>
-
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-    </properties>
 
     <dependencies>
         <!--mybatis-->

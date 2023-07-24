@@ -1,6 +1,7 @@
 package com.github.fanzezhen.common.gateway.endpoint.auth;
 
-import com.github.fanzezhen.common.gateway.core.constant.SystemConstant;
+import com.github.fanzezhen.common.core.constant.SysConstant;
+import com.github.fanzezhen.common.gateway.core.constant.CommonGatewayConstant;
 import com.github.fanzezhen.common.gateway.core.support.StringUtil;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +28,7 @@ import java.util.List;
 /**
  * @author zezhen.fan
  */
-@Configuration()
+@Configuration
 public class ActuatorSecurity {
 
     @Resource
@@ -58,8 +59,7 @@ public class ActuatorSecurity {
         @Override
         public Mono<Authentication> authenticate(Authentication authentication) {
             // JwtAuthenticationToken is my custom token.
-            if (authentication instanceof SimpleAuthentication) {
-                SimpleAuthentication simpleAuthentication = (SimpleAuthentication) authentication;
+            if (authentication instanceof SimpleAuthentication simpleAuthentication) {
                 if (StringUtil.isNotBlank(simpleAuthentication.getToken())) {
                     authentication.setAuthenticated(simpleAuthentication.getToken().equals(validToken));
                 }
@@ -83,7 +83,7 @@ public class ActuatorSecurity {
         @Override
         public Mono<SecurityContext> load(ServerWebExchange serverWebExchange) {
 
-            List<String> tokenList = serverWebExchange.getRequest().getHeaders().get(SystemConstant.HEADER_KEY_TOKEN);
+            List<String> tokenList = serverWebExchange.getRequest().getHeaders().get(SysConstant.HEADER_TOKEN);
             SimpleAuthentication authentication = new SimpleAuthentication();
             if (tokenList != null && tokenList.size() > 0) {
                 authentication.setToken(tokenList.get(0));
