@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.github.fanzezhen.common.mp.enums.DelFlagEnum;
 import com.github.fanzezhen.common.mp.enums.StatusEnum;
 import com.github.fanzezhen.common.mp.model.dto.SysUserDto;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -67,13 +67,13 @@ public class SysUserDetail extends User implements CredentialsContainer {
     /**
      * 是否删除（0--否；1--是）
      */
-    @ApiModelProperty("删除标识（1-已删除；0-未删除），默认 0")
+    @Schema(name = "删除标识（1-已删除；0-未删除），默认 0")
     private DelFlagEnum delFlag;
 
     /**
      * 状态（0--正常；1--停用）
      */
-    @ApiModelProperty("状态（0--正常；1--禁用），默认 0")
+    @Schema(name = "状态（0--正常；1--禁用），默认 0")
     private StatusEnum status;
 
     /**

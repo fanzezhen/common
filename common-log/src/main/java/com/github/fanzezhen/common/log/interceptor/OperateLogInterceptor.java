@@ -5,8 +5,8 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.fanzezhen.common.core.context.SysContextHolder;
 import com.github.fanzezhen.common.core.property.ProjectProperty;
-import com.github.fanzezhen.common.core.context.SysContext;
 import com.github.fanzezhen.common.core.annotion.OperateLog;
 import com.github.fanzezhen.common.core.annotion.OperateLogMapper;
 import com.github.fanzezhen.common.core.dict.AbstractDict;
@@ -147,8 +147,8 @@ public class OperateLogInterceptor implements Interceptor {
         logOperation.setBizId(bizId);
         logOperation.setTableName(tableName);
         logOperation.setOperationType(OperationLogTypeEnum.getOrDefaultByType(operateType));
-        logOperation.setAppCode(SysContext.getCurrentAppCode());
-        logOperation.setOperationUsername(SysContext.getUserName());
+        logOperation.setAppCode(SysContextHolder.getCurrentAppCode());
+        logOperation.setOperationUsername(SysContextHolder.getUserName());
         logOperation.setRemark(comment);
         if (useMicroservice) {
             logRemote.addLogOperate(logOperation);

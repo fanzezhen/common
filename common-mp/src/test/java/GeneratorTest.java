@@ -10,7 +10,7 @@ public class GeneratorTest {
     @Test
     @Ignore
     public void testGenerator() {
-        GeneratorTool.generator(new GeneratorBean("jdbc:mysql://localhost:3306/dev?useSSL=false&useUnicode=true", "root", "root")
-                .setParentPackageName("com.github.fanzezhen.common.mp.generator.tmp"));
+//        GeneratorTool.generator(new GeneratorBean("jdbc:mysql://localhost:3306/dev?useSSL=false&useUnicode=true", "root", "root")
+//                .setParentPackageName("com.github.fanzezhen.common.mp.generator.tmp"));
     }
 }

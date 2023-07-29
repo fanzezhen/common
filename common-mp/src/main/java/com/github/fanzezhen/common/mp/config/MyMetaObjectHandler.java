@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.mp.config;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.github.fanzezhen.common.core.context.SysContext;
+import com.github.fanzezhen.common.core.context.SysContextHolder;
 import com.github.fanzezhen.common.mp.enums.DelFlagEnum;
 import com.github.fanzezhen.common.mp.enums.StatusEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         log.debug("start insert fill ....");
-        String loginUserId = SysContext.getUserId();
+        String loginUserId = SysContextHolder.getUserId();
         if (StrUtil.isNotBlank(loginUserId)) {
             this.fillStrategy(metaObject, "createUserId", loginUserId);
         }
@@ -33,7 +33,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
         log.debug("start update fill ....");
-        String loginUserId = SysContext.getUserId();
+        String loginUserId = SysContextHolder.getUserId();
         if (StrUtil.isNotBlank(loginUserId)) {
             this.fillStrategy(metaObject, "updateUserId", loginUserId);
         }

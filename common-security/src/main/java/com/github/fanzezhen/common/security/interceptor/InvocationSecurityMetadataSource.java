@@ -4,6 +4,7 @@ import com.github.fanzezhen.common.core.constant.SecurityConstant;
 import com.github.fanzezhen.common.mp.model.dto.SysPermissionDto;
 import com.github.fanzezhen.common.security.facade.UserDetailsServiceFacade;
 import com.github.fanzezhen.common.core.property.ProjectProperty;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -12,7 +13,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

@@ -8,7 +8,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.github.fanzezhen.common.mp.enums.log.LoginLogTypeEnum;
 import com.github.fanzezhen.common.mp.model.entity.BaseEntity;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -40,7 +40,7 @@ import java.net.UnknownHostException;
 public class LogLogin extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "用户名")
+    @Schema(name = "用户名")
     private String username;
 
     /**
@@ -48,23 +48,23 @@ public class LogLogin extends BaseEntity {
      */
     @EnumValue
     @Column(name = "LOG_TYPE")
-    @ApiModelProperty(value = "日志类型")
+    @Schema(name = "日志类型")
     @JSONField(serialzeFeatures = SerializerFeature.WriteEnumUsingToString)
     private LoginLogTypeEnum logType;
 
-    @ApiModelProperty(value = "ip")
+    @Schema(name = "ip")
     private byte[] ipBytes;
 
-    @ApiModelProperty(value = "操作系统")
+    @Schema(name = "操作系统")
     private String os;
 
-    @ApiModelProperty(value = "浏览器名称")
+    @Schema(name = "浏览器名称")
     private String browserName;
 
-    @ApiModelProperty(value = "浏览器版本")
+    @Schema(name = "浏览器版本")
     private String browserVersion;
 
-    @ApiModelProperty(value = "备注")
+    @Schema(name = "备注")
     private String remark;
 
     public void setIp(String ip) {

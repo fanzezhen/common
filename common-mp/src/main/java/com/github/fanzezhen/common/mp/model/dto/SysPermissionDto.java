@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.mp.model.dto;
 
 
 import com.github.fanzezhen.common.mp.model.entity.BaseTenantEntity;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,7 +20,7 @@ public class SysPermissionDto extends BaseTenantEntity {
      */
     @Size(max = 50, message = "上级ID长度不能超过50")
     @NotBlank(message = "上级ID不能为空")
-    @ApiModelProperty("上级ID")
+    @Schema(name = "上级ID")
     private String pid;
 
     /**
@@ -28,7 +28,7 @@ public class SysPermissionDto extends BaseTenantEntity {
      */
     @Size(max = 16, message = "icon代码长度不能超过16")
     @NotBlank(message = "icon代码不能为空")
-    @ApiModelProperty("icon代码")
+    @Schema(name = "icon代码")
     private String icon;
 
     /**
@@ -36,7 +36,7 @@ public class SysPermissionDto extends BaseTenantEntity {
      */
     @Size(max = 50, message = "权限代码长度不能超过50")
     @NotBlank(message = "权限代码不能为空")
-    @ApiModelProperty("权限代码")
+    @Schema(name = "权限代码")
     private String code;
 
     /**
@@ -44,7 +44,7 @@ public class SysPermissionDto extends BaseTenantEntity {
      */
     @Size(max = 50, message = "名称长度不能超过50")
     @NotBlank(message = "名称不能为空")
-    @ApiModelProperty("名称")
+    @Schema(name = "名称")
     private String name;
 
     /**
@@ -52,25 +52,25 @@ public class SysPermissionDto extends BaseTenantEntity {
      */
     @Size(max = 255, message = "请求地址长度不能超过255")
     @NotBlank(message = "请求地址不能为空")
-    @ApiModelProperty("请求地址")
+    @Schema(name = "请求地址")
     private String operationUrl;
 
     /**
      * 类型（1--菜单；2--按钮）
      */
-    @ApiModelProperty("类型（1--菜单；2--按钮）")
+    @Schema(name = "类型（1--菜单；2--按钮）")
     private Integer type;
 
     /**
      * 排序优先级
      */
-    @ApiModelProperty("排序优先级")
+    @Schema(name = "排序优先级")
     private Integer orderNum;
 
     /**
      * 所属应用代码
      */
     @Size(max = 50, message = "所属应用代码长度不能超过50")
-    @ApiModelProperty("所属应用代码")
+    @Schema(name = "所属应用代码")
     private String appCode;
 }

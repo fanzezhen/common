@@ -39,7 +39,7 @@ public class ResponseBodyWrapFactoryBean implements InitializingBean {
             if (handler instanceof RequestResponseBodyMethodProcessor) {
                 //用自己的ResponseBody包装类替换掉框架的，达到返回Result的效果
                 ResponseBodyWrapHandler decorator =
-                        new ResponseBodyWrapHandler(handler, commonProperty.getAutoWrapResponseIgnoreUrls());
+                        new ResponseBodyWrapHandler(handler, commonProperty);
                 newHandlers.add(decorator);
             } else {
                 newHandlers.add(handler);

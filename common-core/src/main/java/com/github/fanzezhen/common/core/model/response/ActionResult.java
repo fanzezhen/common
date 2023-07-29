@@ -117,10 +117,6 @@ public class ActionResult<T> implements Serializable {
         return new ActionResult<>(new ErrorInfo(serviceException));
     }
 
-    public static <T> ActionResult<T> failed(T data) {
-        return new ActionResult<>(false, data);
-    }
-
     public static <T> ActionResult<T> failed(T data, String msg) {
         return new ActionResult<>(false, data, new ErrorInfo(msg));
     }

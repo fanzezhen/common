@@ -5,7 +5,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.github.fanzezhen.common.mp.enums.log.ExceptionTypeEnum;
 import com.github.fanzezhen.common.mp.model.entity.BaseEntity;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -36,26 +36,26 @@ public class LogException extends BaseEntity {
      */
     @EnumValue
     @Column(name = "LOG_TYPE")
-    @ApiModelProperty(value = "日志类型")
+    @Schema(name = "日志类型")
     @JSONField(serialzeFeatures= SerializerFeature.WriteEnumUsingToString)
     private ExceptionTypeEnum logType;
 
-    @ApiModelProperty(value = "资源所属模块")
+    @Schema(name = "资源所属模块")
     private String modular;
 
-    @ApiModelProperty(value = "错误类名")
+    @Schema(name = "错误类名")
     private String className;
 
-    @ApiModelProperty(value = "错误说明")
+    @Schema(name = "错误说明")
     private String message;
 
-    @ApiModelProperty(value = "错误堆栈")
+    @Schema(name = "错误堆栈")
     private String stackTrace;
 
-    @ApiModelProperty(value = "操作人名称")
+    @Schema(name = "操作人名称")
     private String operationUsername;
 
-    @ApiModelProperty(value = "应用代码")
+    @Schema(name = "应用代码")
     private String appCode;
 
 }

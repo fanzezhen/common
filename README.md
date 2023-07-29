@@ -5,9 +5,6 @@ common
 1. 项目采用Maven多模块开发方式，模块介绍如下：
     * common-core                  ：核心模块
     * common-exception             ：异常处理模块
-    * common-gateway               ：网关核心模块
-    * common-gateway-endpoint-auth ：网关
-    * common-gateway-sub-env       ：网关子环境隔离
     * common-log                   ：日志模块
     * common-mp                    ：MyBatis-Plus
     * common-redis                 ：redis缓存模块

@@ -1,11 +1,11 @@
 package com.github.fanzezhen.common.core.context;
 
+import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.StrUtil;
 import com.github.fanzezhen.common.core.constant.SysConstant;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.ZoneOffset;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -14,49 +14,22 @@ import java.util.TimeZone;
  */
 @Slf4j
 public class SysContext {
-    /**
-     * 用于保存线程相关信息
-     */
-    private final transient static ThreadLocal<Map<String, String>> CONTEXT_MAP = new ThreadLocal<>();
+    private final transient CaseInsensitiveMap<String, String> contextMap = new CaseInsensitiveMap<>(10);
 
     /**
      * context map 最大容量
      */
-    private static final Integer MAX_CAPACITY = 100;
+    public static final Integer MAX_CAPACITY = 100;
     /**
      * context map key 或者 value 最大值
      */
-    private static final Integer MAX_SIZE = 1024;
-
-    /**
-     * 构造函数
-     */
-    public SysContext() {
-        super();
+    public static final Integer MAX_SIZE = 1024;
+    public CaseInsensitiveMap<String, String> getContextMap() {
+        return contextMap;
     }
 
-    /**
-     * 从 ThreadLocal中获取名值Map(不包含appCode)
-     *
-     * @return 名值Map
-     */
-    public static Map<String, String> getContextMap() {
-        return CONTEXT_MAP.get();
-    }
-
-    /**
-     * （获取键下的值.如果不存在，返回null；如果名值Map未初始化，也返回null） Get the value of key. Would
-     * return null if context map hasn't been initialized.
-     *
-     * @param key 键
-     * @return 键下的值
-     */
-    public static String get(String key) {
-        Map<String, String> contextMap = getContextMap();
-        if (contextMap == null) {
-            return null;
-        }
-        return contextMap.get(convertKey(key));
+    public String get(String key) {
+        return contextMap.get(key);
     }
 
     /**
@@ -68,30 +41,24 @@ public class SysContext {
      * @param value 值
      * @return 之前的值
      */
-    public static String put(String key, String value) {
-        if (key == null) {
-            log.error("key: is null, can't put it into the context map");
-            return value;
+    public String set(String key, String value) {
+        if (key != null && value != null) {
+            if (key.length() > MAX_SIZE) {
+                throw new RuntimeException("key is more than " + MAX_SIZE + ", i can't set it into the context map");
+            } else if (value.length() > MAX_SIZE) {
+                throw new RuntimeException("value is more than " + MAX_SIZE + ", i can't set it into the context map");
+            } else {
+                Map<String, String> contextMap = this.getContextMap();
+                if (contextMap.size() > MAX_CAPACITY) {
+                    throw new RuntimeException("the context map is full, can't set anything");
+                } else {
+                    contextMap.put(key.toLowerCase(), value);
+                }
+            }
+        } else {
+            log.error("key:" + key + " or value:" + value + " is null,i can't set it into the context map");
         }
-        if (key.length() > MAX_SIZE) {
-            throw new RuntimeException("key is more than " + MAX_SIZE + ", can't put it into the context map");
-        }
-        if (value != null && value.length() > MAX_SIZE) {
-            throw new RuntimeException("value is more than " + MAX_SIZE + ", can't put it into the context map");
-        }
-        Map<String, String> contextMap = getContextMap();
-        if (contextMap == null) {
-            contextMap = new HashMap<>(16);
-            SysContext.CONTEXT_MAP.set(contextMap);
-        }
-        if (contextMap.size() > MAX_CAPACITY) {
-            throw new RuntimeException("the context map is full, can't put anything");
-        }
-        if (value == null) {
-            contextMap.remove(convertKey(key));
-            return null;
-        }
-        return contextMap.put(convertKey(key), value);
+        return value;
     }
 
     /**
@@ -99,19 +66,8 @@ public class SysContext {
      *
      * @param key key
      */
-    public static void remove(String key) {
-        if (key == null) {
-            log.error("key: is null, can't remove");
-            return;
-        }
-        final Map<String, String> contextMap = getContextMap();
-        if (contextMap != null) {
-            contextMap.remove(convertKey(key));
-        }
-    }
-
-    private static String convertKey(String key) {
-        return key.toLowerCase();
+    public String remove(String key) {
+        return this.contextMap.remove(key);
     }
 
     /**
@@ -119,68 +75,68 @@ public class SysContext {
      *
      * @return userId
      */
-    public static String getUserId() {
+    public String getUserId() {
         return get(SysConstant.HEADER_USER_ID);
     }
 
-    public static void setUserId(String userId) {
-        put(SysConstant.HEADER_USER_ID, userId);
+    public void setUserId(String userId) {
+        set(SysConstant.HEADER_USER_ID, userId);
     }
 
-    public static String getAccountId() {
+    public String getAccountId() {
         return get(SysConstant.HEADER_ACCOUNT_ID);
     }
 
-    public static void setAccountId(String accountId) {
-        put(SysConstant.HEADER_ACCOUNT_ID, accountId);
+    public void setAccountId(String accountId) {
+        set(SysConstant.HEADER_ACCOUNT_ID, accountId);
     }
 
-    public static String getAccountName() {
+    public String getAccountName() {
         return get(SysConstant.HEADER_ACCOUNT_NAME);
     }
 
-    public static void setAccountName(String accountName) {
-        put(SysConstant.HEADER_ACCOUNT_NAME, accountName);
+    public void setAccountName(String accountName) {
+        set(SysConstant.HEADER_ACCOUNT_NAME, accountName);
     }
 
-    public static String getProjectId() {
+    public String getProjectId() {
         return get(SysConstant.HEADER_PROJECT_ID);
     }
 
-    public static void setProjectId(String projectId) {
-        put(SysConstant.HEADER_PROJECT_ID, projectId);
+    public void setProjectId(String projectId) {
+        set(SysConstant.HEADER_PROJECT_ID, projectId);
     }
 
-    public static String getAppId() {
+    public String getAppId() {
         return get(SysConstant.HEADER_APP_CODE);
     }
 
-    public static void setAppId(String appId) {
-        put(SysConstant.HEADER_APP_CODE, appId);
+    public void setAppId(String appId) {
+        set(SysConstant.HEADER_APP_CODE, appId);
     }
 
-    public static String getCurrentAppCode() {
+    public String getCurrentAppCode() {
         return get(SysConstant.CURRENT_PROJECT_ID_KEY);
     }
 
-    public static void setCurrentAppCode(String appCode) {
-        put(SysConstant.CURRENT_PROJECT_ID_KEY, appCode);
+    public void setCurrentAppCode(String appCode) {
+        set(SysConstant.CURRENT_PROJECT_ID_KEY, appCode);
     }
 
-    public static String getTraceId() {
+    public String getTraceId() {
         return get(SysConstant.HEADER_TRACE_ID);
     }
 
-    public static void setTraceId(String traceId) {
-        put(SysConstant.HEADER_TRACE_ID, traceId);
+    public void setTraceId(String traceId) {
+        set(SysConstant.HEADER_TRACE_ID, traceId);
     }
 
-    public static String getNodeId() {
+    public String getNodeId() {
         return get(SysConstant.HEADER_NODE_ID);
     }
 
-    public static void setNodeId(String nodeId) {
-        put(SysConstant.HEADER_NODE_ID, nodeId);
+    public void setNodeId(String nodeId) {
+        set(SysConstant.HEADER_NODE_ID, nodeId);
     }
 
     /**
@@ -188,12 +144,12 @@ public class SysContext {
      *
      * @return username
      */
-    public static String getUserName() {
+    public String getUserName() {
         return get(SysConstant.HEADER_USER_NAME);
     }
 
-    public static void setUserName(String userName) {
-        put(SysConstant.HEADER_USER_NAME, userName);
+    public void setUserName(String userName) {
+        set(SysConstant.HEADER_USER_NAME, userName);
     }
 
     /**
@@ -201,7 +157,7 @@ public class SysContext {
      *
      * @return userAgent
      */
-    public static String getUseAgent() {
+    public String getUseAgent() {
         return get(SysConstant.HEADER_USER_AGENT);
     }
 
@@ -210,12 +166,12 @@ public class SysContext {
      *
      * @return tenantId
      */
-    public static String getTenantId() {
+    public String getTenantId() {
         return get(SysConstant.HEADER_TENANT_ID);
     }
 
-    public static void setTenantId(String tenantId) {
-        put(SysConstant.HEADER_TENANT_ID, tenantId);
+    public void setTenantId(String tenantId) {
+        set(SysConstant.HEADER_TENANT_ID, tenantId);
     }
 
     /**
@@ -224,7 +180,7 @@ public class SysContext {
      *
      * @return locale
      */
-    public static String getLocale() {
+    public String getLocale() {
         String locale = get(SysConstant.HEADER_LOCALE);
         if (locale == null || locale.isEmpty()) {
             return SysConstant.DEFAULT_LOCALE;
@@ -232,8 +188,8 @@ public class SysContext {
         return locale;
     }
 
-    public static void setLocale(String locale) {
-        put(SysConstant.HEADER_LOCALE, locale);
+    public void setLocale(String locale) {
+        set(SysConstant.HEADER_LOCALE, locale);
     }
 
     /**
@@ -242,7 +198,7 @@ public class SysContext {
      *
      * @return 时区
      */
-    public static TimeZone getTimeZone() {
+    public TimeZone getTimeZone() {
         String zoneOffset = get(SysConstant.HEADER_TIME_ZONE);
         if (StrUtil.isBlank(zoneOffset)) {
             return TimeZone.getDefault();
@@ -252,8 +208,8 @@ public class SysContext {
         return TimeZone.getTimeZone(offset);
     }
 
-    public static void setTimeZone(String timeZone) {
-        put(SysConstant.HEADER_TIME_ZONE, timeZone);
+    public void setTimeZone(String timeZone) {
+        set(SysConstant.HEADER_TIME_ZONE, timeZone);
     }
 
     /**
@@ -261,48 +217,32 @@ public class SysContext {
      *
      * @return clientIp
      */
-    public static String getClientIp() {
+    public String getClientIp() {
         return get(SysConstant.HEADER_USER_IP);
     }
 
-    public static void setClientIp(String clientIp) {
-        put(SysConstant.HEADER_USER_IP, clientIp);
+    public void setClientIp(String clientIp) {
+        set(SysConstant.HEADER_USER_IP, clientIp);
     }
 
-    public static void setUserAgent(String userAgent) {
-        put(SysConstant.HEADER_USER_AGENT, userAgent);
+    public void setUserAgent(String userAgent) {
+        set(SysConstant.HEADER_USER_AGENT, userAgent);
     }
 
-    public static String getServerHost() {
+    public String getServerHost() {
         return get(SysConstant.HEADER_SERVER_HOST);
     }
 
-    public static void setServerHost(String serverHost) {
-        put(SysConstant.HEADER_SERVER_HOST, serverHost);
+    public void setServerHost(String serverHost) {
+        set(SysConstant.HEADER_SERVER_HOST, serverHost);
     }
 
-    public static void removeServerHost() {
-        getContextMap().remove(SysConstant.HEADER_SERVER_HOST);
+    public void removeServerHost() {
+        this.remove(SysConstant.HEADER_SERVER_HOST);
     }
 
-    public static void clean() {
-        CONTEXT_MAP.remove();
-    }
-
-    /**
-     * 清除指定的Key对应的元素
-     *
-     * @param key key
-     */
-    public static void clean(String key) {
-        if (key == null) {
-            log.error("key is null,can't remove");
-            return;
-        }
-        Map<String, String> map = CONTEXT_MAP.get();
-        if (map != null) {
-            map.remove(convertKey(key));
-        }
+    public void clean() {
+        contextMap.clear();
     }
 }
 

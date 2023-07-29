@@ -1,6 +1,6 @@
 package com.github.fanzezhen.common.swagger;
 
-import com.github.fanzezhen.common.core.model.bean.SwaggerRequestParameter;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -14,5 +14,6 @@ import java.util.List;
 @Component("FzzSwaggerProperty")
 @ConfigurationProperties(prefix = "com.github.fanzezhen.common.swagger")
 public class SwaggerProperty {
-    private List<SwaggerRequestParameter> headerRequestParameterList;
+    private boolean headerParameterCommonDisabled;
+    private List<Parameter> headerParameterList;
 }

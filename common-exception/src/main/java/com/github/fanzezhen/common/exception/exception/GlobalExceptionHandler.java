@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import java.util.List;
@@ -37,13 +37,6 @@ public class GlobalExceptionHandler {
     public ActionResult<Object> exception(Exception e) {
         log.error("全局异常信息 ex={}", e.getMessage(), e);
         return ActionResult.failed(CoreExceptionEnum.SERVICE_ERROR);
-    }
-
-    @ExceptionHandler(value = {NoHandlerFoundException.class})
-    @ResponseStatus(HttpStatus.OK)
-    public ActionResult<Object> noHandlerFoundException(Exception e, HttpServletRequest request) {
-        log.error("request:{} Method:{} message:{}", request.getRequestURI(), request.getMethod(), e.getMessage(), e);
-        return ActionResult.failed("unhandled  server exception", request.getRequestURI());
     }
 
     /**

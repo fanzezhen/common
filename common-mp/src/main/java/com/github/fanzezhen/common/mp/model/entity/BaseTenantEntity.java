@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.mp.model.entity;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -30,7 +30,7 @@ public class BaseTenantEntity extends BaseEntity {
     /**
      * 租户id
      */
-    @ApiModelProperty("租户id")
+    @Schema(name = "租户id")
     @TableField(value = "TENANT_ID")
     @Column(name = "TENANT_ID",columnDefinition = "varchar(50) not null comment '租户id'", nullable = false)
     protected String tenantId;

@@ -5,6 +5,7 @@ import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.ErrorResponseException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -29,6 +30,11 @@ public class ErrorInfo implements Serializable {
         this.message = message;
     }
 
+    public ErrorInfo(String code, String message) {
+        this.code = Integer.parseInt(code);
+        this.message = message;
+    }
+
     public ErrorInfo(AbstractBaseExceptionEnum exceptionEnum) {
         this.code = exceptionEnum.getCode();
         this.message = exceptionEnum.getMessage();
@@ -37,5 +43,10 @@ public class ErrorInfo implements Serializable {
     public ErrorInfo(ServiceException serviceException) {
         this.code = serviceException.getCode();
         this.message = serviceException.getMessage();
+    }
+
+    public ErrorInfo(ErrorResponseException errorResponseException) {
+        this.code = errorResponseException.getStatusCode().value();
+        this.message = errorResponseException.getMessage();
     }
 }

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.annotation.*;
 import com.github.fanzezhen.common.mp.enums.DelFlagEnum;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +31,7 @@ public class BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     @TableId(value = "ID", type = IdType.ASSIGN_UUID)
-    @ApiModelProperty("主键ID")
+    @Schema(name = "主键ID")
     private String id;
 
     /**
@@ -39,7 +39,7 @@ public class BaseEntity implements Serializable {
      */
     @Column(name = "CREATE_TIME")
     @TableField(value = "CREATE_TIME", fill = FieldFill.INSERT)
-    @ApiModelProperty("创建时间")
+    @Schema(name = "创建时间")
     private LocalDateTime createTime;
 
     /**
@@ -47,7 +47,7 @@ public class BaseEntity implements Serializable {
      */
     @Column(name = "CREATE_USER_ID")
     @TableField(value = "CREATE_USER_ID", fill = FieldFill.INSERT)
-    @ApiModelProperty("创建人ID")
+    @Schema(name = "创建人ID")
     private String createUserId;
 
     /**
@@ -57,7 +57,7 @@ public class BaseEntity implements Serializable {
     @TableLogic
     @Column(name = "DEL_FLAG")
     @TableField(value = "DEL_FLAG", fill = FieldFill.INSERT)
-    @ApiModelProperty("删除标识（1-已删除；0-未删除），默认 0")
+    @Schema(name = "删除标识（1-已删除；0-未删除），默认 0")
     @JSONField(serialzeFeatures = SerializerFeature.WriteEnumUsingToString)
     private DelFlagEnum delFlag;
 
@@ -66,7 +66,7 @@ public class BaseEntity implements Serializable {
      */
     @Column(name = "UPDATE_TIME")
     @TableField(value = "UPDATE_TIME", fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty("更新时间")
+    @Schema(name = "更新时间")
     private LocalDateTime updateTime;
 
     /**
@@ -74,7 +74,7 @@ public class BaseEntity implements Serializable {
      */
     @Column(name = "UPDATE_USER_ID")
     @TableField(value = "UPDATE_USER_ID", fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty("更新者ID")
+    @Schema(name = "更新者ID")
     private String updateUserId;
 
     public boolean isDeleted() {
