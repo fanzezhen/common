@@ -4,6 +4,7 @@ import com.github.fanzezhen.common.core.constant.SysConstant;
 import com.github.fanzezhen.common.core.enums.NoRepeatTypeEnum;
 
 import java.lang.annotation.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 防止重复提交注解
@@ -29,8 +30,9 @@ public @interface NoRepeat {
     String[] paramArgs() default {};
     String[] headerArgs() default {SysConstant.HEADER_TENANT_ID};
 
+    TimeUnit timeUnit() default TimeUnit.SECONDS;
     /**
      * 超时时间（毫秒）
      */
-    long timeoutMillis() default 1000L;
+    long timeout() default 1;
 }

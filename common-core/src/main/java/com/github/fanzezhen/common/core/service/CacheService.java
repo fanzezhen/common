@@ -1,5 +1,7 @@
 package com.github.fanzezhen.common.core.service;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author zezhen.fan
  */
@@ -17,13 +19,15 @@ public interface CacheService {
      *
      * @param k       key
      * @param v       value
-     * @param timeout 过期时间（毫秒）
+     * @param timeoutMillis 过期时间（毫秒）
      */
-    void put(String k, String v, long timeout);
+    void put(String k, String v, long timeoutMillis);
     /**
      * 删除
      *
      * @param k       key
      */
     void remove(String k);
+
+    void set(String k, String v, long timeout, TimeUnit timeUnit);
 }

@@ -6,17 +6,14 @@ import com.github.fanzezhen.common.core.property.ProjectProperty;
 import com.github.fanzezhen.common.core.constant.SysConstant;
 import com.github.fanzezhen.common.core.model.bean.SwaggerRequestParameter;
 import com.github.fanzezhen.common.swagger.SwaggerProperty;
+import io.swagger.v3.oas.models.ExternalDocumentation;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.builders.RequestParameterBuilder;
-import springfox.documentation.oas.annotations.EnableOpenApi;
-import springfox.documentation.service.*;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -26,7 +23,6 @@ import java.util.stream.Collectors;
 /**
  * @author zezhen.fan
  */
-@EnableOpenApi
 @Configuration
 public class Swagger3Config implements WebMvcConfigurer {
     @Resource
@@ -34,38 +30,24 @@ public class Swagger3Config implements WebMvcConfigurer {
     @Resource
     private SwaggerProperty swaggerProperty;
 
-    @Bean
-    public Docket createRestApi() {
-        return new Docket(DocumentationType.OAS_30)
-                .pathMapping(StrUtil.SLASH)
-                // 是否开启swagger配置，生产环境需关闭
-                .enable(true)
-                .apiInfo(this.apiInfo())
-                // 指定需要发布到Swagger的接口目录，不支持通配符
-                .select()
-                .apis(RequestHandlerSelectors.basePackage(projectProperty.getBasePackage()))
-                .paths(PathSelectors.any())
-                .build()
-                // 全局请求参数
-                .globalRequestParameters(getHeaderGlobalRequestParameters())
-                // 支持的通讯协议集合
-                .protocols(Set.of("https", "http"))
-                ;
+    private Info info() {
+        return new Info()
+                .title(projectProperty.getTitle())
+                .description(projectProperty.getDescription())
+                .contact(new Contact()
+                        .name(projectProperty.getLinkMan())
+                        .url(projectProperty.getLinkUrl())
+                        .email(projectProperty.getLinkEmail())
+                )
+                .version(projectProperty.getVersion());
     }
 
-    /**
-     * 项目信息
-     */
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title(projectProperty.getTitle())
-                .description(projectProperty.getDescription())
-                .contact(new Contact(
-                        projectProperty.getLinkMan(), projectProperty.getLinkUrl(), projectProperty.getLinkEmail()))
-                .version(projectProperty.getVersion())
-                .license(projectProperty.getLicense())
-                .licenseUrl(projectProperty.getLicenseUrl())
-                .build();
+    @Bean
+    public OpenAPI springOpenApi() {
+        new OpenAPI().paths()
+        return new OpenAPI().info(info());
     }
+
 
     private List<RequestParameter> getHeaderGlobalRequestParameters() {
         List<SwaggerRequestParameter> headerList = swaggerProperty.getHeaderRequestParameterList();

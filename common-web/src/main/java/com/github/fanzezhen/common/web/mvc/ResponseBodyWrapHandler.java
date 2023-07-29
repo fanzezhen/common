@@ -1,17 +1,19 @@
 package com.github.fanzezhen.common.web.mvc;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.fanzezhen.common.core.model.response.ActionResult;
+import com.github.fanzezhen.common.core.property.CommonProperty;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.Set;
 
 
@@ -22,10 +24,12 @@ public class ResponseBodyWrapHandler implements HandlerMethodReturnValueHandler 
 
     private final HandlerMethodReturnValueHandler delegate;
     private final Set<String> autoWrapResponseIgnoreUrlSet;
+    private final String[] resourcesFileSuffixArr;
 
-    public ResponseBodyWrapHandler(HandlerMethodReturnValueHandler delegate, String autoWrapResponseIgnoreUrls) {
+    public ResponseBodyWrapHandler(HandlerMethodReturnValueHandler delegate, CommonProperty commonProperty) {
         this.delegate = delegate;
-        this.autoWrapResponseIgnoreUrlSet = CollUtil.newHashSet(autoWrapResponseIgnoreUrls.split(","));
+        this.autoWrapResponseIgnoreUrlSet = CollUtil.newHashSet(commonProperty.getAutoWrapResponseIgnoreUrls().split(StrUtil.COMMA));
+        this.resourcesFileSuffixArr = commonProperty.getResourcesFileSuffixArr();
     }
 
     @Override
@@ -53,7 +57,12 @@ public class ResponseBodyWrapHandler implements HandlerMethodReturnValueHandler 
                     requestUri = requestUri.substring(0, requestUri.indexOf(separator));
                 }
                 // 对特殊的URL不进行统一包装结果处理
-                if (CollectionUtil.contains(autoWrapResponseIgnoreUrlSet, requestUri)) {
+                AntPathMatcher antPathMatcher = new AntPathMatcher();
+                String finalRequestUri = requestUri;
+                if (StrUtil.endWithAnyIgnoreCase(requestUri, resourcesFileSuffixArr) || (
+                        autoWrapResponseIgnoreUrlSet != null &&
+                                autoWrapResponseIgnoreUrlSet.stream().anyMatch(ignore ->
+                                        antPathMatcher.match(ignore, finalRequestUri)))) {
                     delegate.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
                 } else {
                     delegate.handleReturnValue(ActionResult.success(returnValue), returnType, mavContainer, webRequest);

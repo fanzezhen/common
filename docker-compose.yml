@@ -182,6 +182,10 @@ services:
       - "9848:9848"
       - "9849:9849"
     environment:
+      NACOS_AUTH_ENABLE: true
+        -Dnacos.core.auth.plugin.nacos.token.secret.key=SecretKey012345678901234567890123456789012345678901234567890123456789
+        -Dnacos.core.auth.server.identity.key=serverIdentity
+        -Dnacos.core.auth.server.identity.value=SecretKey012345678901234567890123456789012345678901234567890123456789
       PREFER_HOST_MODE: hostname
       MODE: standalone
       SPRING_DATASOURCE_PLATFORM: mysql

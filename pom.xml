@@ -6,7 +6,8 @@
 
     <artifactId>common</artifactId>
     <groupId>com.github.fanzezhen</groupId>
-    <version>3.0</version>
+    <packaging>pom</packaging>
+    <version>3.0.1</version>
 
     <properties>
         <com.github.fanzezhen.jdk8.version>0.0.3.4</com.github.fanzezhen.jdk8.version>
@@ -16,11 +17,11 @@
         <cn.hutool.version>5.8.20</cn.hutool.version>
         <cn.stylefeng.roses.version>2.2.13</cn.stylefeng.roses.version>
         <com.github.penggle.version>2.3.2</com.github.penggle.version>
-        <com.alibaba.version>1.2.68</com.alibaba.version>
+        <com.alibaba.version>2.0.37</com.alibaba.version>
         <com.alibaba.boot.version>0.2.12</com.alibaba.boot.version>
-        <com.alibaba.cloud.version>2.2.9.RELEASE</com.alibaba.cloud.version>
-        <com.alibaba.csp.version>1.8.5</com.alibaba.csp.version>
-        <com.baomidou.version>3.5.2</com.baomidou.version>
+        <com.alibaba.cloud.version>2022.0.0.0</com.alibaba.cloud.version>
+        <com.alibaba.csp.version>2.0.0-alpha</com.alibaba.csp.version>
+        <com.baomidou.version>3.5.3</com.baomidou.version>
         <com.fasterxml.jackson.version>2.13.1</com.fasterxml.jackson.version>
         <com.google.code.gson.version>2.8.6</com.google.code.gson.version>
         <com.google.guava.version>29.0-jre</com.google.guava.version>
@@ -34,6 +35,7 @@
         <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
         <io.projectreactor.version>3.4.7</io.projectreactor.version>
         <io.springfox.version>3.0.0</io.springfox.version>
+        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
         <javax.annotation.version>1.3.2</javax.annotation.version>
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <javax.persistence.version>2.2</javax.persistence.version>
@@ -49,18 +51,19 @@
         <org.apache.commons.commons-beanutils.version>1.9.4</org.apache.commons.commons-beanutils.version>
         <org.apache.commons.commons-collections4.version>4.4</org.apache.commons.commons-collections4.version>
         <org.apache.commons.commons-lang3.version>3.12.0</org.apache.commons.commons-lang3.version>
-        <org.apache.logging.log4j.version>2.16.0</org.apache.logging.log4j.version>
+        <org.apache.logging.log4j.version>2.20.0</org.apache.logging.log4j.version>
         <org.apache.poi.version>4.1.2</org.apache.poi.version>
         <org.apache.tomcat.embed.version>10.0.0-M7</org.apache.tomcat.embed.version>
-        <org.hibernate.validator.version>6.2.5.Final</org.hibernate.validator.version>
+        <org.hibernate.validator.version>8.0.1.Final</org.hibernate.validator.version>
         <org.mybatis.spring.boot.version>2.2.0</org.mybatis.spring.boot.version>
         <org.projectlombok.version>1.18.22</org.projectlombok.version>
         <org.reflections.version>0.9.12</org.reflections.version>
-        <org.slf4j.version>1.7.32</org.slf4j.version>
+        <org.slf4j.version>2.0.7</org.slf4j.version>
+        <org.springdoc.version>2.1.0</org.springdoc.version>
         <org.springframework.version>6.0.11</org.springframework.version>
         <org.springframework.batch.version>4.2.4.RELEASE</org.springframework.batch.version>
-        <org.springframework.boot.version>3.1.1</org.springframework.boot.version>
-        <org.springframework.cloud.version>3.1.7</org.springframework.cloud.version>
+        <org.springframework.boot.version>3.1.2</org.springframework.boot.version>
+        <org.springframework.cloud.version>4.0.3</org.springframework.cloud.version>
         <org.springframework.data.version>2.4.2</org.springframework.data.version>
         <org.springframework.security.version>6.1.2</org.springframework.security.version>
         <org.springframework.social.version>1.1.6.RELEASE</org.springframework.social.version>
@@ -125,11 +128,6 @@
             <dependency>
                 <groupId>com.github.fanzezhen.common</groupId>
                 <artifactId>common-web</artifactId>
-                <version>${com.github.fanzezhen.common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.fanzezhen.common</groupId>
-                <artifactId>common-gateway</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
@@ -235,11 +233,6 @@
                 <version>${com.fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${com.fasterxml.jackson.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${com.google.code.gson.version}</version>
@@ -255,14 +248,9 @@
                 <version>${com.zaxxer.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-annotations</artifactId>
-                <version>1.5.24</version>
-            </dependency>
-            <dependency>
                 <groupId>jakarta.servlet</groupId>
                 <artifactId>jakarta.servlet-api</artifactId>
-                <version>6.0.0</version>
+                <version>${jakarta.servlet.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
@@ -289,6 +277,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${org.apache.commons.commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${org.apache.logging.log4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>p6spy</groupId>
@@ -323,16 +316,6 @@
                 <artifactId>reactor-test</artifactId>
                 <scope>test</scope>
                 <version>${io.projectreactor.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${io.springfox.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>${io.springfox.version}</version>
             </dependency>
             <!--net-->
             <dependency>
@@ -426,6 +409,11 @@
             </dependency>
             <!--spring-->
             <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${org.springdoc.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
                 <version>${org.springframework.version}</version>
@@ -498,6 +486,11 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-log4j2</artifactId>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-configuration-processor</artifactId>
                 <optional>true</optional>
                 <version>${org.springframework.boot.version}</version>
@@ -535,6 +528,11 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-validation</artifactId>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${org.springframework.boot.version}</version>
             </dependency>
@@ -558,7 +556,18 @@
                 <artifactId>spring-cloud-starter-gateway</artifactId>
                 <version>${org.springframework.cloud.version}</version>
             </dependency>
-
+            <!-- SpringCloud-2020.X.X以后版本官方重构了bootstrap引导配置的加载方式，需要添加以下依赖 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-bootstrap</artifactId>
+                <version>${org.springframework.cloud.version}</version>
+            </dependency>
+            <!-- 负载均衡  -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+                <version>${org.springframework.cloud.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
@@ -586,6 +595,11 @@
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-core</artifactId>
+                <version>${com.baomidou.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-extension</artifactId>
                 <version>${com.baomidou.version}</version>
             </dependency>
@@ -603,11 +617,6 @@
                 <groupId>eu.bitwalker</groupId>
                 <artifactId>UserAgentUtils</artifactId>
                 <version>${eu.bitwalker.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
-                <version>${io.jsonwebtoken.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
@@ -651,21 +660,11 @@
                 <type>pom</type>
                 <scope>runtime</scope>
             </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-netflix-ribbon</artifactId>
-                <version>${org.springframework.cloud.version}</version>
-            </dependency>
             <!-- spring cloud Eureka Client 启动器，因为Eureka Server开启了安全校验，
                 所有需要依赖更大范围的jar包资源spring-cloud-starter-eureka-server-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-                <version>${org.springframework.cloud.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
                 <version>${org.springframework.cloud.version}</version>
             </dependency>
             <dependency>
@@ -770,13 +769,11 @@
         <module>common-exception</module>
         <module>common-web</module>
         <module>common-log</module>
-        <module>common-gateway</module>
         <module>common-sentinel</module>
         <module>common-redis</module>
         <module>common-mp</module>
     </modules>
 
-    <packaging>pom</packaging>
     <name>${project.groupId}.${project.artifactId}</name>
     <url>https://github.com/fanzezhen/${project.artifactId}</url>
     <description>Commonly used</description>

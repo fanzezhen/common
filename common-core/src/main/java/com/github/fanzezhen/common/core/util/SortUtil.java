@@ -1,9 +1,14 @@
 package com.github.fanzezhen.common.core.util;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 
 /**
  * @author zezhen.fan
@@ -76,8 +81,25 @@ public class SortUtil {
         quicksort(arr, i + 1, right);
     }
 
+    public static <T> T getFirstByOrder(Collection<T> beans) {
+        if (CollUtil.isEmpty(beans)) {
+            return null;
+        }
+        return beans.stream().min(Comparator.comparingInt(bean -> {
+            if (bean instanceof Ordered) {
+                return ((Ordered) bean).getOrder();
+            }
+            Class<?> beanClass = bean.getClass();
+            Order order = beanClass.getAnnotation(Order.class);
+            if (order != null) {
+                return order.value();
+            }
+            return Integer.MAX_VALUE;
+        })).get();
+    }
+
     public static void main(String[] args) {
-        int[] arr = {8, 6, 1, 7, 2,9};
+        int[] arr = {8, 6, 1, 7, 2, 9};
         quicksort(arr, 0, 4);
         System.out.println(Arrays.toString(arr));
         JSONArray objects = new JSONArray().fluentAdd("1").fluentAdd("3");

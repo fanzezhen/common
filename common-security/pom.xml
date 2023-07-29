@@ -5,7 +5,7 @@
     <parent>
         <artifactId>common</artifactId>
         <groupId>com.github.fanzezhen</groupId>
-        <version>3.0</version>
+        <version>3.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,11 +13,6 @@
     <artifactId>common-security</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <!-- 引入缓存和redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

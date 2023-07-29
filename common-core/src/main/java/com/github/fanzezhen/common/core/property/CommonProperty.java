@@ -11,8 +11,9 @@ import org.springframework.stereotype.Component;
 @Component("FzzCommonProperty")
 @ConfigurationProperties(prefix = "com.github.fanzezhen.common.core.common")
 public class CommonProperty {
-    private final boolean responseJson = true;
-    private final String autoWrapResponseIgnoreUrls = "";
-    private final String noRepeatedCacheServiceBean = "FzzCacheServiceImpl";
+    private boolean responseJson = true;
+    private String[] resourcesFileSuffixArr = new String[]{".html", ".css", ".js", ".json", ".doc"};
+    private String autoWrapResponseIgnoreUrls = "/v2/api-docs/**,/v3/api-docs/**,/swagger**,/webjars/**";
+    private String noRepeatedCacheServiceBean = "CommonCacheServiceImpl";
 
 }
