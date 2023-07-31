@@ -28,6 +28,9 @@ public class SortUtil {
      * @return 排序后数组
      */
     public static int[] bubbleSort(int[] arr) {
+        if (arr == null || arr.length <= 1) {
+            return arr;
+        }
         for (int i = 0; i < arr.length - 1; i++) {
             for (int j = 0; j < arr.length - 1 - i; j++) {
                 if (arr[j] > arr[j + 1]) {
@@ -53,6 +56,13 @@ public class SortUtil {
      *
      * @param arr 待排序数组
      */
+    public static void quicksort(int[] arr) {
+        if (arr == null || arr.length <= 1) {
+            return;
+        }
+        quicksort(arr, 0, arr.length - 1);
+    }
+
     public static void quicksort(int[] arr, int left, int right) {
         if (left >= right) {
             return;
@@ -60,7 +70,7 @@ public class SortUtil {
         int base = arr[left];
         int i = left, j = right;
         while (i < j) {
-            while (arr[j] >= base && i < j) {
+            while (arr[j] > base && i < j) {
                 j--;
             }
             while (arr[i] <= base && i < j) {
@@ -98,15 +108,4 @@ public class SortUtil {
         })).get();
     }
 
-    public static void main(String[] args) {
-        int[] arr = {8, 6, 1, 7, 2, 9};
-        quicksort(arr, 0, 4);
-        System.out.println(Arrays.toString(arr));
-        JSONArray objects = new JSONArray().fluentAdd("1").fluentAdd("3");
-        JSONObject raw = new JSONObject(1).fluentPut("value", objects);
-        System.out.println(objects);
-        System.out.println(raw.getString("value"));
-        String str = JSONObject.parseArray(objects.toJSONString(), String.class).get(0);
-        System.out.println(str);
-    }
 }
