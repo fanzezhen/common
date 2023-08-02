@@ -18,7 +18,7 @@ public class SearchUtil {
             return -1;
         }
         int end = arr.length;
-        if (end <= 0) {
+        if (end == 0) {
             return -1;
         }
         int start = 0;
