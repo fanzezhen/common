@@ -14,9 +14,9 @@ common
     * common-web                   ：web模块，通用的mvc配置
    
 2. 项目介绍
-   * 后端主体框架： Springboot 2
+   * 后端主体框架： Springboot 3
    * 持久层： MyBatis-Plus
-   * 使用java版本： jdk 11+
+   * 使用java版本： jdk 17+
    
 3. 运行条件
    * 每个模块都有启用该模块配置的注解，详见各模块中的 README.md

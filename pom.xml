@@ -57,6 +57,7 @@
         <org.hibernate.validator.version>8.0.1.Final</org.hibernate.validator.version>
         <org.mybatis.spring.boot.version>2.2.0</org.mybatis.spring.boot.version>
         <org.projectlombok.version>1.18.22</org.projectlombok.version>
+        <org.redisson.version>3.23.2</org.redisson.version>
         <org.reflections.version>0.9.12</org.reflections.version>
         <org.slf4j.version>2.0.7</org.slf4j.version>
         <org.springdoc.version>2.1.0</org.springdoc.version>
@@ -395,6 +396,11 @@
                 <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator</artifactId>
                 <version>${org.hibernate.validator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>${org.redisson.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.reflections</groupId>
