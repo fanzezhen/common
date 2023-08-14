@@ -5,8 +5,6 @@ import org.junit.Ignore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author zezhen.fan

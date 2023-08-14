@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.exception.exception;
 
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
-import com.github.fanzezhen.common.core.property.CommonProperty;
+import com.github.fanzezhen.common.core.property.CommonProperties;
 import com.github.fanzezhen.common.core.util.HttpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,16 +33,16 @@ import java.util.Map;
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Component
-public class DefaultExceptionResolver implements HandlerExceptionResolver {
+public class CommonExceptionResolver implements HandlerExceptionResolver {
     @Resource
-    private CommonProperty responseProperty;
+    private CommonProperties commonProperties;
 
     private final View defaultErrorJsonView;
 
     private static final boolean FAST_JSON_VIEW_PRESENT = ClassUtils.isPresent(
-            "com.alibaba.fastjson.support.spring.FastJsonJsonView", DefaultExceptionResolver.class.getClassLoader());
+            "com.alibaba.fastjson.support.spring.FastJsonJsonView", CommonExceptionResolver.class.getClassLoader());
 
-    public DefaultExceptionResolver() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
+    public CommonExceptionResolver() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
             NoSuchMethodException, InvocationTargetException {
         if (FAST_JSON_VIEW_PRESENT) {
             defaultErrorJsonView = (View) Class.forName(
@@ -59,7 +59,7 @@ public class DefaultExceptionResolver implements HandlerExceptionResolver {
         int errorStatus = HttpServletResponse.SC_OK;
         response.setStatus(errorStatus);
         ModelAndView modelAndView;
-        if (responseProperty.isResponseJson()) {
+        if (commonProperties.isResponseJson()) {
             return jsonResponse(ex);
         }
         if (handler instanceof HandlerMethod handlerMethod) {

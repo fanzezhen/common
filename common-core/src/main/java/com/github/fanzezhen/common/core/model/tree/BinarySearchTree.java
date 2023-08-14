@@ -1,26 +1,29 @@
 package com.github.fanzezhen.common.core.model.tree;
 
+/**
+ * @author zezhen.fan
+ */
 public class BinarySearchTree<T extends Comparable<T>> {
-    public Node<T> root;
+    public BinaryNode<T> root;
 
     public boolean insert(T data) {
         if (data == null) {
             return false;
         }
         if (root == null) {
-            root = new Node<>(data);
+            root = new BinaryNode<>(data);
         }
-        Node<T> cur = root;
+        BinaryNode<T> cur = root;
         while (true) {
             if (data.compareTo(cur.data) < 0) {
                 if (cur.left == null) {
-                    cur.left = new Node<>(data);
+                    cur.left = new BinaryNode<>(data);
                     return true;
                 }
                 cur = cur.left;
             } else if (data.compareTo(cur.data) > 0) {
                 if (cur.right == null) {
-                    cur.right = new Node<>(data);
+                    cur.right = new BinaryNode<>(data);
                     return true;
                 }
                 cur = cur.right;
@@ -34,7 +37,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         if (root == null || data == null) {
             return false;
         }
-        Node<T> cur = root;
+        BinaryNode<T> cur = root;
         while (true) {
             if (data.compareTo(cur.data) < 0) {
                 cur = cur.left;

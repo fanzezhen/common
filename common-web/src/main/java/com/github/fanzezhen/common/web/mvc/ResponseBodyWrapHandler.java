@@ -3,7 +3,7 @@ package com.github.fanzezhen.common.web.mvc;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.fanzezhen.common.core.model.response.ActionResult;
-import com.github.fanzezhen.common.core.property.CommonProperty;
+import com.github.fanzezhen.common.core.property.CommonProperties;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -26,10 +26,10 @@ public class ResponseBodyWrapHandler implements HandlerMethodReturnValueHandler 
     private final Set<String> autoWrapResponseIgnoreUrlSet;
     private final String[] resourcesFileSuffixArr;
 
-    public ResponseBodyWrapHandler(HandlerMethodReturnValueHandler delegate, CommonProperty commonProperty) {
+    public ResponseBodyWrapHandler(HandlerMethodReturnValueHandler delegate, CommonProperties commonProperties) {
         this.delegate = delegate;
-        this.autoWrapResponseIgnoreUrlSet = CollUtil.newHashSet(commonProperty.getAutoWrapResponseIgnoreUrls().split(StrUtil.COMMA));
-        this.resourcesFileSuffixArr = commonProperty.getResourcesFileSuffixArr();
+        this.autoWrapResponseIgnoreUrlSet = CollUtil.newHashSet(commonProperties.getAutoWrapResponseIgnoreUrls().split(StrUtil.COMMA));
+        this.resourcesFileSuffixArr = commonProperties.getResourcesFileSuffixArr();
     }
 
     @Override

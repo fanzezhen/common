@@ -10,10 +10,11 @@ import org.springframework.stereotype.Component;
 @Data
 @Component("FzzCommonProperty")
 @ConfigurationProperties(prefix = "com.github.fanzezhen.common.core.common")
-public class CommonProperty {
+public class CommonProperties {
     private boolean responseJson = true;
     private String[] resourcesFileSuffixArr = new String[]{".html", ".css", ".js", ".json", ".doc"};
     private String autoWrapResponseIgnoreUrls = "/v2/api-docs/**,/v3/api-docs/**,/swagger**,/webjars/**";
     private String noRepeatedCacheServiceBean = "CommonCacheServiceImpl";
+    private CommonThreadPoolProperties threadPoolProperties = new CommonThreadPoolProperties();
 
 }
