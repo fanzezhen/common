@@ -36,7 +36,7 @@ public interface SysConstant {
     String HEADER_NGINX_REAL_IP = "X-Real-IP";
     String HEADER_USER_AGENT = "User-Agent";
     /***************公共header********************/
-    String CONTEXT_HEADER_PREFIX = "common-";
+    String CONTEXT_HEADER_PREFIX = "common-header-";
     String HEADER_TOKEN = CONTEXT_HEADER_PREFIX + "token";
     /**
      * 应用Id

@@ -1,13 +1,15 @@
 package com.github.fanzezhen.common.core.context;
 
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.StrUtil;
 import com.github.fanzezhen.common.core.constant.SysConstant;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.ZoneOffset;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * @author zezhen.fan
@@ -24,6 +26,7 @@ public class SysContext {
      * context map key 或者 value 最大值
      */
     public static final Integer MAX_SIZE = 1024;
+
     public CaseInsensitiveMap<String, String> getContextMap() {
         return contextMap;
     }
@@ -35,7 +38,7 @@ public class SysContext {
     /**
      * （设置名值对。如果Map之前为null，则会被初始化） Put the key-value into the context map;
      * <p/>
-     * Initialize the map if the it doesn't exist.
+     * Initialize the map if it doesn't exist.
      *
      * @param key   键
      * @param value 值
@@ -243,6 +246,36 @@ public class SysContext {
 
     public void clean() {
         contextMap.clear();
+    }
+
+    public List<Pair<String, String>> toHeaders() {
+        if (this.contextMap.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            List<Pair<String, String>> pairs = new ArrayList<>();
+            for (Map.Entry<String, String> entry : this.contextMap.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                if (StrUtil.isBlank(value)) {
+                    log.warn("header:" + key + "'s value:" + value + " is empty,will not add to headers");
+                } else if (StrUtil.startWithIgnoreCase(key, SysConstant.CONTEXT_HEADER_PREFIX)) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("adding header{" + key + ":" + value + "}");
+                    }
+
+                    if (!StrUtil.equalsIgnoreCase(key, SysConstant.HEADER_ACCOUNT_NAME) && !StrUtil.equalsIgnoreCase(key, SysConstant.HEADER_USER_NAME)) {
+                        pairs.add(this.convertKey(key, value, false));
+                    } else {
+                        pairs.add(this.convertKey(key, value, true));
+                    }
+                }
+            }
+            return pairs;
+        }
+    }
+
+    private Pair<String, String> convertKey(String name, String value, boolean encoding) {
+        return encoding ? Pair.of(name, URLEncoder.encode(value, StandardCharsets.UTF_8)) : Pair.of(name, value);
     }
 }
 

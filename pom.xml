@@ -31,6 +31,7 @@
         <com.zaxxer.version>3.4.5</com.zaxxer.version>
         <commons-net.version>3.6</commons-net.version>
         <eu.bitwalker.version>1.21</eu.bitwalker.version>
+        <io.github.openfeign.version>12.4</io.github.openfeign.version>
         <io.jaegertracing.version>1.6.0</io.jaegertracing.version>
         <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
         <io.projectreactor.version>3.4.7</io.projectreactor.version>
@@ -295,6 +296,11 @@
                 <version>${mysql.version}</version>
             </dependency>
             <!--io-->
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-core</artifactId>
+                <version>${io.github.openfeign.version}</version>
+            </dependency>
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-boot-starter</artifactId>
