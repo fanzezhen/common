@@ -37,7 +37,7 @@ public class SysUserDict extends AbstractDict {
 
     @Override
     protected void initBeAdapter() {
-        putFieldAdapter("sex", new LinkedHashMap<>(4) {{
+        putFieldAdapter("sex", new LinkedHashMap<>(4, 1) {{
             put(SexEnum.WOMAN.getDesc(), SexEnum.WOMAN.code);
             put(SexEnum.MAN.getDesc(), SexEnum.MAN.code);
             put(SexEnum.UNKNOWN.getDesc(), SexEnum.UNKNOWN.code);

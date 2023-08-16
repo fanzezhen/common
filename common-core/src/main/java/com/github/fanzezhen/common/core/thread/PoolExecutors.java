@@ -15,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @Slf4j
 public class PoolExecutors {
-    private static final Map<String, CommonThreadPoolExecutor> poolExecutorMap = new ConcurrentHashMap<>(12);
+    private static final Map<String, CommonThreadPoolExecutor> poolExecutorMap = new ConcurrentHashMap<>(8);
     private static final Lock lock = new ReentrantLock();
     private static final CommonThreadPoolProperties threadPoolProperties = new CommonThreadPoolProperties();
 

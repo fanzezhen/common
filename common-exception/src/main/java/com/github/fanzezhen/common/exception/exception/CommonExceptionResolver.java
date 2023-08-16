@@ -46,7 +46,7 @@ public class CommonExceptionResolver implements HandlerExceptionResolver {
             NoSuchMethodException, InvocationTargetException {
         if (FAST_JSON_VIEW_PRESENT) {
             defaultErrorJsonView = (View) Class.forName(
-                    "com.alibaba.fastjson.support.spring.FastJsonJsonView").getDeclaredConstructor()
+                            "com.alibaba.fastjson.support.spring.FastJsonJsonView").getDeclaredConstructor()
                     .newInstance();
         } else {
             defaultErrorJsonView = new MappingJackson2JsonView();
@@ -103,7 +103,7 @@ public class CommonExceptionResolver implements HandlerExceptionResolver {
     }
 
     public Map<String, Object> newExceptionResp(Exception exception) {
-        Map<String, Object> error = new HashMap<>(2);
+        Map<String, Object> error = new HashMap<>(2, 1);
         if (exception instanceof ServiceException serviceException) {
             error.put("msg", serviceException.getErrorMessage());
             error.put("code", serviceException.getCode());

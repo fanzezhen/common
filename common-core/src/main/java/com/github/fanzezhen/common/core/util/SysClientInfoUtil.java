@@ -107,7 +107,7 @@ public class SysClientInfoUtil {
     }
 
     public static Map<String, String> getRequestParameters() {
-        HashMap<String, String> values = new HashMap<>(10);
+        HashMap<String, String> values = new HashMap<>(8);
         HttpServletRequest request = getRequest();
         if (request != null) {
             Enumeration<String> enums = request.getParameterNames();
@@ -123,7 +123,7 @@ public class SysClientInfoUtil {
     }
 
     public static Map<String, String> getAll(HttpServletRequest request) {
-        return new HashMap<>(5) {{
+        return new HashMap<>(8) {{
             put("os", SysClientInfoUtil.getOsName(request));
             put("osName", SysClientInfoUtil.getOsName(request));
             put("ip", SysClientInfoUtil.getIp(request));
