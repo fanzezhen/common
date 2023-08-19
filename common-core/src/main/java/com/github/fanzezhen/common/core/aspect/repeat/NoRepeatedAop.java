@@ -1,27 +1,21 @@
-package com.github.fanzezhen.common.core.aop;
+package com.github.fanzezhen.common.core.aspect.repeat;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.SecureUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.github.fanzezhen.common.core.annotion.NoRepeat;
 import com.github.fanzezhen.common.core.context.SysContextHolder;
-import com.github.fanzezhen.common.core.enums.NoRepeatTypeEnum;
 import com.github.fanzezhen.common.core.service.CacheService;
 import com.github.fanzezhen.common.core.util.ExceptionUtil;
-import com.github.fanzezhen.common.core.util.SortUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -36,20 +30,26 @@ import static java.util.stream.Collectors.toList;
  */
 @Slf4j
 @Aspect
-@Component("FzzNoRepeatedAop")
+@Component("CommonNoRepeatedAop")
 public class NoRepeatedAop {
     @Value("${spring.application.name:}")
     private String springApplicationName;
     /**
-     * 环境分离变量
+     * 环境隔离变量
      */
     @Value("${spring.profiles.active:}")
     private String env;
+    private final CacheService cacheService;
+
+    @Autowired(required = false)
+    public NoRepeatedAop(CacheService cacheService) {
+        this.cacheService = cacheService;
+    }
 
     /**
      * 要处理的方法，包名+类名+方法名
      */
-    @Pointcut("@annotation(com.github.fanzezhen.common.core.annotion.NoRepeat)")
+    @Pointcut("@annotation(com.github.fanzezhen.common.core.aspect.repeat.NoRepeat)")
     public void cut() {
     }
 
@@ -63,14 +63,12 @@ public class NoRepeatedAop {
         String key;
         String value;
         NoRepeat noRepeat;
-        CacheService cacheService;
         try {
             noRepeat = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(NoRepeat.class);
-            if (noRepeat == null || !NoRepeatTypeEnum.TIME.equals(noRepeat.type())) {
+            if (noRepeat == null) {
                 return;
             }
             key = getKey(joinPoint, noRepeat);
-            cacheService = SortUtil.getFirstByOrder(SpringUtil.getBeansOfType(CacheService.class).values());
             if (cacheService == null) {
                 log.warn("noRepeated check skip cacheService is null");
                 return;
@@ -92,8 +90,6 @@ public class NoRepeatedAop {
 
     private String getKey(JoinPoint joinPoint, NoRepeat noRepeat) {
         Object[] args = joinPoint.getArgs();
-        String className = joinPoint.getTarget().getClass().getName();
-        String methodName = joinPoint.getSignature().getName();
         JSONObject param = new JSONObject();
         String[] headerArgs = noRepeat.headerArgs();
         if (ArrayUtil.isNotEmpty(headerArgs)) {
@@ -128,63 +124,14 @@ public class NoRepeatedAop {
                 }
             }
         }
-        String paramStr;
-        if (param.isEmpty()) {
-            paramStr = JSON.toJSONString(Arrays.stream(args).filter(arg -> !(arg instanceof HttpServletRequest)).collect(toList()));
-        } else {
-            paramStr = param.toJSONString();
+        String headerJsonStr = SysContextHolder.getHeaderJsonStr(noRepeat.headerArgs());
+        String paramKey = noRepeat.key();
+        if (StrUtil.isEmpty(paramKey)) {
+            paramKey = JSON.toJSONString(Arrays.stream(args).filter(arg -> !(arg instanceof HttpServletRequest)).collect(toList()));
         }
-        String md5 = SecureUtil.md5(paramStr);
-        log.info(env + springApplicationName + "-noRepeat-" + className + methodName + noRepeat.type() + noRepeat.timeout() + noRepeat.timeUnit() + paramStr + md5);
-        return env + springApplicationName + "-noRepeat-" + className + methodName + md5;
+        String key = env + StrUtil.SLASH + springApplicationName + StrUtil.SLASH + "NoRepeat" + StrUtil.SLASH + joinPoint.getTarget().getClass().getName() + StrUtil.DOT + joinPoint.getSignature().getName() + StrUtil.SLASH + paramKey + StrUtil.SLASH + headerJsonStr + StrUtil.SLASH + param.toJSONString();
+        log.info("key={}", key);
+        return key;
     }
 
-    /**
-     * @param joinPoint 切点
-     * @return ActionResult
-     */
-    @Around("cut()")
-    public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        Object result;
-        String key = null;
-        String value = null;
-        NoRepeat noRepeat = null;
-        boolean isTransaction = false;
-        CacheService cacheService = null;
-        try {
-            cacheService = SortUtil.getFirstByOrder(SpringUtil.getBeansOfType(CacheService.class).values());
-            if (cacheService != null) {
-                noRepeat = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(NoRepeat.class);
-                isTransaction = noRepeat != null && NoRepeatTypeEnum.TRANSACTION.equals(noRepeat.type());
-                if (isTransaction) {
-                    key = getKey(joinPoint, noRepeat);
-                    value = cacheService.get(key);
-                }
-            }
-        } catch (Throwable throwable) {
-            log.error("noRepeated check failed exception", throwable);
-        }
-        if (!StrUtil.isEmpty(value)) {
-            ExceptionUtil.throwException("系统繁忙，请勿重复提交");
-        }
-        try {
-            if (cacheService != null && isTransaction) {
-                cacheService.set(key, String.valueOf(System.currentTimeMillis()), noRepeat.timeout(), noRepeat.timeUnit());
-            }
-        } catch (Throwable throwable) {
-            log.error("noRepeated put failed exception", throwable);
-        }
-        try {
-            result = joinPoint.proceed();
-        } finally {
-            try {
-                if (key != null) {
-                    cacheService.remove(key);
-                }
-            } catch (Throwable throwable) {
-                log.warn("noRepeated TransactionLock freed failed exception", throwable);
-            }
-        }
-        return result;
-    }
 }

@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.exception.exception;
 
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
-import com.github.fanzezhen.common.core.property.CommonProperties;
+import com.github.fanzezhen.common.core.property.CommonCoreProperties;
 import com.github.fanzezhen.common.core.util.HttpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,7 +35,7 @@ import java.util.Map;
 @Component
 public class CommonExceptionResolver implements HandlerExceptionResolver {
     @Resource
-    private CommonProperties commonProperties;
+    private CommonCoreProperties commonCoreProperties;
 
     private final View defaultErrorJsonView;
 
@@ -59,7 +59,7 @@ public class CommonExceptionResolver implements HandlerExceptionResolver {
         int errorStatus = HttpServletResponse.SC_OK;
         response.setStatus(errorStatus);
         ModelAndView modelAndView;
-        if (commonProperties.isResponseJson()) {
+        if (commonCoreProperties.isResponseJson()) {
             return jsonResponse(ex);
         }
         if (handler instanceof HandlerMethod handlerMethod) {

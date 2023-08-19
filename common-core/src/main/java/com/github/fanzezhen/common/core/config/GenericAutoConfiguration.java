@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.core.config;
 
 import com.github.fanzezhen.common.core.thread.CommonThreadPoolExecutor;
 import com.github.fanzezhen.common.core.thread.PoolExecutors;
-import com.github.fanzezhen.common.core.property.CommonProperties;
+import com.github.fanzezhen.common.core.property.CommonCoreProperties;
 import com.github.fanzezhen.common.core.property.CommonThreadPoolProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -16,15 +16,15 @@ import javax.annotation.Resource;
  * @date 2023/8/14
  */
 @Configuration
-@EnableConfigurationProperties({CommonProperties.class})
+@EnableConfigurationProperties({CommonCoreProperties.class})
 public class GenericAutoConfiguration {
     @Resource
-    private CommonProperties commonProperties;
+    private CommonCoreProperties commonCoreProperties;
 
     @Bean
     @ConditionalOnMissingBean
     public CommonThreadPoolExecutor commonThreadPool() {
-        CommonThreadPoolProperties threadPoolProperties = this.commonProperties.getThreadPoolProperties();
+        CommonThreadPoolProperties threadPoolProperties = this.commonCoreProperties.getThreadPoolProperties();
         int coreSize = threadPoolProperties.getCoreSize();
         int maxSize = threadPoolProperties.getMaxSize();
         int queueCapacity = threadPoolProperties.getQueueCapacity();

@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.fanzezhen.common.core.context.SysContextHolder;
-import com.github.fanzezhen.common.core.property.ProjectProperty;
+import com.github.fanzezhen.common.core.property.CommonProjectProperties;
 import com.github.fanzezhen.common.core.annotion.OperateLog;
 import com.github.fanzezhen.common.core.annotion.OperateLogMapper;
 import com.github.fanzezhen.common.core.dict.AbstractDict;
@@ -45,7 +45,7 @@ public class OperateLogInterceptor implements Interceptor {
     private static final String NAME_SUFFIX_DTO = "Dto";
     private static final String NAME_SUFFIX_SERVICE_IMPL = "ServiceImpl";
     @Resource
-    private ProjectProperty projectProperty;
+    private CommonProjectProperties commonProjectProperties;
     @Value("${log.operate.check-mapper:false}")
     private boolean needCheckMapper;
     @Value("${log.operate.use-microservice:false}")
@@ -85,11 +85,11 @@ public class OperateLogInterceptor implements Interceptor {
         LogOperation logOperation = insertLog(String.valueOf(ReflectUtil.getFieldValue(arg, "id")),
                 sqlCommandType.ordinal(), tableName, null);
         switch (sqlCommandType) {
-            case INSERT:
+            case INSERT -> {
                 result = invocation.proceed();
                 dealOnlyNewValueLog(dict, operateLog, sqlCommandType.ordinal(), arg);
-                break;
-            case UPDATE:
+            }
+            case UPDATE -> {
                 IService<?> service = getService(operateLog.serviceBeanName(), arg.getClass());
                 if (service == null) {
                     // 无法获取旧值，按照新增执行（operateType为更新）
@@ -122,12 +122,9 @@ public class OperateLogInterceptor implements Interceptor {
                     }
                 });
                 addLogOperateDetailBatch(detailLogList);
-                break;
-            case DELETE:
-            case SELECT:
-            case FLUSH:
-            case UNKNOWN:
-            default:
+            }
+            default -> {
+            }
         }
         return result;
     }
@@ -253,8 +250,8 @@ public class OperateLogInterceptor implements Interceptor {
     private OperateLog getOperateLog(Object arg) {
         OperateLog operateLog = arg == null ? null : arg.getClass().getAnnotation(OperateLog.class);
         if (operateLog == null) {
-            if (arg != null && StrUtil.isNotBlank(projectProperty.getDtoPackage())) {
-                String[] dtoPackages = projectProperty.getDtoPackage().split(",");
+            if (arg != null && StrUtil.isNotBlank(commonProjectProperties.getDtoPackage())) {
+                String[] dtoPackages = commonProjectProperties.getDtoPackage().split(",");
                 for (String dtoPackage : dtoPackages) {
                     Reflections reflections = new Reflections(dtoPackage);
                     for (Class<?> dtoClass : reflections.getTypesAnnotatedWith(OperateLog.class)) {

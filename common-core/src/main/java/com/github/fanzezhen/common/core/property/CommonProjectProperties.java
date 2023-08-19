@@ -1,16 +1,12 @@
 package com.github.fanzezhen.common.core.property;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * @author zezhen.fan
  */
 @Data
-@Component("FzzProjectProperty")
-@ConfigurationProperties(prefix = "com.github.fanzezhen.common.core.project")
-public class ProjectProperty {
+public class CommonProjectProperties {
     private String appCode = "DEMO";
     private String version = "1.0";
     private String basePackage = "com.github.fanzezhen.common";

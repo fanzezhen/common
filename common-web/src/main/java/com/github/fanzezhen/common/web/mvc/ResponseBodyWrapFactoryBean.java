@@ -1,7 +1,7 @@
 package com.github.fanzezhen.common.web.mvc;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.github.fanzezhen.common.core.property.CommonProperties;
+import com.github.fanzezhen.common.core.property.CommonCoreProperties;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
@@ -22,7 +22,7 @@ public class ResponseBodyWrapFactoryBean implements InitializingBean {
     private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
     @Resource
-    private CommonProperties commonProperties;
+    private CommonCoreProperties commonCoreProperties;
 
     @Override
     public void afterPropertiesSet() {
@@ -39,7 +39,7 @@ public class ResponseBodyWrapFactoryBean implements InitializingBean {
             if (handler instanceof RequestResponseBodyMethodProcessor) {
                 //用自己的ResponseBody包装类替换掉框架的，达到返回Result的效果
                 ResponseBodyWrapHandler decorator =
-                        new ResponseBodyWrapHandler(handler, commonProperties);
+                        new ResponseBodyWrapHandler(handler, commonCoreProperties);
                 newHandlers.add(decorator);
             } else {
                 newHandlers.add(handler);

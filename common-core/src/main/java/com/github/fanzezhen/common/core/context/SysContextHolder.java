@@ -1,6 +1,7 @@
 package com.github.fanzezhen.common.core.context;
 
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.fanzezhen.common.core.constant.SysConstant;
 import lombok.extern.slf4j.Slf4j;
@@ -245,5 +246,21 @@ public class SysContextHolder {
 
     public static void remove(String key) {
         getContextMap().remove(key);
+    }
+    public static String getHeaderJsonStr(String[] headerArgs) {
+        if (ArrayUtil.isEmpty(headerArgs)) {
+            return StrUtil.EMPTY;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String headerKey : headerArgs) {
+            if (StrUtil.isBlank(headerKey)) {
+                continue;
+            }
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append(StrUtil.COMMA);
+            }
+            stringBuilder.append(headerKey).append("=").append(get(headerKey));
+        }
+        return stringBuilder.toString();
     }
 }

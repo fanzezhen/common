@@ -15,6 +15,12 @@ import java.util.Map;
  * @author zezhen.fan
  */
 public class ExceptionUtil {
+    public static ServiceException wrapException(String errorMessage) {
+        return new ServiceException(CoreExceptionEnum.SERVICE_ERROR.getCode(), errorMessage);
+    }
+    public static ServiceException wrapException(int code, String errorMessage) {
+        return new ServiceException(code, errorMessage);
+    }
     public static void throwException(int code, String errorMessage) {
         throw new ServiceException(code, errorMessage);
     }
