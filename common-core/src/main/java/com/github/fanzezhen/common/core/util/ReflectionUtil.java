@@ -128,7 +128,7 @@ public class ReflectionUtil {
      * @return HashMap
      */
     public static HashMap<String, Object> javaBeanToHashMap(Object javaBean) {
-        HashMap<String, Object> map = new HashMap<>(10);
+        HashMap<String, Object> map = new HashMap<>(32);
         // 获取所有方法
         Method[] methods = javaBean.getClass().getMethods();
         for (Method method : methods) {
@@ -186,7 +186,7 @@ public class ReflectionUtil {
         fieldList.addAll(oldFieldList);
         fieldList.addAll(newFieldList);
         for (Field field : new HashSet<>(fieldList)) {
-            HashMap<String, Object> hashMap = new HashMap<>(3);
+            HashMap<String, Object> hashMap = new HashMap<>(4);
             if (!oldFieldList.contains(field)) {
                 Object newValue = getAttribute(field, newObject).getValue();
                 if (newValue != null) {
@@ -224,22 +224,22 @@ public class ReflectionUtil {
     }
 
     public static HashMap<String, HashMap<String, Object>> getDiff(Object before, Object after, AbstractDict dict, boolean isGetAll) {
-        HashMap<String, Object> beforeMap = new HashMap<>(10);
-        HashMap<String, Object> afterMap = new HashMap<>(10);
+        HashMap<String, Object> beforeMap = new HashMap<>(8);
+        HashMap<String, Object> afterMap = new HashMap<>(8);
         for (HashMap<String, Object> hashMap : getDifferentPropertyList(before, after)) {
             if (isGetAll || dict.containsKey(hashMap.get("name"))) {
                 beforeMap.put(dict.get(String.valueOf(hashMap.get("name"))), hashMap.get("oldValue"));
                 afterMap.put(dict.get(String.valueOf(hashMap.get("name"))), hashMap.get("newValue"));
             }
         }
-        return new HashMap<>(2) {{
+        return new HashMap<>(2, 1) {{
             put("before", beforeMap);
             put("after", afterMap);
         }};
     }
 
     public static HashMap<String, Object> extractByDict(Object o, AbstractDict dict) {
-        HashMap<String, Object> result = new HashMap<>(10);
+        HashMap<String, Object> result = new HashMap<>(8);
         HashMap<String, Object> map = javaBeanToHashMap(o);
         for (String key : map.keySet()) {
             if (dict.containsKey(key)) {

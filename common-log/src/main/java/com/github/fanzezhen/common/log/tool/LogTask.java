@@ -35,7 +35,7 @@ public class LogTask {
             @Override
             public void run() {
                 try {
-                    log.info(String.valueOf(log(logApi, new HashMap<>(8) {{
+                    log.info(String.valueOf(log(logApi, new HashMap<>(8, 1) {{
                         put("username", username);
                         put("logType", logType);
                         put("os", os);

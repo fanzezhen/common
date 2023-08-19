@@ -24,7 +24,7 @@ public class ExpiredSessionStrategy implements SessionInformationExpiredStrategy
     @Override
     public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException {
         // 这里也可以根据需要返回html页面或者json数据
-        Map<String, Object> map = new HashMap<>(2);
+        Map<String, Object> map = new HashMap<>(2, 1);
         map.put("code", 0);
         map.put("msg", "已经另一台机器登录，您被迫下线。" + event.getSessionInformation().getLastRequest());
         event.getResponse().setContentType("application/json;charset=UTF-8");

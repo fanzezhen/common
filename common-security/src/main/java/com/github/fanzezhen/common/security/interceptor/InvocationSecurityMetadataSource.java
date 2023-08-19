@@ -35,7 +35,7 @@ public class InvocationSecurityMetadataSource implements FilterInvocationSecurit
      * 加载权限表中所有权限
      */
     public void loadResourceDefine() {
-        map = new HashMap<>(100);
+        map = new HashMap<>(256);
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
         List<SysPermissionDto> sysPermissionDtoList = userDetailsServiceFacade.listAllPermissionDto(commonProjectProperties.getAppCode());

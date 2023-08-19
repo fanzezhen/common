@@ -15,19 +15,19 @@ public abstract class AbstractDict {
     /**
      * 字典映射，实体的字段名→字段标题
      */
-    protected LinkedHashMap<String, String> dict = new LinkedHashMap<>();
+    protected LinkedHashMap<String, String> dict = new LinkedHashMap<>(8);
     /**
      * 字典映射，实体标题→实体的字段名
      */
-    protected LinkedHashMap<String, String> reverseDict = new LinkedHashMap<>();
+    protected LinkedHashMap<String, String> reverseDict = new LinkedHashMap<>(8);
     /**
      * 字段枚举值映射，实体的字段名→{枚举名：枚举值}
      */
-    protected LinkedHashMap<String, LinkedHashMap<Object, String>> fieldWrapperDict = new LinkedHashMap<>();
+    protected LinkedHashMap<String, LinkedHashMap<Object, String>> fieldWrapperDict = new LinkedHashMap<>(8);
     /**
      * 字段枚举值映射，实体的字段名→{枚举值：枚举名}
      */
-    protected LinkedHashMap<String, LinkedHashMap<String, Object>> fieldAdapterDict = new LinkedHashMap<>();
+    protected LinkedHashMap<String, LinkedHashMap<String, Object>> fieldAdapterDict = new LinkedHashMap<>(8);
 
     public AbstractDict() {
         put("id", "主键id");
@@ -120,7 +120,7 @@ public abstract class AbstractDict {
         if (this.fieldWrapperDict.containsKey(field)) {
             getFieldWrapper(field).put(value, desc);
         } else {
-            putFieldWrapper(field, new LinkedHashMap<>(1) {{
+            putFieldWrapper(field, new LinkedHashMap<>(2) {{
                 put(value, desc);
             }});
         }
