@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.redis;
 
 import com.github.fanzezhen.common.core.service.CacheService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +12,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author zezhen.fan
  */
+@Order
 @Service("CommonRedisCacheServiceImpl")
 @ConditionalOnProperty(prefix = "com.github.fanzezhen.common.redis", name = "enabled", havingValue = "true")
-public class RedisCacheServiceImpl implements CacheService, Ordered {
+public class RedisCacheServiceImpl implements CacheService {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
@@ -38,8 +39,4 @@ public class RedisCacheServiceImpl implements CacheService, Ordered {
         stringRedisTemplate.opsForValue().set(k, v, timeout, timeUnit);
     }
 
-    @Override
-    public int getOrder() {
-        return Integer.MAX_VALUE - 10;
-    }
 }

@@ -7,9 +7,7 @@ import com.github.fanzezhen.common.core.util.HttpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.annotation.Order;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
@@ -31,7 +29,6 @@ import java.util.Map;
  * @author zezhen.fan
  */
 @Slf4j
-@Order(Ordered.HIGHEST_PRECEDENCE)
 @Component
 public class CommonExceptionResolver implements HandlerExceptionResolver {
     @Resource

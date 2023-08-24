@@ -3,7 +3,7 @@ package com.github.fanzezhen.common.core.service;
 import cn.hutool.cache.impl.TimedCache;
 import com.github.fanzezhen.common.core.constant.CacheConstant;
 import com.github.fanzezhen.common.core.util.ExceptionUtil;
-import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -11,8 +11,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author zezhen.fan
  */
+@Order
 @Service("CommonCacheServiceImpl")
-public class CacheServiceImpl implements CacheService, Ordered {
+public class CacheServiceImpl implements CacheService {
     @Override
     public String get(String k) {
         TimedCache<String, String> timedCache = CacheConstant.getTimedCacheInstance();
@@ -49,8 +50,4 @@ public class CacheServiceImpl implements CacheService, Ordered {
         timedCache.put(k, String.valueOf(System.currentTimeMillis()), timeoutMillis);
     }
 
-    @Override
-    public int getOrder() {
-        return Integer.MAX_VALUE;
-    }
 }

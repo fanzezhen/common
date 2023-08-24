@@ -21,8 +21,8 @@ import java.util.Enumeration;
  */
 @Slf4j
 @WebFilter
-@Order(SysConstant.FILTER_ORDER)
-public class SysContextFilter implements Filter, Ordered {
+@Order(0)
+public class SysContextFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) {
@@ -98,10 +98,5 @@ public class SysContextFilter implements Filter, Ordered {
         } finally {
             SysContextHolder.clean();
         }
-    }
-
-    @Override
-    public int getOrder() {
-        return 0;
     }
 }
