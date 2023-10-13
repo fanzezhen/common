@@ -7,7 +7,7 @@
     <artifactId>common</artifactId>
     <groupId>com.github.fanzezhen</groupId>
     <packaging>pom</packaging>
-    <version>3.0.0</version>
+    <version>3.0.1-2023.10.13</version>
 
     <properties>
         <com.github.fanzezhen.jdk8.version>0.0.3.4</com.github.fanzezhen.jdk8.version>

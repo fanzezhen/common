@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.IPAddress;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
 import java.math.BigInteger;
@@ -30,6 +31,7 @@ import java.net.UnknownHostException;
  * @author fanzezhen
  * @since 2020-06-11
  */
+@Entity
 @Slf4j
 @Data
 @EqualsAndHashCode(callSuper = true)

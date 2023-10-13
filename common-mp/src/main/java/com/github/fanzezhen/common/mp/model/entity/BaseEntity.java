@@ -21,12 +21,13 @@ import java.util.Objects;
  * @author zezhen.fan
  * @ MappedSuperclass注解表示不是一个完整的实体类，将不会映射到数据库表，但是它的属性都将映射到其子类的数据库字段中
  */
+@Entity
 @Data
 @MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class BaseEntity implements Serializable {
+public abstract class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -50,37 +51,6 @@ public class BaseEntity implements Serializable {
     @Schema(name = "创建人ID")
     private String createUserId;
 
-    /**
-     * 删除标识（1-已删除；0-未删除），默认 0
-     */
-    @EnumValue
-    @TableLogic
-    @Column(name = "DEL_FLAG")
-    @TableField(value = "DEL_FLAG", fill = FieldFill.INSERT)
-    @Schema(name = "删除标识（1-已删除；0-未删除），默认 0")
-    @JSONField(serialzeFeatures = SerializerFeature.WriteEnumUsingToString)
-    private DelFlagEnum delFlag;
-
-    /**
-     * 更新时间
-     */
-    @Column(name = "UPDATE_TIME")
-    @TableField(value = "UPDATE_TIME", fill = FieldFill.INSERT_UPDATE)
-    @Schema(name = "更新时间")
-    private LocalDateTime updateTime;
-
-    /**
-     * 更新者ID
-     */
-    @Column(name = "UPDATE_USER_ID")
-    @TableField(value = "UPDATE_USER_ID", fill = FieldFill.INSERT_UPDATE)
-    @Schema(name = "更新者ID")
-    private String updateUserId;
-
-    public boolean isDeleted() {
-        return delFlag != null && Objects.equals(DelFlagEnum.DELETED.code, delFlag.code);
-    }
-
     public void init(BaseEntity baseVarEntry) {
         this.id = baseVarEntry.getId();
         this.createTime = baseVarEntry.getCreateTime();
@@ -88,7 +58,7 @@ public class BaseEntity implements Serializable {
     }
 
     public static String[] getFieldNames() {
-        return new String[]{"id", "create_time", "create_user_id", "update_time", "update_user_id", "del_flag"};
+        return new String[]{"id", "create_time", "create_user_id"};
     }
 
 }

@@ -16,25 +16,25 @@ import java.util.concurrent.TimeUnit;
 public class CacheServiceImpl implements CacheService {
     @Override
     public String get(String k) {
-        TimedCache<String, String> timedCache = CacheConstant.getTimedCacheInstance();
+        TimedCache<String, String> timedCache = CacheConstant.getHourTimedCacheInstance();
         return timedCache.get(k, false);
     }
 
     @Override
     public void put(String k, String v, long timeoutMillis) {
-        TimedCache<String, String> timedCache = CacheConstant.getTimedCacheInstance();
+        TimedCache<String, String> timedCache = CacheConstant.getHourTimedCacheInstance();
         timedCache.put(k, String.valueOf(System.currentTimeMillis()), timeoutMillis);
     }
 
     @Override
     public void remove(String k) {
-        TimedCache<String, String> timedCache = CacheConstant.getTimedCacheInstance();
+        TimedCache<String, String> timedCache = CacheConstant.getHourTimedCacheInstance();
         timedCache.remove(k);
     }
 
     @Override
     public void set(String k, String v, long timeout, TimeUnit timeUnit) {
-        TimedCache<String, String> timedCache = CacheConstant.getTimedCacheInstance();
+        TimedCache<String, String> timedCache = CacheConstant.getHourTimedCacheInstance();
         long timeoutMillis = timeout;
         switch (timeUnit) {
             case NANOSECONDS -> ExceptionUtil.throwException("不支持 NANOSECONDS");

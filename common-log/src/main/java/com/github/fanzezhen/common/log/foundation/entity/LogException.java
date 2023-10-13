@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
@@ -22,6 +23,7 @@ import javax.persistence.Table;
  * @author fanzezhen
  * @since 2020-06-11
  */
+@Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
@@ -29,33 +31,37 @@ import javax.persistence.Table;
         @Index(name = "ix_del_app_time", columnList = "del_flag, app_code, update_time")
 })
 public class LogException extends BaseEntity {
-    private static final long serialVersionUID = 1L;
-
     /**
      * 日志类型
      */
     @EnumValue
-    @Column(name = "LOG_TYPE")
+    @Column(name = "LOG_TYPE", columnDefinition = "tinyint default 0 comment '日志类型'")
     @Schema(name = "日志类型")
-    @JSONField(serialzeFeatures= SerializerFeature.WriteEnumUsingToString)
+    @JSONField(serialzeFeatures = SerializerFeature.WriteEnumUsingToString)
     private ExceptionTypeEnum logType;
 
     @Schema(name = "资源所属模块")
+    @Column(name = "modular", columnDefinition = "varchar(100) null comment '资源所属模块'")
     private String modular;
 
     @Schema(name = "错误类名")
+    @Column(name = "class_name", columnDefinition = "varchar(100) null comment '错误类名'")
     private String className;
 
     @Schema(name = "错误说明")
+    @Column(name = "message", columnDefinition = "varchar(5000) null comment '错误说明'")
     private String message;
 
     @Schema(name = "错误堆栈")
+    @Column(name = "stack_trace", columnDefinition = "text null comment '错误堆栈'")
     private String stackTrace;
 
     @Schema(name = "操作人名称")
+    @Column(name = "operation_username", columnDefinition = "varchar(100) null comment '操作人名称'")
     private String operationUsername;
 
     @Schema(name = "应用代码")
+    @Column(name = "app_code", columnDefinition = "varchar(50) null comment '应用代码'")
     private String appCode;
 
 }

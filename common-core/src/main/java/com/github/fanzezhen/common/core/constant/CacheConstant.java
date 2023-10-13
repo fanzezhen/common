@@ -71,24 +71,18 @@ public interface CacheConstant {
      */
     String PARAMS_DETAILS = "params_details";
 
-
-    /**
-     * 获取29min自动过期的缓存器
-     *
-     * @return 29min自动过期的缓存器
-     */
-    static TimedCache<String, String> getTimedCacheInstance() {
-        return SingletonHolder.TIMED_CACHE;
+    static TimedCache<String, String> getHourTimedCacheInstance() {
+        return HourCacheSingletonHolder.HOUR_TIMED_CACHE;
     }
 
-    class SingletonHolder {
-        /**
-         * 30min自动过期的缓存器
-         */
-        private static final TimedCache<String, String> TIMED_CACHE = CacheUtil.newTimedCache(30 * 60 * 1000);
+    class HourCacheSingletonHolder {
+        private HourCacheSingletonHolder() {
+        }
+
+        private static final TimedCache<String, String> HOUR_TIMED_CACHE = CacheUtil.newTimedCache(60 * 60 * 1000);
 
         static {
-            TIMED_CACHE.schedulePrune(60 * 60 * 1000);
+            HOUR_TIMED_CACHE.schedulePrune(60 * 60 * 1000);
         }
     }
 }

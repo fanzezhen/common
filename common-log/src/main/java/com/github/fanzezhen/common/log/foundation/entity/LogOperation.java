@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
@@ -22,6 +23,7 @@ import javax.persistence.Table;
  * @author fanzezhen
  * @since 2021-01-04
  */
+@Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Schema(name="LogOperation对象", description="操作日志表")
