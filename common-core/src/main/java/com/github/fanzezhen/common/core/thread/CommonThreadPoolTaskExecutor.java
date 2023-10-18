@@ -12,8 +12,8 @@ import java.util.concurrent.Future;
  * @author zezhen.fan
  * @date 2023/8/14
  */
-public class CommonThreadPoolExecutor extends ThreadPoolTaskExecutor {
-    public CommonThreadPoolExecutor() {
+public class CommonThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
+    public CommonThreadPoolTaskExecutor() {
     }
 
     public void execute(final Runnable task) {

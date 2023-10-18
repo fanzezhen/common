@@ -11,7 +11,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import com.github.fanzezhen.common.core.thread.CommonThreadPoolExecutor;
+import com.github.fanzezhen.common.core.thread.CommonThreadPoolTaskExecutor;
 import com.github.fanzezhen.common.core.thread.PoolExecutors;
 import com.github.fanzezhen.common.core.property.CommonCoreProperties;
 import com.github.fanzezhen.common.core.property.CommonThreadPoolProperties;
@@ -40,13 +40,13 @@ public class GenericAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public CommonThreadPoolExecutor commonThreadPool() {
+    public CommonThreadPoolTaskExecutor commonThreadPool() {
         CommonThreadPoolProperties threadPoolProperties = this.commonCoreProperties.getThreadPoolProperties();
         int coreSize = threadPoolProperties.getCoreSize();
         int maxSize = threadPoolProperties.getMaxSize();
         int queueCapacity = threadPoolProperties.getQueueCapacity();
         int keepAliveSeconds = threadPoolProperties.getKeepAliveSeconds();
-        return PoolExecutors.newThreadPool("commonThreadPool", coreSize, maxSize, queueCapacity, keepAliveSeconds);
+        return PoolExecutors.newThreadPoolTaskExecutor("commonThreadPoolTaskExecutor", coreSize, maxSize, queueCapacity, keepAliveSeconds);
     }
 
     @Bean

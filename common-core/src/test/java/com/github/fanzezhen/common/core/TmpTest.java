@@ -2,6 +2,7 @@ package com.github.fanzezhen.common.core;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +13,17 @@ import java.util.List;
  */
 @Slf4j
 @Ignore
-public class Test {
+public class TmpTest {
     public static void main(String[] args) {
+        int i = Integer.MIN_VALUE;
+        System.out.println(i);
+        System.out.println(i-1);
+    }
+
+
+    @Test
+    @Ignore
+    public void testSubset() {
         List<Integer> nums = new ArrayList<>();
         nums.add(1);
         nums.add(2);
