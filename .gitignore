@@ -27,12 +27,13 @@ tmp/
 # DataBase
 *.rdb
 *.pdb
+app/elasticsearch
 app/mysql/data
 app/redis-insight/db
+app/nacos/standalone-logs
 
 # log
 logs/
-app/nacos/standalone-logs
 
 
 # others

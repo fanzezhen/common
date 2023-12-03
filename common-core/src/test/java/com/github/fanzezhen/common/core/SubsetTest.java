@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Slf4j
 @Ignore
-public class TmpTest {
+public class SubsetTest {
     public static void main(String[] args) {
         int i = Integer.MIN_VALUE;
         System.out.println(i);
