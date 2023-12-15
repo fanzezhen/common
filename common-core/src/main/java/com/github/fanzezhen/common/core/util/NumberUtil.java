@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.core.util;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.util.StringUtils;
 
@@ -47,7 +48,7 @@ public class NumberUtil {
      */
     @SuppressWarnings("unused")
     public static Integer chineseNumberToInteger(String chineseNumber) {
-        if (StrUtil.isEmpty(chineseNumber)) {
+        if (CharSequenceUtil.isEmpty(chineseNumber)) {
             return null;
         }
         int result = 0;

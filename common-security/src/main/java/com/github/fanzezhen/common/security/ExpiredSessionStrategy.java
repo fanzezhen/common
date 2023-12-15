@@ -19,7 +19,6 @@ import java.util.Map;
 @Component
 public class ExpiredSessionStrategy implements SessionInformationExpiredStrategy {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Override
     public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException {
@@ -29,8 +28,5 @@ public class ExpiredSessionStrategy implements SessionInformationExpiredStrategy
         map.put("msg", "已经另一台机器登录，您被迫下线。" + event.getSessionInformation().getLastRequest());
         event.getResponse().setContentType("application/json;charset=UTF-8");
         event.getResponse().getWriter().write(objectMapper.writeValueAsString(map));
-
-        // 如果是跳转html页面，url代表跳转的地址
-        // redirectStrategy.sendRedirect(event.getRequest(), event.getResponse(), "url");
     }
 }

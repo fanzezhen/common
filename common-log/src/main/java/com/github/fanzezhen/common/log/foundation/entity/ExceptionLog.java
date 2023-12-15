@@ -30,7 +30,7 @@ import javax.persistence.Table;
 @Table(indexes = {
         @Index(name = "ix_del_app_time", columnList = "del_flag, app_code, update_time")
 })
-public class LogException extends BaseEntity {
+public class ExceptionLog extends BaseEntity {
     /**
      * 日志类型
      */

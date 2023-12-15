@@ -8,9 +8,9 @@ import java.util.concurrent.*;
 
 /**
  * @author zezhen.fan
- * @date 2023/8/14
  */
 @Slf4j
+@SuppressWarnings("unused")
 public class PoolExecutors {
     private static final Map<String, ThreadPoolExecutor> POOL_EXECUTOR_MAP = new ConcurrentHashMap<>(2);
     private static final Map<String, CommonThreadPoolTaskExecutor> POOL_TASK_EXECUTOR_MAP = new ConcurrentHashMap<>(2);

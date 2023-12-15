@@ -5,6 +5,7 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.jwt.JWT;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.fanzezhen.common.core.aspect.repeat.NoRepeat;
 import com.github.fanzezhen.common.core.context.SysContextHolder;
@@ -42,11 +43,10 @@ public class CommonTokenApi {
 
     @NoRepeat(timeout = 60)
     @GetMapping("/get")
-    @ResponseBody
     public String getJwtToken(@RequestParam(value = "appId") @NotBlank String appId, @RequestParam(value = "secret") @NotBlank String secretMd5, @RequestParam(value = "timeMillis") long timeMillis) {
         long jwtTimeDelayMillis = jwtTimeDelaySeconds * 1000L;
         ExceptionUtil.throwIf(System.currentTimeMillis() - timeMillis > jwtTimeDelayMillis, "请求已过期");
-        JSONObject jwtSecretJsonObject = JSONObject.parseObject(jwtSecretJson);
+        JSONObject jwtSecretJsonObject = JSON.parseObject(jwtSecretJson);
         JSONObject authInfoJsonObj = jwtSecretJsonObject.getJSONObject(appId);
         ExceptionUtil.throwIf(MapUtil.isEmpty(authInfoJsonObj), "账户未对接");
         String secret = authInfoJsonObj.getString("secret");

@@ -4,24 +4,31 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-parent</artifactId>
+        <version>3.2.1</version>
+    </parent>
+
     <artifactId>common</artifactId>
     <groupId>com.github.fanzezhen</groupId>
     <packaging>pom</packaging>
-    <version>3.0.1-2023.10.13</version>
+    <version>3.0.1-2023.12.12</version>
 
     <properties>
         <com.github.fanzezhen.jdk8.version>0.0.3.4</com.github.fanzezhen.jdk8.version>
-        <com.github.fanzezhen.common.version>${project.version}</com.github.fanzezhen.common.version>
+        <com.github.fanzezhen.common.version>3.0.1-2023.12.12</com.github.fanzezhen.common.version>
         <app.server>-tomcat</app.server>
         <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
-        <cn.hutool.version>5.8.20</cn.hutool.version>
+        <cn.hutool.version>5.8.23</cn.hutool.version>
         <cn.stylefeng.roses.version>2.2.13</cn.stylefeng.roses.version>
         <com.github.penggle.version>2.3.2</com.github.penggle.version>
         <com.alibaba.version>2.0.37</com.alibaba.version>
         <com.alibaba.boot.version>0.2.12</com.alibaba.boot.version>
         <com.alibaba.cloud.version>2022.0.0.0</com.alibaba.cloud.version>
         <com.alibaba.csp.version>2.0.0-alpha</com.alibaba.csp.version>
-        <com.baomidou.version>3.5.3</com.baomidou.version>
+        <com.alibaba.druid.version>1.2.21</com.alibaba.druid.version>
+        <com.baomidou.version>3.5.5</com.baomidou.version>
         <com.fasterxml.jackson.version>2.15.2</com.fasterxml.jackson.version>
         <com.google.code.gson.version>2.8.6</com.google.code.gson.version>
         <com.google.guava.version>29.0-jre</com.google.guava.version>
@@ -71,6 +78,7 @@
         <org.springframework.social.version>1.1.6.RELEASE</org.springframework.social.version>
         <org.thymeleaf.version>3.0.11.RELEASE</org.thymeleaf.version>
         <org.thymeleaf.extras.version>3.0.4.RELEASE</org.thymeleaf.extras.version>
+        <us.codecraft.version>0.10.0</us.codecraft.version>
         <p6spy.version>3.9.1</p6spy.version>
         <redis.clients.version>3.5.2</redis.clients.version>
         <spring-cloud.version>2022.0.3</spring-cloud.version>
@@ -92,42 +100,42 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.github.fanzezhen.common</groupId>
+                <groupId>com.github.fanzezhen</groupId>
                 <artifactId>common-core</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.fanzezhen.common</groupId>
+                <groupId>com.github.fanzezhen</groupId>
                 <artifactId>common-exception</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.fanzezhen.common</groupId>
+                <groupId>com.github.fanzezhen</groupId>
                 <artifactId>common-mp</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.fanzezhen.common</groupId>
+                <groupId>com.github.fanzezhen</groupId>
                 <artifactId>common-log</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.fanzezhen.common</groupId>
+                <groupId>com.github.fanzezhen</groupId>
                 <artifactId>common-security</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.fanzezhen.common</groupId>
+                <groupId>com.github.fanzezhen</groupId>
                 <artifactId>common-sentinel</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.fanzezhen.common</groupId>
+                <groupId>com.github.fanzezhen</groupId>
                 <artifactId>common-swagger</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.fanzezhen.common</groupId>
+                <groupId>com.github.fanzezhen</groupId>
                 <artifactId>common-web</artifactId>
                 <version>${com.github.fanzezhen.common.version}</version>
             </dependency>
@@ -163,6 +171,11 @@
                 <version>${cn.hutool.version}</version>
             </dependency>
             <!--alibaba-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${com.alibaba.druid.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
@@ -428,139 +441,11 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${org.slf4j.version}</version>
             </dependency>
-            <!--spring-->
+            <!--接口文档-->
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>${org.springdoc.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${org.springframework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${org.springframework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${org.springframework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-tx</artifactId>
-                <version>${org.springframework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>${org.springframework.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-webmvc</artifactId>
-                <version>${org.springframework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.batch</groupId>
-                <artifactId>spring-batch-core</artifactId>
-                <version>${org.springframework.batch.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot</artifactId>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <!-- actuator 组件是Spring Boot的监控组件，actuator一旦应用，在启动的时候，会发布一系列的URL服务。包含一个shutdown服务，代表优雅关闭
-                当Spring Boot 应用中的actuator组件接收到shutdown请求的时候，会触发优雅关闭。
-                如果当前应用中有Eureka Client的集成，则会触发Eureka Client向Eureka Server发起一个shutdown优雅停服的请求 -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-actuator</artifactId>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-autoconfigure</artifactId>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter</artifactId>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
-                <scope>provided</scope>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-logging</artifactId>
-                <scope>compile</scope>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-log4j2</artifactId>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-configuration-processor</artifactId>
-                <optional>true</optional>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-actuator</artifactId>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-cache</artifactId>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-redis</artifactId>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-json</artifactId>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-security</artifactId>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <version>${org.springframework.boot.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-validation</artifactId>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-                <version>${org.springframework.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-webflux</artifactId>
-                <version>${org.springframework.boot.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -780,6 +665,16 @@
                 <artifactId>kaptcha</artifactId>
                 <version>${com.github.penggle.version}</version>
             </dependency>
+            <dependency>
+                <groupId>us.codecraft</groupId>
+                <artifactId>webmagic-core</artifactId>
+                <version>${us.codecraft.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>us.codecraft</groupId>
+                <artifactId>webmagic-extension</artifactId>
+                <version>${us.codecraft.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -855,11 +750,6 @@
                 <maven.compiler.target>${java.version}</maven.compiler.target>
                 <maven.compiler.compilerVersion>${java.version}</maven.compiler.compilerVersion>
                 <gpg.executable>gpg</gpg.executable>
-
-                <!-- 这个就是前面需要记录下的key -->
-                <gpg.keyname>7B8AED5BE39079F4D5CFEFFEC64C39C38F920A8F</gpg.keyname>
-                <!-- 公钥的加密密码 -->
-                <gpg.passphrase>zmd19951005</gpg.passphrase>
                 <gpg.executable>C:/Program Files (x86)/Gpg4win/../GnuPG/bin/gpg.exe</gpg.executable>
                 <!-- 前面pom.xml中配置了gpg的maven插件，这个目录就是你本地机器存放gpg秘钥的目录 -->
                 <gpg.homedir>C:/Users/andy/AppData/Roaming/gnupg</gpg.homedir>
@@ -868,6 +758,142 @@
     </profiles>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <!-- 指定编译器版本 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <forceJavacCompilerUse>true</forceJavacCompilerUse>
+                    </configuration>
+                </plugin>
+
+                <!-- 生成sources源码包的插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${org.apache.maven.plugins.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- 生成javadoc文档包的插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${org.apache.maven.plugins.version}</version>
+                    <configuration>
+                        <failOnError>false</failOnError>
+                        <doclint>none</doclint>
+                        <charset>UTF-8</charset>
+                        <docencoding>UTF-8</docencoding>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                            <phase>package</phase>
+                            <configuration>
+                                <additionalJOption>-Xdoclint:none</additionalJOption>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>default-deploy</id>
+                            <phase>deploy</phase>
+                            <goals>
+                                <goal>deploy</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>${nexus-staging-maven-plugin.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <!-- 这个id不要乱设置，需要和后面的settings.xml中的server的id保持一致 -->
+                        <serverId>oss</serverId>
+                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                        <!-- 如果希望发布后自动执行close和release操作，此处可以调整为true -->
+                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>deploy-to-sonatype</id>
+                            <phase>deploy</phase>
+                            <goals>
+                                <goal>deploy</goal>
+                                <goal>release</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-plugin</artifactId>
+                    <version>${maven-scm-plugin.version}</version>
+                </plugin>
+
+                <!--gpg加密，用于生成.asc-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>deploy</phase>
+<!--                            <phase>verify</phase>-->
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${org.springframework.boot.version}</version>
+                    <executions>
+                        <execution>
+                            <id>repackage</id>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                            <configuration>
+                                <attach>false</attach>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <finalName>${project.artifactId}</finalName>
         <resources>
             <resource>
@@ -880,116 +906,33 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
-                </configuration>
             </plugin>
-
             <!-- 生成sources源码包的插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${org.apache.maven.plugins.version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
-
             <!-- 生成javadoc文档包的插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${org.apache.maven.plugins.version}</version>
-                <configuration>
-                    <failOnError>false</failOnError>
-                    <doclint>none</doclint>
-                    <charset>UTF-8</charset>
-                    <docencoding>UTF-8</docencoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <phase>package</phase>
-                        <configuration>
-                            <!-- <additionalparam>-Xdoclint:none</additionalparam>  -->
-                            <additionalJOption>-Xdoclint:none</additionalJOption>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven-deploy-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>${nexus-staging-maven-plugin.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <!-- 这个id不要乱设置，需要和后面的settings.xml中的server的id保持一致 -->
-                    <serverId>oss</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <!-- 如果希望发布后自动执行close和release操作，此处可以调整为true -->
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>deploy-to-sonatype</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                            <goal>release</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-plugin</artifactId>
-                <version>${maven-scm-plugin.version}</version>
             </plugin>
-
             <!--gpg加密，用于生成.asc-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>${maven-gpg-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

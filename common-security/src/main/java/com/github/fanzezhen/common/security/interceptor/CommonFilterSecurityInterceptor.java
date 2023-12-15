@@ -1,6 +1,7 @@
 package com.github.fanzezhen.common.security.interceptor;
 
 import jakarta.servlet.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
@@ -15,8 +16,8 @@ import java.io.IOException;
 /**
  *
  * @author fanzezhen
- * @date 17/1/19
  */
+@Slf4j
 @Component
 public class CommonFilterSecurityInterceptor extends AbstractSecurityInterceptor implements Filter {
 
@@ -32,6 +33,7 @@ public class CommonFilterSecurityInterceptor extends AbstractSecurityInterceptor
 
     @Override
     public void init(FilterConfig filterConfig) {
+        log.debug("");
     }
 
     @Override
@@ -57,7 +59,7 @@ public class CommonFilterSecurityInterceptor extends AbstractSecurityInterceptor
 
     @Override
     public void destroy() {
-
+        log.debug("");
     }
 
     @Override

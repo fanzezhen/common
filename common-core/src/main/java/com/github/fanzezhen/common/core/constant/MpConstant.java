@@ -3,6 +3,7 @@ package com.github.fanzezhen.common.core.constant;
 /**
  * @author zezhen.fan
  */
+@SuppressWarnings("unused")
 public interface MpConstant {
     /**
      * 默认的包内文件夹名

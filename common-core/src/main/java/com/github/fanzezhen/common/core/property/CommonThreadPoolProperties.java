@@ -1,18 +1,18 @@
 package com.github.fanzezhen.common.core.property;
 
+import lombok.NoArgsConstructor;
+
 /**
  * @author zezhen.fan
  * @date 2023/8/14
  */
+@NoArgsConstructor
 public class CommonThreadPoolProperties {
     private int coreSize = 50;
     private int maxSize = 300;
     private int queueCapacity = 500;
     private int keepAliveSeconds = 300;
     private int circuitBreakerThreshold = 100;
-
-    public CommonThreadPoolProperties() {
-    }
 
     public int getCoreSize() {
         return this.coreSize;
@@ -57,10 +57,7 @@ public class CommonThreadPoolProperties {
     public boolean equals(final Object o) {
         if (o == this) {
             return true;
-        } else if (!(o instanceof CommonThreadPoolProperties)) {
-            return false;
-        } else {
-            CommonThreadPoolProperties other = (CommonThreadPoolProperties) o;
+        } else if (o instanceof CommonThreadPoolProperties other) {
             if (!other.canEqual(this)) {
                 return false;
             } else if (this.getCoreSize() != other.getCoreSize()) {
@@ -74,6 +71,8 @@ public class CommonThreadPoolProperties {
             } else {
                 return this.getCircuitBreakerThreshold() == other.getCircuitBreakerThreshold();
             }
+        } else {
+            return false;
         }
     }
 

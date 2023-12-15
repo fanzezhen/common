@@ -1,7 +1,9 @@
-package com.github.fanzezhen.common.mp.model.entity;
+package com.github.fanzezhen.common.mp.model.entity.tenant;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.github.fanzezhen.common.mp.model.entity.BaseEntity;
+import com.github.fanzezhen.common.mp.model.entity.BaseGenericEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,7 +29,7 @@ import javax.persistence.*;
 @Table(indexes = {
         @Index(name = "ix_del_status", columnList = "DEL_FLAG, STATUS")
 })
-public abstract class BaseTenantEntity extends BaseEntity {
+public abstract class BaseTenantGenericEntity extends BaseGenericEntity {
 
     /**
      * 租户id

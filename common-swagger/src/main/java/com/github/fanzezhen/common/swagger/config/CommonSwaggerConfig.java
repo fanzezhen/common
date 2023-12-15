@@ -17,9 +17,6 @@ public class CommonSwaggerConfig {
     @Resource
     private CommonCoreProperties commonCoreProperties;
 
-    public CommonSwaggerConfig() {
-    }
-
     private Info info() {
         CommonProjectProperties commonProjectProperties = commonCoreProperties.getCommonProjectProperties();
         return new Info()

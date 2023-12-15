@@ -17,22 +17,23 @@ import java.util.List;
  */
 @Component
 public class CommonGlobalOperationCustomizer implements GlobalOperationCustomizer {
+    static final String HEADER = "header";
     @Resource
     private SwaggerProperty swaggerProperty;
     @Override
     public Operation customize(Operation operation, HandlerMethod handlerMethod) {
         List<Parameter> headerParameterList = swaggerProperty.getHeaderParameterList();
         if (!swaggerProperty.isHeaderParameterCommonDisabled()){
-            operation.addParametersItem(new Parameter().in("header").name(SysConstant.HEADER_TOKEN));
-            operation.addParametersItem(new Parameter().in("header").name(SysConstant.HEADER_LOCALE));
-            operation.addParametersItem(new Parameter().in("header").name(SysConstant.HEADER_ACCOUNT_ID));
-            operation.addParametersItem(new Parameter().in("header").name(SysConstant.HEADER_ACCOUNT_NAME));
-            operation.addParametersItem(new Parameter().in("header").name(SysConstant.HEADER_USER_ID));
-            operation.addParametersItem(new Parameter().in("header").name(SysConstant.HEADER_USER_NAME));
-            operation.addParametersItem(new Parameter().in("header").name(SysConstant.HEADER_USER_IP));
-            operation.addParametersItem(new Parameter().in("header").name(SysConstant.HEADER_APP_CODE));
-            operation.addParametersItem(new Parameter().in("header").name(SysConstant.HEADER_TENANT_ID));
-            operation.addParametersItem(new Parameter().in("header").name(SysConstant.HEADER_PROJECT_ID));
+            operation.addParametersItem(new Parameter().in(HEADER).name(SysConstant.HEADER_TOKEN));
+            operation.addParametersItem(new Parameter().in(HEADER).name(SysConstant.HEADER_LOCALE));
+            operation.addParametersItem(new Parameter().in(HEADER).name(SysConstant.HEADER_ACCOUNT_ID));
+            operation.addParametersItem(new Parameter().in(HEADER).name(SysConstant.HEADER_ACCOUNT_NAME));
+            operation.addParametersItem(new Parameter().in(HEADER).name(SysConstant.HEADER_USER_ID));
+            operation.addParametersItem(new Parameter().in(HEADER).name(SysConstant.HEADER_USER_NAME));
+            operation.addParametersItem(new Parameter().in(HEADER).name(SysConstant.HEADER_USER_IP));
+            operation.addParametersItem(new Parameter().in(HEADER).name(SysConstant.HEADER_APP_CODE));
+            operation.addParametersItem(new Parameter().in(HEADER).name(SysConstant.HEADER_TENANT_ID));
+            operation.addParametersItem(new Parameter().in(HEADER).name(SysConstant.HEADER_PROJECT_ID));
         }
         if (CollUtil.isNotEmpty(headerParameterList)) {
             headerParameterList.forEach(operation::addParametersItem);

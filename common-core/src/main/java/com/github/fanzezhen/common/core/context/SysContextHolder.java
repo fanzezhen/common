@@ -1,9 +1,11 @@
 package com.github.fanzezhen.common.core.context;
 
-import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.github.fanzezhen.common.core.constant.SysConstant;
+import com.github.fanzezhen.common.core.util.ExceptionUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.ZoneOffset;
@@ -14,10 +16,14 @@ import java.util.TimeZone;
  * @author zezhen.fan
  */
 @Slf4j
+@SuppressWarnings("unused")
 public class SysContextHolder {
+    private SysContextHolder() {
+    }
+
     private static final ThreadLocal<SysContext> CONTEXT_MAP = new ThreadLocal<>();
 
-    public static CaseInsensitiveMap<String, String> getContextMap() {
+    public static JSONObject getContextMap() {
         SysContext systemContext = CONTEXT_MAP.get();
         if (systemContext == null) {
             systemContext = new SysContext();
@@ -31,13 +37,17 @@ public class SysContextHolder {
         return CONTEXT_MAP.get();
     }
 
-    public static void setContextMap(Map<String, String> CONTEXT_MAP) {
-        getContextMap().putAll(CONTEXT_MAP);
+    public static void setContextMap(Map<String, String> contextMap) {
+        getContextMap().putAll(contextMap);
+    }
+
+    public static void setContextMap(JSONObject contextMap) {
+        getContextMap().putAll(contextMap);
     }
 
     public static String get(String key) {
-        Map<String, String> CONTEXT_MAP = getContextMap();
-        return CONTEXT_MAP.get(key.toLowerCase());
+        JSONObject contextMap = getContextMap();
+        return contextMap == null ? null : contextMap.getString(key.toLowerCase());
     }
 
     public static void set(SysContext systemContext) {
@@ -45,9 +55,9 @@ public class SysContextHolder {
     }
 
     public static void clear(String key) {
-        Map<String, String> CONTEXT_MAP = getContextMap();
-        if (CONTEXT_MAP != null) {
-            CONTEXT_MAP.remove(key);
+        JSONObject contextMap = getContextMap();
+        if (contextMap != null) {
+            contextMap.remove(key);
         }
 
     }
@@ -56,15 +66,15 @@ public class SysContextHolder {
         if (key == null) {
             log.warn("key is null, can't set it into the context map");
         } else if (key.length() > SysContext.MAX_SIZE) {
-            throw new RuntimeException("key is more than " + SysContext.MAX_SIZE + ", i can't set it into the context map");
+            throw ExceptionUtil.wrapException("key is more than " + SysContext.MAX_SIZE + ", i can't set it into the context map");
         } else if (value != null && value.length() > SysContext.MAX_SIZE) {
-            throw new RuntimeException("value is more than " + SysContext.MAX_SIZE + ", i can't set it into the context map");
+            throw ExceptionUtil.wrapException("value is more than " + SysContext.MAX_SIZE + ", i can't set it into the context map");
         } else {
-            Map<String, String> CONTEXT_MAP = getContextMap();
-            if (CONTEXT_MAP.size() > SysContext.MAX_CAPACITY) {
-                throw new RuntimeException("the context map is full, can't set anything");
+            JSONObject contextMap = getContextMap();
+            if (contextMap.size() > SysContext.MAX_CAPACITY) {
+                throw ExceptionUtil.wrapException("the context map is full, can't set anything");
             } else {
-                CONTEXT_MAP.put(key.toLowerCase(), value);
+                contextMap.put(key.toLowerCase(), value);
             }
         }
     }
@@ -199,7 +209,7 @@ public class SysContextHolder {
      */
     public static TimeZone getTimeZone() {
         String zoneOffset = get(SysConstant.HEADER_TIME_ZONE);
-        if (StrUtil.isBlank(zoneOffset)) {
+        if (CharSequenceUtil.isBlank(zoneOffset)) {
             return TimeZone.getDefault();
         }
         // 和user profile的timezone的格式匹配
@@ -247,17 +257,18 @@ public class SysContextHolder {
     public static void remove(String key) {
         getContextMap().remove(key);
     }
+
     public static String getHeaderJsonStr(String[] headerArgs) {
         if (ArrayUtil.isEmpty(headerArgs)) {
-            return StrUtil.EMPTY;
+            return CharSequenceUtil.EMPTY;
         }
         StringBuilder stringBuilder = new StringBuilder();
         for (String headerKey : headerArgs) {
-            if (StrUtil.isBlank(headerKey)) {
+            if (CharSequenceUtil.isBlank(headerKey)) {
                 continue;
             }
-            if (stringBuilder.length() > 0) {
-                stringBuilder.append(StrUtil.COMMA);
+            if (!stringBuilder.isEmpty()) {
+                stringBuilder.append(StrPool.COMMA);
             }
             stringBuilder.append(headerKey).append("=").append(get(headerKey));
         }

@@ -32,17 +32,17 @@ public class HttpUtil {
         // 同步请求方式，拿到结果前会阻塞当前线程
         var httpResponse = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println("拿到结果前会阻塞当前线程...");
+        log.debug("拿到结果前会阻塞当前线程...");
         // 打印获取到的网页内容
-        System.out.println(httpResponse.body());
+        log.debug(httpResponse.body());
 
         // 发送异步请求：
         CompletableFuture<String> future = HttpClient.newHttpClient().
                 sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body);
-        System.out.println("先继续干点别的事情...");
+        log.debug("先继续干点别的事情...");
         // // 打印获取到的网页内容
-        System.out.println(future.get());
+        log.debug(future.get());
     }
 
     public static boolean isAjaxRequest(HttpServletRequest request) {
@@ -62,12 +62,11 @@ public class HttpUtil {
         OutputStream out = null;
         DataOutputStream dataOutputStream = null;
         InputStream in = null;
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        try {
+
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();) {
             URLConnection urlConnection = new URL(url).openConnection();
             HttpURLConnection httpUrlConnection = (HttpURLConnection) urlConnection;
             // 设置是否向httpUrlConnection输出，post请求，参数要放在http正文内，因此需要设为true,
-            // 默认情况下是false;
             httpUrlConnection.setDoOutput(true);
             // 设置是否从httpUrlConnection读入，默认情况下是true;
             httpUrlConnection.setDoInput(true);
@@ -109,7 +108,7 @@ public class HttpUtil {
         } catch (IOException e) {
             result = ResponseData.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getLocalizedMessage());
         } finally {
-            if (!(closeStream(byteArrayOutputStream) && closeStream(in) && closeStream(out) && closeStream(dataOutputStream))) {
+            if (closeStream(in) && closeStream(out) && closeStream(dataOutputStream)) {
                 result = ResponseData.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "请求关闭异常");
             }
         }
@@ -119,13 +118,11 @@ public class HttpUtil {
     /**
      * GET请求
      */
-    public static ResponseData doGet(String url, HashMap<String, String> params) {
+    public static ResponseData doGet(String url, Map<String, String> params) {
         ResponseData result;
 
         InputStream in = null;
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-        try {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();) {
             // URL传入参数
             StringBuilder queryString = getQueryString(params);
 
@@ -139,7 +136,6 @@ public class HttpUtil {
             URLConnection urlConnection = new URL(url).openConnection();
             HttpURLConnection httpUrlConnection = (HttpURLConnection) urlConnection;
             // 设置是否向httpUrlConnection输出，post请求，参数要放在http正文内，因此需要设为true,
-            // 默认情况下是false;
             httpUrlConnection.setDoOutput(false);
             // 设置是否从httpUrlConnection读入，默认情况下是true;
             httpUrlConnection.setDoInput(true);
@@ -167,7 +163,7 @@ public class HttpUtil {
         } catch (IOException e) {
             result = ResponseData.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getLocalizedMessage());
         } finally {
-            if (!(closeStream(byteArrayOutputStream) && closeStream(in))) {
+            if (closeStream(in)) {
                 result = ResponseData.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "请求关闭异常");
             }
         }

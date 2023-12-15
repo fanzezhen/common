@@ -35,7 +35,7 @@ import java.util.Objects;
 @Table(indexes = {
         @Index(name = "ix_del_status", columnList = "DEL_FLAG, STATUS")
 })
-public abstract class BaseTenantUpdateEntity extends BaseTenantEntity {
+public abstract class BaseGenericEntity extends BaseEntity {
 
     /**
      * 删除标识（1-已删除；0-未删除），默认 0

@@ -1,11 +1,14 @@
 package com.github.fanzezhen.common.mp.generator;
 
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.github.fanzezhen.common.core.constant.MpConstant;
 import com.github.fanzezhen.common.mp.model.entity.BaseEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +17,7 @@ import java.util.Scanner;
 /**
  * @author zezhen.fan
  */
+@Slf4j
 @Accessors(chain = true)
 @Data
 public class GeneratorBean {
@@ -74,7 +78,7 @@ public class GeneratorBean {
         setVersionFieldName(MpConstant.VERSION_FIELD_NAME);
         setFormatFileName(MpConstant.DEFAULT_FORMAT_FILE_NAME);
         setIgnoreTablePrefix(MpConstant.DEFAULT_IGNORE_TABLE_PREFIX);
-        setTableNameSplitter(StrUtil.COMMA);
+        setTableNameSplitter(StrPool.COMMA);
         setSuperEntityClass(BaseEntity.class);
     }
 
@@ -91,13 +95,12 @@ public class GeneratorBean {
      * </p>
      */
     public String scanner(String tip) {
-        System.out.println("请输入" + tip + "：");
-        Scanner scanner = getScanner();
-        String nextLine = scanner.nextLine();
-        return StringUtils.isBlank(nextLine) ? scanner.next() : nextLine;
+        log.info("请输入{}：", tip);
+        String nextLine = getOrSystemScanner().nextLine();
+        return StringUtils.isBlank(nextLine) ? getOrSystemScanner().next() : nextLine;
     }
 
-    public Scanner getScanner() {
+    public Scanner getOrSystemScanner() {
         if (scanner == null) {
             scanner = new Scanner(System.in);
         }
@@ -105,6 +108,6 @@ public class GeneratorBean {
     }
 
     public List<String> getTableNameList() {
-        return StrUtil.isBlank(tableNameStr) ? Collections.emptyList() : StrUtil.split(tableNameStr, getTableNameSplitter(), true, true);
+        return CharSequenceUtil.isBlank(tableNameStr) ? Collections.emptyList() : CharSequenceUtil.split(tableNameStr, getTableNameSplitter(), true, true);
     }
 }

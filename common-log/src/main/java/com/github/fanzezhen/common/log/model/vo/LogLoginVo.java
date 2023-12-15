@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.log.model.vo;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.fanzezhen.common.log.foundation.entity.LogLogin;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class LogLoginVo extends LogLogin {
 
     @Override
     public String getIp() {
-        if (StrUtil.isBlank(ip)) {
+        if (CharSequenceUtil.isBlank(ip)) {
             setIp(super.getIp());
         }
         return ip;
@@ -27,7 +28,7 @@ public class LogLoginVo extends LogLogin {
 
     @Override
     public String getIpv4() {
-        if (StrUtil.isBlank(ipv4)) {
+        if (CharSequenceUtil.isBlank(ipv4)) {
             setIpv4(super.getIpv4());
         }
         return ipv4;
@@ -35,7 +36,7 @@ public class LogLoginVo extends LogLogin {
 
     @Override
     public String getIpv6() {
-        if (StrUtil.isBlank(ipv6)) {
+        if (CharSequenceUtil.isBlank(ipv6)) {
             setIpv6(super.getIpv6());
         }
         return ipv6;

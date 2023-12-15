@@ -2,7 +2,6 @@ package com.github.fanzezhen.common.log.foundation.entity;
 
 import com.github.fanzezhen.common.mp.model.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

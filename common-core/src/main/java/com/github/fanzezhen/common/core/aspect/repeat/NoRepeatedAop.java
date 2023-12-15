@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.core.aspect.repeat;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -78,7 +79,7 @@ public class NoRepeatedAop {
             log.error("noRepeated check failed exception", throwable);
             return;
         }
-        if (!StrUtil.isEmpty(value)) {
+        if (!CharSequenceUtil.isEmpty(value)) {
             ExceptionUtil.throwException("请勿重复提交");
         }
         try {
@@ -94,7 +95,7 @@ public class NoRepeatedAop {
         String[] headerArgs = noRepeat.headerArgs();
         if (ArrayUtil.isNotEmpty(headerArgs)) {
             for (String headerKey : headerArgs) {
-                if (StrUtil.isBlank(headerKey)) {
+                if (CharSequenceUtil.isBlank(headerKey)) {
                     continue;
                 }
                 param.put(headerKey, SysContextHolder.get(headerKey));
@@ -103,7 +104,7 @@ public class NoRepeatedAop {
         String[] paramArgs = noRepeat.paramArgs();
         if (ArrayUtil.isNotEmpty(paramArgs) && ArrayUtil.isNotEmpty(args)) {
             for (String validArg : paramArgs) {
-                if (StrUtil.isBlank(validArg)) {
+                if (CharSequenceUtil.isBlank(validArg)) {
                     continue;
                 }
                 String[] fieldParts = validArg.split("\\.");
@@ -126,7 +127,7 @@ public class NoRepeatedAop {
         }
         String headerJsonStr = SysContextHolder.getHeaderJsonStr(noRepeat.headerArgs());
         String paramKey = noRepeat.key();
-        if (StrUtil.isEmpty(paramKey)) {
+        if (CharSequenceUtil.isEmpty(paramKey)) {
             paramKey = JSON.toJSONString(Arrays.stream(args).filter(arg -> !(arg instanceof HttpServletRequest)).collect(toList()));
         }
         String key = env + StrUtil.SLASH + springApplicationName + StrUtil.SLASH + "NoRepeat" + StrUtil.SLASH + joinPoint.getTarget().getClass().getName() + StrUtil.DOT + joinPoint.getSignature().getName() + StrUtil.SLASH + paramKey + StrUtil.SLASH + headerJsonStr + StrUtil.SLASH + param.toJSONString();

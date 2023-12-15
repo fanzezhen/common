@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * @author zezhen.fan
  */
 @Order
-@Service("CommonCacheServiceImpl")
+@Service("commonCacheServiceImpl")
 public class CacheServiceImpl implements CacheService {
     @Override
     public String get(String k) {
@@ -36,10 +36,12 @@ public class CacheServiceImpl implements CacheService {
     public void set(String k, String v, long timeout, TimeUnit timeUnit) {
         TimedCache<String, String> timedCache = CacheConstant.getHourTimedCacheInstance();
         long timeoutMillis = timeout;
+        if (timeUnit == null){
+            throw ExceptionUtil.wrapException("timeUnit 不能为空");
+        }
         switch (timeUnit) {
             case NANOSECONDS -> ExceptionUtil.throwException("不支持 NANOSECONDS");
             case MICROSECONDS -> ExceptionUtil.throwException("不支持 MICROSECONDS");
-            case MILLISECONDS -> timeoutMillis = timeout;
             case SECONDS -> timeoutMillis = timeout * 1000;
             case MINUTES -> timeoutMillis = timeout * 60 * 1000;
             case HOURS -> timeoutMillis = timeout * 60 * 60 * 1000;

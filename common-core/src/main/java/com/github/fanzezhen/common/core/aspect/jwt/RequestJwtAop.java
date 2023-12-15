@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.core.aspect.jwt;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.jwt.JWT;
@@ -91,7 +92,7 @@ public class RequestJwtAop {
         // 默认验证HS265的算法
         ExceptionUtil.throwIf(!JWT.of(token).setKey(secret.getBytes(StandardCharsets.UTF_8)).verify(), 405, "token验证失败");
         String tenantId = authInfoJson.getString("tenantId");
-        if (StrUtil.isNotEmpty(tenantId)) {
+        if (CharSequenceUtil.isNotEmpty(tenantId)) {
             SysContextHolder.setTenantId(tenantId);
         }
         log.info("验证JWT通过： url={}, Args={}", request.getRequestURL().toString(), args);

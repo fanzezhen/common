@@ -1,6 +1,7 @@
 package com.github.fanzezhen.common.log.interceptor;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
@@ -79,7 +80,7 @@ public class OperateLogInterceptor implements Interceptor {
         List<String> fieldNameList = Arrays.asList(fieldNames);
         SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
         String tableName = operateLog.tableName();
-        if (StrUtil.isBlank(tableName)) {
+        if (CharSequenceUtil.isBlank(tableName)) {
             tableName = getTableNameByClass(arg.getClass());
         }
         LogOperation logOperation = insertLog(String.valueOf(ReflectUtil.getFieldValue(arg, "id")),
@@ -114,7 +115,7 @@ public class OperateLogInterceptor implements Interceptor {
                         detailLog.setColumnName(name);
                         //新增只有新值
                         String newValue = String.valueOf(newFieldValue);
-                        if (StrUtil.isNotEmpty(newValue)) {
+                        if (CharSequenceUtil.isNotEmpty(newValue)) {
                             detailLog.setNewValue(newValue);
                             detailLog.setOldValue(String.valueOf(oldFieldValue));
                             detailLogList.add(detailLog);
@@ -178,7 +179,7 @@ public class OperateLogInterceptor implements Interceptor {
                                      int operateType,
                                      Object arg) {
         String tableName = operateLog.tableName();
-        if (StrUtil.isBlank(tableName)) {
+        if (CharSequenceUtil.isBlank(tableName)) {
             tableName = getTableNameByClass(arg.getClass());
         }
         String comment = null;
@@ -204,7 +205,7 @@ public class OperateLogInterceptor implements Interceptor {
                 detailLog.setColumnName(name);
                 //新增只有新值
                 String newValue = String.valueOf(fieldValue);
-                if (StrUtil.isNotEmpty(newValue)) {
+                if (CharSequenceUtil.isNotEmpty(newValue)) {
                     detailLog.setNewValue(newValue);
                     detailLogList.add(detailLog);
                 }
@@ -250,7 +251,7 @@ public class OperateLogInterceptor implements Interceptor {
     private OperateLog getOperateLog(Object arg) {
         OperateLog operateLog = arg == null ? null : arg.getClass().getAnnotation(OperateLog.class);
         if (operateLog == null) {
-            if (arg != null && StrUtil.isNotBlank(commonProjectProperties.getDtoPackage())) {
+            if (arg != null && CharSequenceUtil.isNotBlank(commonProjectProperties.getDtoPackage())) {
                 String[] dtoPackages = commonProjectProperties.getDtoPackage().split(",");
                 for (String dtoPackage : dtoPackages) {
                     Reflections reflections = new Reflections(dtoPackage);
@@ -268,10 +269,10 @@ public class OperateLogInterceptor implements Interceptor {
 
     private IService<?> getService(String serviceBeanName, Class<?> clazz) {
         try {
-            if (StrUtil.isBlank(serviceBeanName)) {
+            if (CharSequenceUtil.isBlank(serviceBeanName)) {
                 serviceBeanName = getServiceBeanNameByBeanClass(clazz);
             }
-            return StrUtil.isBlank(serviceBeanName) ? null : SpringUtil.getBean(serviceBeanName);
+            return CharSequenceUtil.isBlank(serviceBeanName) ? null : SpringUtil.getBean(serviceBeanName);
         } catch (Throwable throwable) {
             log.warn("", throwable);
         }

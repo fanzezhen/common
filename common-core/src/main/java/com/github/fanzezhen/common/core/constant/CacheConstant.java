@@ -79,10 +79,10 @@ public interface CacheConstant {
         private HourCacheSingletonHolder() {
         }
 
-        private static final TimedCache<String, String> HOUR_TIMED_CACHE = CacheUtil.newTimedCache(60 * 60 * 1000);
+        private static final TimedCache<String, String> HOUR_TIMED_CACHE = CacheUtil.newTimedCache(60 * 60 * 1000L);
 
         static {
-            HOUR_TIMED_CACHE.schedulePrune(60 * 60 * 1000);
+            HOUR_TIMED_CACHE.schedulePrune(60 * 60 * 1000L);
         }
     }
 }

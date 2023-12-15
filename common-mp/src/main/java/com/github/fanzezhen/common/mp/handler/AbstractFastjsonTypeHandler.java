@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class AbstractFastjsonTypeHandler<T extends JSON> extends AbstractJsonTypeHandler<T> {
 
-    public AbstractFastjsonTypeHandler(Class<T> classType) {
+    protected AbstractFastjsonTypeHandler(Class<T> classType) {
         super(classType);
     }
 

@@ -2,25 +2,26 @@ package com.github.fanzezhen.common.core.util;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author zezhen.fan
  */
 @Slf4j
+@SuppressWarnings("unused")
 public class CommonUtil {
     @SuppressWarnings("unchecked")
     public static <T> T cast(Class<T> classType, Object value) {
@@ -38,7 +39,8 @@ public class CommonUtil {
                 }
             }
             return result;
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             log.warn("类型转化失败", e);
         }
         return null;
@@ -53,11 +55,8 @@ public class CommonUtil {
         response.addHeader("Content-Disposition", "attachment;fileName=" +
                 new String(file.getName().getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
         byte[] buffer = new byte[1024];
-        FileInputStream fis = null;
-        BufferedInputStream bis = null;
-        try {
-            fis = new FileInputStream(file);
-            bis = new BufferedInputStream(fis);
+        try (FileInputStream fis = new FileInputStream(file);
+             BufferedInputStream bis = new BufferedInputStream(fis)) {
             // 获取response输出流
             OutputStream os = response.getOutputStream();
             int i = bis.read(buffer);
@@ -69,8 +68,6 @@ public class CommonUtil {
             throw new ServiceException(CoreExceptionEnum.FILE_NOT_FOUND);
         } catch (IOException e) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "输出流读取失败！");
-        } finally {
-            CommonUtil.doClose(fis, bis);
         }
     }
 
@@ -85,19 +82,20 @@ public class CommonUtil {
             }
         }
     }
+
     public static void replaceInFile(String originPath, String targetPath, CharSequence target, CharSequence replacement) {
         File file = new File(originPath);
-        if (!file.exists()){
+        if (!file.exists()) {
             return;
         }
-        if (file.isFile()){
+        if (file.isFile()) {
             replaceInFile(file, targetPath, target, replacement);
         }
         File[] files = file.listFiles();
-        if (ArrayUtil.isEmpty(files)){
+        if (ArrayUtil.isEmpty(files)) {
             return;
         }
-        if (!targetPath.endsWith(File.separator) && !targetPath.endsWith(StrUtil.BACKSLASH)) {
+        if (!targetPath.endsWith(File.separator) && !targetPath.endsWith(StrPool.BACKSLASH)) {
             targetPath += File.separator;
         }
         for (File listFile : files) {
@@ -106,11 +104,11 @@ public class CommonUtil {
     }
 
     private static void replaceInFile(File file, String targetFilePath, CharSequence target, CharSequence replacement) {
-        if (!file.isFile()){
+        if (!file.isFile()) {
             return;
         }
         List<String> list = FileUtil.readUtf8Lines(file);
-        FileUtil.writeUtf8Lines(list.stream().map(s -> s.replace(target, replacement)).collect(Collectors.toList()), new File(targetFilePath));
+        FileUtil.writeUtf8Lines(list.stream().map(s -> s.replace(target, replacement)).toList(), new File(targetFilePath));
     }
 
     public static void main(String[] args) {

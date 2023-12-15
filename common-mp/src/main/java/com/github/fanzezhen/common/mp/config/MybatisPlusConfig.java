@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.mp.config;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
@@ -75,7 +76,7 @@ public class MybatisPlusConfig {
             }
             for (String tb : shardingByTenantTables) {
                 if (tableName.equalsIgnoreCase(tb)){
-                    if (StrUtil.isEmpty(tenantId)){
+                    if (CharSequenceUtil.isEmpty(tenantId)){
                         return tableName;
                     }
                     return tableName + StrUtil.UNDERLINE + tenantId;

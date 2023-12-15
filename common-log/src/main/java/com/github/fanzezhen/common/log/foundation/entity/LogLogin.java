@@ -1,6 +1,7 @@
 package com.github.fanzezhen.common.log.foundation.entity;
 
 import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.annotation.JSONField;
@@ -70,7 +71,7 @@ public class LogLogin extends BaseEntity {
     private String remark;
 
     public void setIp(String ip) {
-        if (StrUtil.isBlank(ip)) {
+        if (CharSequenceUtil.isBlank(ip)) {
             return;
         }
         try {
@@ -101,7 +102,7 @@ public class LogLogin extends BaseEntity {
     }
 
     public void setIpv4(String ipv4) {
-        if (StrUtil.isBlank(ipv4)) {
+        if (CharSequenceUtil.isBlank(ipv4)) {
             return;
         }
         try {
@@ -126,7 +127,7 @@ public class LogLogin extends BaseEntity {
     }
 
     public void setIpv6(String ipv6) {
-        if (StrUtil.isBlank(ipv6)) {
+        if (CharSequenceUtil.isBlank(ipv6)) {
             return;
         }
         try {

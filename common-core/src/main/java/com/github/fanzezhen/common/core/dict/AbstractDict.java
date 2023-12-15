@@ -3,6 +3,7 @@ package com.github.fanzezhen.common.core.dict;
 import lombok.Data;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 字典映射抽象字典类
@@ -23,13 +24,13 @@ public abstract class AbstractDict {
     /**
      * 字段枚举值映射，实体的字段名→{枚举名：枚举值}
      */
-    protected LinkedHashMap<String, LinkedHashMap<Object, String>> fieldWrapperDict = new LinkedHashMap<>(8);
+    protected LinkedHashMap<String, Map<Object, String>> fieldWrapperDict = new LinkedHashMap<>(8);
     /**
      * 字段枚举值映射，实体的字段名→{枚举值：枚举名}
      */
-    protected LinkedHashMap<String, LinkedHashMap<String, Object>> fieldAdapterDict = new LinkedHashMap<>(8);
+    protected LinkedHashMap<String, Map<String, Object>> fieldAdapterDict = new LinkedHashMap<>(8);
 
-    public AbstractDict() {
+    protected AbstractDict() {
         put("id", "主键id");
         put("name", "名称");
 
@@ -100,11 +101,11 @@ public abstract class AbstractDict {
         this.reverseDict.put(key, value);
     }
 
-    public LinkedHashMap<Object, String> getFieldWrapper(String key) {
+    public Map<Object, String> getFieldWrapper(String key) {
         return this.fieldWrapperDict.get(key);
     }
 
-    public void putFieldWrapper(String key, LinkedHashMap<Object, String> fieldWrapper) {
+    public void putFieldWrapper(String key, Map<Object, String> fieldWrapper) {
         this.fieldWrapperDict.put(key, fieldWrapper);
     }
 
@@ -120,17 +121,17 @@ public abstract class AbstractDict {
         if (this.fieldWrapperDict.containsKey(field)) {
             getFieldWrapper(field).put(value, desc);
         } else {
-            putFieldWrapper(field, new LinkedHashMap<>(2) {{
-                put(value, desc);
-            }});
+            LinkedHashMap<Object, String> linkedHashMap = new LinkedHashMap<>(2);
+            linkedHashMap.put(value, desc);
+            putFieldWrapper(field, linkedHashMap);
         }
     }
 
-    public LinkedHashMap<String, Object> getFieldAdapter(String key) {
+    public Map<String, Object> getFieldAdapter(String key) {
         return this.fieldAdapterDict.get(key);
     }
 
-    public void putFieldAdapter(String key, LinkedHashMap<String, Object> fieldAdapter) {
+    public void putFieldAdapter(String key, Map<String, Object> fieldAdapter) {
         this.fieldAdapterDict.put(key, fieldAdapter);
     }
 
@@ -148,14 +149,6 @@ public abstract class AbstractDict {
 
     public Object getFieldAdapterByReverse(String reverseKey, String value) {
         return getFieldAdapter(getReverse(reverseKey), value);
-    }
-
-    private static class SingletonHolder {
-        public static AbstractDict INSTANCE;
-    }
-
-    public static AbstractDict getInstance() {
-        return SingletonHolder.INSTANCE;
     }
 
 }

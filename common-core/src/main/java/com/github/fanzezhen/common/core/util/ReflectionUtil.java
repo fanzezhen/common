@@ -2,6 +2,7 @@ package com.github.fanzezhen.common.core.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
@@ -97,7 +98,7 @@ public class ReflectionUtil {
     @SuppressWarnings("unchecked")
     public static boolean isEmptyValue(String fieldName, Object bean) {
         Object value = getValue(fieldName, bean);
-        if (value == null || StrUtil.isEmpty(String.valueOf(value))) {
+        if (value == null || CharSequenceUtil.isEmpty(String.valueOf(value))) {
             return true;
         }
         if (value instanceof Iterable) {

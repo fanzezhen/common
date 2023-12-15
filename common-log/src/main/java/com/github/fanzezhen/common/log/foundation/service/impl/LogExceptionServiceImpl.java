@@ -1,7 +1,7 @@
 package com.github.fanzezhen.common.log.foundation.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.github.fanzezhen.common.log.foundation.entity.LogException;
+import com.github.fanzezhen.common.log.foundation.entity.ExceptionLog;
 import com.github.fanzezhen.common.log.foundation.mapper.LogExceptionMapper;
 import com.github.fanzezhen.common.log.foundation.service.ILogExceptionService;
 import org.springframework.stereotype.Service;
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2021-04-28
  */
 @Service
-public class LogExceptionServiceImpl extends ServiceImpl<LogExceptionMapper, LogException> implements ILogExceptionService {
+public class LogExceptionServiceImpl extends ServiceImpl<LogExceptionMapper, ExceptionLog> implements ILogExceptionService {
 
 }

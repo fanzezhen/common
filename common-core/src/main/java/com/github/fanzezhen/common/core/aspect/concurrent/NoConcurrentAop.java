@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.core.aspect.concurrent;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.fanzezhen.common.core.context.SysContextHolder;
@@ -63,7 +64,7 @@ public class NoConcurrentAop {
     private String getKey(JoinPoint joinPoint, NoConcurrent noConcurrent) {
         Object[] args = joinPoint.getArgs();
         String paramKey = noConcurrent.key();
-        if (StrUtil.isEmpty(paramKey)) {
+        if (CharSequenceUtil.isEmpty(paramKey)) {
             paramKey = JSON.toJSONString(Arrays.stream(args).filter(arg -> !(arg instanceof HttpServletRequest)).collect(toList()));
         }
         String key = env + StrUtil.SLASH +

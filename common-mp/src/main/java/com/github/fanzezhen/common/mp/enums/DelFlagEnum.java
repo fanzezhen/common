@@ -1,9 +1,10 @@
 package com.github.fanzezhen.common.mp.enums;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.IEnum;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.github.fanzezhen.common.core.constant.MpConstant;
 import lombok.Getter;
 
 /**
@@ -45,7 +46,7 @@ public enum DelFlagEnum implements IEnum<Integer> {
             }
             return String.valueOf(code);
         }
-        return StrUtil.EMPTY;
+        return CharSequenceUtil.EMPTY;
     }
 
     public static DelFlagEnum toEnum(int code) {
@@ -58,6 +59,6 @@ public enum DelFlagEnum implements IEnum<Integer> {
     }
 
     public static String getColumn() {
-        return "del_flag";
+        return MpConstant.DEFAULT_LOGIC_DELETE_COLUMN_NAME;
     }
 }

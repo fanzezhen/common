@@ -1,7 +1,7 @@
 package com.github.fanzezhen.common.log.foundation.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.github.fanzezhen.common.log.foundation.entity.LogException;
+import com.github.fanzezhen.common.log.foundation.entity.ExceptionLog;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import com.github.fanzezhen.common.log.foundation.entity.LogException;
  * @author fanzezhen
  * @since 2021-04-28
  */
-public interface LogExceptionMapper extends BaseMapper<LogException> {
+public interface LogExceptionMapper extends BaseMapper<ExceptionLog> {
 
 }

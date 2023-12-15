@@ -1,7 +1,7 @@
 package com.github.fanzezhen.common.log.foundation.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.github.fanzezhen.common.log.foundation.entity.LogException;
+import com.github.fanzezhen.common.log.foundation.entity.ExceptionLog;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import com.github.fanzezhen.common.log.foundation.entity.LogException;
  * @author fanzezhen
  * @since 2021-04-28
  */
-public interface ILogExceptionService extends IService<LogException> {
+public interface ILogExceptionService extends IService<ExceptionLog> {
 
 }

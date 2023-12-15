@@ -5,12 +5,11 @@
     <parent>
         <artifactId>common</artifactId>
         <groupId>com.github.fanzezhen</groupId>
-        <version>3.0.1-2023.10.13</version>
+        <version>3.0.1-2023.12.12</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.github.fanzezhen.common</groupId>
     <artifactId>common-swagger</artifactId>
+    <version>${com.github.fanzezhen.common.version}</version>
 
     <dependencies>
         <dependency>
@@ -18,7 +17,7 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.fanzezhen.common</groupId>
+            <groupId>com.github.fanzezhen</groupId>
             <artifactId>common-core</artifactId>
         </dependency>
     </dependencies>

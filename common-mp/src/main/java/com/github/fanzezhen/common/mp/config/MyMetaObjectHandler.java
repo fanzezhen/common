@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.mp.config;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.github.fanzezhen.common.core.context.SysContextHolder;
@@ -21,7 +22,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         log.debug("start insert fill ....");
         String loginUserId = SysContextHolder.getUserId();
-        if (StrUtil.isNotBlank(loginUserId)) {
+        if (CharSequenceUtil.isNotBlank(loginUserId)) {
             this.fillStrategy(metaObject, "createUserId", loginUserId);
         }
         this.fillStrategy(metaObject, "status", StatusEnum.ENABLE);
@@ -34,7 +35,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject) {
         log.debug("start update fill ....");
         String loginUserId = SysContextHolder.getUserId();
-        if (StrUtil.isNotBlank(loginUserId)) {
+        if (CharSequenceUtil.isNotBlank(loginUserId)) {
             this.fillStrategy(metaObject, "updateUserId", loginUserId);
         }
         this.fillStrategy(metaObject, "updateTime", LocalDateTime.now());

@@ -2,6 +2,7 @@ package com.github.fanzezhen.common.core.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.stylefeng.roses.kernel.model.exception.AbstractBaseExceptionEnum;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
@@ -15,12 +16,17 @@ import java.util.Map;
  * @author zezhen.fan
  */
 public class ExceptionUtil {
+    private ExceptionUtil() {
+    }
+
     public static ServiceException wrapException(String errorMessage) {
         return new ServiceException(CoreExceptionEnum.SERVICE_ERROR.getCode(), errorMessage);
     }
+
     public static ServiceException wrapException(int code, String errorMessage) {
         return new ServiceException(code, errorMessage);
     }
+
     public static void throwException(int code, String errorMessage) {
         throw new ServiceException(code, errorMessage);
     }
@@ -52,11 +58,11 @@ public class ExceptionUtil {
             return true;
         }
         if (isStrip) {
-            if (StrUtil.isBlank(String.valueOf(o))) {
+            if (CharSequenceUtil.isBlank(String.valueOf(o))) {
                 return true;
             }
         } else {
-            if (StrUtil.isEmpty(String.valueOf(o))) {
+            if (CharSequenceUtil.isEmpty(String.valueOf(o))) {
                 return true;
             }
         }
@@ -66,13 +72,10 @@ public class ExceptionUtil {
         if (o instanceof Collection && CollUtil.isEmpty((Collection<?>) o)) {
             return true;
         }
-        if (o instanceof byte[] && ((byte[]) o).length == 0) {
+        if (o instanceof byte[] bytes && bytes.length == 0) {
             return true;
         }
-        if (o instanceof String[] && ((String[]) o).length == 0) {
-            return true;
-        }
-        return false;
+        return o instanceof String[] strings && strings.length == 0;
     }
 
     public static boolean isNotBlank(Object o) {
@@ -84,7 +87,7 @@ public class ExceptionUtil {
     }
 
     public static void throwIfEmpty(Object param, String paramName, String errMsg) {
-        if (param == null || StrUtil.isEmpty(String.valueOf(param))) {
+        if (param == null || CharSequenceUtil.isEmpty(String.valueOf(param))) {
             ExceptionUtil.throwException(paramName + errMsg);
         }
         if (param instanceof Map && MapUtil.isEmpty((Map<?, ?>) param)) {
@@ -93,10 +96,10 @@ public class ExceptionUtil {
         if (param instanceof Collection && CollUtil.isEmpty((Collection<?>) param)) {
             ExceptionUtil.throwException(paramName + errMsg);
         }
-        if (param instanceof byte[] && ((byte[]) param).length == 0) {
+        if (param instanceof byte[] bytes&& bytes.length == 0) {
             ExceptionUtil.throwException(paramName + errMsg);
         }
-        if (param instanceof String[] && ((String[]) param).length == 0) {
+        if (param instanceof String[]strings &&strings.length == 0) {
             ExceptionUtil.throwException(paramName + errMsg);
         }
     }
@@ -126,33 +129,18 @@ public class ExceptionUtil {
     }
 
     public static void throwOfSize(Object o, Integer min, Integer max, String name) {
-        throwOfSize(o, min, max, name, name + "不能小于" + min, name + "不能大于" + max);
+        throwOfSize(o, min, max, name + "不能小于" + min, name + "不能大于" + max);
     }
 
-    public static void throwOfSize(Object o, Integer min, Integer max, String name, String minErrMsg, String maxErrMsg) {
+    public static void throwOfSize(Object o, Integer min, Integer max, String minErrMsg, String maxErrMsg) {
         if (o == null) {
             ExceptionUtil.throwIf(min != null, minErrMsg);
-        } else if (o instanceof CharSequence) {
-            if (min != null) {
-                ExceptionUtil.throwIf(((CharSequence) o).length() < min, minErrMsg);
-            }
-            if (max != null) {
-                ExceptionUtil.throwIf(((CharSequence) o).length() > max, maxErrMsg);
-            }
-        } else if (o instanceof Map) {
-            if (min != null) {
-                ExceptionUtil.throwIf(((Map<?, ?>) o).size() < min, minErrMsg);
-            }
-            if (max != null) {
-                ExceptionUtil.throwIf(((Map<?, ?>) o).size() > max, maxErrMsg);
-            }
-        } else if (o instanceof Collection) {
-            if (min != null) {
-                ExceptionUtil.throwIf(((Collection<?>) o).size() < min, minErrMsg);
-            }
-            if (max != null) {
-                ExceptionUtil.throwIf(((Collection<?>) o).size() > max, maxErrMsg);
-            }
+        } else if (o instanceof CharSequence charSequence) {
+            throwOfSizeCharSequence(charSequence, min, max, minErrMsg, maxErrMsg);
+        } else if (o instanceof Map<?, ?> map) {
+            throwOfSizeMap(map, min, max, minErrMsg, maxErrMsg);
+        } else if (o instanceof Collection<?> collection) {
+            throwOfSizeCollection(collection, min, max, minErrMsg, maxErrMsg);
         } else if (o.getClass().isArray()) {
             if (min != null) {
                 ExceptionUtil.throwIf(Array.getLength(o) < min, minErrMsg);
@@ -160,6 +148,33 @@ public class ExceptionUtil {
             if (max != null) {
                 ExceptionUtil.throwIf(Array.getLength(o) > max, maxErrMsg);
             }
+        }
+    }
+
+    public static void throwOfSizeCharSequence(CharSequence o, Integer min, Integer max, String minErrMsg, String maxErrMsg) {
+        if (min != null) {
+            ExceptionUtil.throwIf(o.length() < min, minErrMsg);
+        }
+        if (max != null) {
+            ExceptionUtil.throwIf(o.length() > max, maxErrMsg);
+        }
+    }
+
+    public static void throwOfSizeCollection(Collection<?> o, Integer min, Integer max, String minErrMsg, String maxErrMsg) {
+        if (min != null) {
+            ExceptionUtil.throwIf(o.size() < min, minErrMsg);
+        }
+        if (max != null) {
+            ExceptionUtil.throwIf(o.size() > max, maxErrMsg);
+        }
+    }
+
+    public static void throwOfSizeMap(Map<?, ?> o, Integer min, Integer max, String minErrMsg, String maxErrMsg) {
+        if (min != null) {
+            ExceptionUtil.throwIf(o.size() < min, minErrMsg);
+        }
+        if (max != null) {
+            ExceptionUtil.throwIf(o.size() > max, maxErrMsg);
         }
     }
 }
