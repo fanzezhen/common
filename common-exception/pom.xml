@@ -5,7 +5,7 @@
     <parent>
         <artifactId>common</artifactId>
         <groupId>com.github.fanzezhen</groupId>
-        <version>3.0.1-2023.12.12</version>
+        <version>3.2.1-2024.01.12</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>common-exception</artifactId>
@@ -19,17 +19,14 @@
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
-            <version>${javax.annotation.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${org.springframework.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.fanzezhen</groupId>
             <artifactId>common-core</artifactId>
-            <version>${com.github.fanzezhen.common.version}</version>
         </dependency>
     </dependencies>
 </project>

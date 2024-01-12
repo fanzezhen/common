@@ -13,11 +13,11 @@
     <artifactId>common</artifactId>
     <groupId>com.github.fanzezhen</groupId>
     <packaging>pom</packaging>
-    <version>3.0.1-2023.12.12</version>
+    <version>3.2.1-2024.01.12</version>
 
     <properties>
         <com.github.fanzezhen.jdk8.version>0.0.3.4</com.github.fanzezhen.jdk8.version>
-        <com.github.fanzezhen.common.version>3.0.1-2023.12.12</com.github.fanzezhen.common.version>
+        <com.github.fanzezhen.common.version>3.2.1-2024.01.12</com.github.fanzezhen.common.version>
         <app.server>-tomcat</app.server>
         <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
         <cn.hutool.version>5.8.23</cn.hutool.version>
@@ -69,13 +69,11 @@
         <org.reflections.version>0.9.12</org.reflections.version>
         <org.slf4j.version>2.0.7</org.slf4j.version>
         <org.springdoc.version>2.1.0</org.springdoc.version>
-        <org.springframework.version>6.0.11</org.springframework.version>
-        <org.springframework.batch.version>4.2.4.RELEASE</org.springframework.batch.version>
         <org.springframework.boot.version>3.1.2</org.springframework.boot.version>
         <org.springframework.cloud.version>4.0.3</org.springframework.cloud.version>
         <org.springframework.data.version>2.4.2</org.springframework.data.version>
-        <org.springframework.security.version>6.1.2</org.springframework.security.version>
         <org.springframework.social.version>1.1.6.RELEASE</org.springframework.social.version>
+        <org.ssssssss.version>2.1.1</org.ssssssss.version>
         <org.thymeleaf.version>3.0.11.RELEASE</org.thymeleaf.version>
         <org.thymeleaf.extras.version>3.0.4.RELEASE</org.thymeleaf.extras.version>
         <us.codecraft.version>0.10.0</us.codecraft.version>
@@ -90,11 +88,13 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <org.apache.maven.plugins.version>3.3.0</org.apache.maven.plugins.version>
         <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
-        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
-        <maven-scm-plugin.version>2.0.1</maven-scm-plugin.version>
         <maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
+        <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
+        <maven-scm-plugin.version>2.0.1</maven-scm-plugin.version>
+        <maven-shade-plugin.version>3.5.1</maven-shade-plugin.version>
+        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -603,42 +603,16 @@
                 <artifactId>spring-social-config</artifactId>
                 <version>${org.springframework.social.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-cas</artifactId>
-                <version>${org.springframework.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-config</artifactId>
-                <version>${org.springframework.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-core</artifactId>
-                <version>${org.springframework.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-taglibs</artifactId>
-                <version>${org.springframework.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-web</artifactId>
-                <version>${org.springframework.security.version}</version>
-            </dependency>
-            <!--lombok-->
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${org.projectlombok.version}</version>
-            </dependency>
             <!--thymeleaf-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-thymeleaf</artifactId>
                 <version>${org.springframework.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ssssssss</groupId>
+                <artifactId>magic-api-spring-boot-starter</artifactId>
+                <version>${org.ssssssss.version}</version>
             </dependency>
             <dependency>
                 <groupId>nz.net.ultraq.thymeleaf</groupId>
@@ -777,7 +751,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>${org.apache.maven.plugins.version}</version>
+                    <version>${maven-source-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
@@ -793,7 +767,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>${org.apache.maven.plugins.version}</version>
+                    <version>${maven-javadoc-plugin.version}</version>
                     <configuration>
                         <failOnError>false</failOnError>
                         <doclint>none</doclint>
@@ -858,6 +832,27 @@
                     <artifactId>maven-scm-plugin</artifactId>
                     <version>${maven-scm-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven-shade-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <transformers>
+                                    <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                        <mainClass>com.qxb.generator.Main</mainClass> <!-- 主类的全名 -->
+                                    </transformer>
+                                </transformers>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
 
                 <!--gpg加密，用于生成.asc-->
                 <plugin>
@@ -867,8 +862,8 @@
                     <executions>
                         <execution>
                             <id>sign-artifacts</id>
-                            <phase>deploy</phase>
-<!--                            <phase>verify</phase>-->
+<!--                            <phase>deploy</phase>-->
+                            <phase>verify</phase>
                             <goals>
                                 <goal>sign</goal>
                             </goals>

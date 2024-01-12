@@ -14,8 +14,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author zezhen.fan
@@ -23,6 +26,9 @@ import java.util.List;
 @Slf4j
 @SuppressWarnings("unused")
 public class CommonUtil {
+    private CommonUtil() {
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> T cast(Class<T> classType, Object value) {
         try {
@@ -53,7 +59,7 @@ public class CommonUtil {
         response.setContentType("application/force-download");
         // 设置文件名
         response.addHeader("Content-Disposition", "attachment;fileName=" +
-                new String(file.getName().getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
+            new String(file.getName().getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
         byte[] buffer = new byte[1024];
         try (FileInputStream fis = new FileInputStream(file);
              BufferedInputStream bis = new BufferedInputStream(fis)) {
@@ -111,7 +117,24 @@ public class CommonUtil {
         FileUtil.writeUtf8Lines(list.stream().map(s -> s.replace(target, replacement)).toList(), new File(targetFilePath));
     }
 
-    public static void main(String[] args) {
-        replaceInFile("D:\\tmp\\2023年2月10日", "D:\\tmp\\2月10日", "INSERT INTO site_finance.", "INSERT INTO site_pro_finance.");
+    /**
+     * 执行方法并countDown
+     */
+    public static void runAndCountDown(Runnable runnable, CountDownLatch countDownLatch) {
+        try {
+            runnable.run();
+        } finally {
+            countDownLatch.countDown();
+        }
+    }
+
+    /**
+     * 转列表
+     */
+    public static <T> List<T> toList(Collection<T> tCollection) {
+        if (tCollection == null) {
+            return null;
+        }
+        return tCollection instanceof List ? (List<T>) tCollection : new ArrayList<>(tCollection);
     }
 }
