@@ -7,17 +7,17 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-parent</artifactId>
-        <version>3.2.1</version>
+        <version>3.1.7</version>
     </parent>
 
     <artifactId>common</artifactId>
     <groupId>com.github.fanzezhen</groupId>
     <packaging>pom</packaging>
-    <version>3.2.1-2024.01.12</version>
+    <version>3.1.7-2024.01.16</version>
 
     <properties>
         <com.github.fanzezhen.jdk8.version>0.0.3.4</com.github.fanzezhen.jdk8.version>
-        <com.github.fanzezhen.common.version>3.2.1-2024.01.12</com.github.fanzezhen.common.version>
+        <com.github.fanzezhen.common.version>3.1.7-2024.01.16</com.github.fanzezhen.common.version>
         <app.server>-tomcat</app.server>
         <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
         <cn.hutool.version>5.8.23</cn.hutool.version>
@@ -615,6 +615,11 @@
                 <version>${org.ssssssss.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.ssssssss</groupId>
+                <artifactId>magic-api-plugin-springdoc</artifactId>
+                <version>${org.ssssssss.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>nz.net.ultraq.thymeleaf</groupId>
                 <artifactId>thymeleaf-layout-dialect</artifactId>
                 <version>${nz.net.ultraq.thymeleaf.version}</version>
@@ -732,6 +737,7 @@
     </profiles>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <pluginManagement>
             <plugins>
                 <!-- 指定编译器版本 -->
@@ -842,14 +848,6 @@
                             <goals>
                                 <goal>shade</goal>
                             </goals>
-                            <configuration>
-                                <transformers>
-                                    <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                        <mainClass>com.qxb.generator.Main</mainClass> <!-- 主类的全名 -->
-                                    </transformer>
-                                </transformers>
-                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
@@ -888,14 +886,6 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-
-        <finalName>${project.artifactId}</finalName>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <plugins>
             <!-- 指定编译器版本 -->
             <plugin>
