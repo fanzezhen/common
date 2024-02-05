@@ -5,14 +5,17 @@
     <parent>
         <artifactId>common</artifactId>
         <groupId>com.github.fanzezhen</groupId>
-        <version>3.0.1-2023.10.13</version>
+        <version>3.1.7-20240202</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.github.fanzezhen.common</groupId>
     <artifactId>common-mp</artifactId>
+    <version>${com.github.fanzezhen.common.version}</version>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.fanzezhen</groupId>
+            <artifactId>common-core</artifactId>
+        </dependency>
         <!--mybatis-->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -21,10 +24,6 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-annotation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -51,29 +50,12 @@
             <artifactId>jackson-module-parameter-names</artifactId>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        <dependency>
             <groupId>p6spy</groupId>
             <artifactId>p6spy</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity-engine-core</artifactId>
-            <version>${org.apache.velocity.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.fanzezhen.common</groupId>
-            <artifactId>common-core</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

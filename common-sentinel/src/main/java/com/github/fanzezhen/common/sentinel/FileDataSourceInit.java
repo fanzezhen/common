@@ -60,10 +60,10 @@ public class FileDataSourceInit implements InitFunc {
         Props props = null;
         try {
             props = new Props("sentinel.properties");
-        } catch (Throwable throwable) {
+        } catch (Exception throwable) {
             log.warn("", throwable);
         }
-        log.info("init ruleDir={}, props={}", ruleDir, JSONObject.toJSONString(props));
+        log.info("init ruleDir={}, props={}", ruleDir, JSON.toJSONString(props));
         String flowRuleFile = "FlowRule.json";
         String degradeRuleFile = "DegradeRule.json";
         String systemRuleFile = "SystemRule.json";

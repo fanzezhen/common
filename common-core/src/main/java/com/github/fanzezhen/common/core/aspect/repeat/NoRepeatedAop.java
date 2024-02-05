@@ -1,9 +1,10 @@
 package com.github.fanzezhen.common.core.aspect.repeat;
 
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.fanzezhen.common.core.context.SysContextHolder;
@@ -16,7 +17,6 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,19 +30,19 @@ import static java.util.stream.Collectors.toList;
  */
 @Slf4j
 @Aspect
-@Component("CommonNoRepeatedAop")
+@Component
 public class NoRepeatedAop {
-    @Value("${spring.application.name:}")
-    private String springApplicationName;
+    private final String springApplicationName;
     /**
      * 环境隔离变量
      */
-    @Value("${spring.profiles.active:}")
-    private String env;
+    private final String env;
     private final CacheService cacheService;
 
     @Autowired(required = false)
-    public NoRepeatedAop(CacheService cacheService) {
+    public NoRepeatedAop(String springApplicationName, String env, CacheService cacheService) {
+        this.springApplicationName = springApplicationName;
+        this.env = env;
         this.cacheService = cacheService;
     }
 
@@ -78,8 +78,8 @@ public class NoRepeatedAop {
             log.error("noRepeated check failed exception", throwable);
             return;
         }
-        if (!StrUtil.isEmpty(value)) {
-            ExceptionUtil.throwException("请勿重复提交");
+        if (!CharSequenceUtil.isEmpty(value)) {
+            throw ExceptionUtil.wrapException("请勿重复提交");
         }
         try {
             cacheService.set(key, String.valueOf(System.currentTimeMillis()), noRepeat.timeout(), noRepeat.timeUnit());
@@ -92,18 +92,23 @@ public class NoRepeatedAop {
         Object[] args = joinPoint.getArgs();
         JSONObject param = new JSONObject();
         String[] headerArgs = noRepeat.headerArgs();
-        if (ArrayUtil.isNotEmpty(headerArgs)) {
-            for (String headerKey : headerArgs) {
-                if (StrUtil.isBlank(headerKey)) {
-                    continue;
-                }
-                param.put(headerKey, SysContextHolder.get(headerKey));
-            }
-        }
+        loadHeaderArgs(param, headerArgs);
         String[] paramArgs = noRepeat.paramArgs();
+        loadParamArgs(param, paramArgs, args);
+        String headerJsonStr = SysContextHolder.getHeaderJsonStr(noRepeat.headerArgs());
+        String paramKey = noRepeat.key();
+        if (CharSequenceUtil.isEmpty(paramKey)) {
+            paramKey = JSON.toJSONString(Arrays.stream(args).filter(arg -> !(arg instanceof HttpServletRequest)).toList());
+        }
+        String key = env + StrPool.SLASH + springApplicationName + StrPool.SLASH + "NoRepeat" + StrPool.SLASH + joinPoint.getTarget().getClass().getName() + StrPool.DOT + joinPoint.getSignature().getName() + StrPool.SLASH + paramKey + StrPool.SLASH + headerJsonStr + StrPool.SLASH + param.toJSONString();
+        log.info("key={}", key);
+        return key;
+    }
+
+    private static void loadParamArgs(JSONObject param, String[] paramArgs, Object[] args) {
         if (ArrayUtil.isNotEmpty(paramArgs) && ArrayUtil.isNotEmpty(args)) {
             for (String validArg : paramArgs) {
-                if (StrUtil.isBlank(validArg)) {
+                if (CharSequenceUtil.isBlank(validArg)) {
                     continue;
                 }
                 String[] fieldParts = validArg.split("\\.");
@@ -124,14 +129,17 @@ public class NoRepeatedAop {
                 }
             }
         }
-        String headerJsonStr = SysContextHolder.getHeaderJsonStr(noRepeat.headerArgs());
-        String paramKey = noRepeat.key();
-        if (StrUtil.isEmpty(paramKey)) {
-            paramKey = JSON.toJSONString(Arrays.stream(args).filter(arg -> !(arg instanceof HttpServletRequest)).collect(toList()));
+    }
+
+    private static void loadHeaderArgs(JSONObject param, String[] headerArgs) {
+        if (ArrayUtil.isNotEmpty(headerArgs)) {
+            for (String headerKey : headerArgs) {
+                if (CharSequenceUtil.isBlank(headerKey)) {
+                    continue;
+                }
+                param.put(headerKey, SysContextHolder.get(headerKey));
+            }
         }
-        String key = env + StrUtil.SLASH + springApplicationName + StrUtil.SLASH + "NoRepeat" + StrUtil.SLASH + joinPoint.getTarget().getClass().getName() + StrUtil.DOT + joinPoint.getSignature().getName() + StrUtil.SLASH + paramKey + StrUtil.SLASH + headerJsonStr + StrUtil.SLASH + param.toJSONString();
-        log.info("key={}", key);
-        return key;
     }
 
 }

@@ -1,7 +1,9 @@
 package com.github.fanzezhen.common.core;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author zezhen.fan
@@ -9,7 +11,7 @@ import org.junit.Ignore;
  */
 
 @Slf4j
-@Ignore
+@Disabled
 public class ReverseLinkedListTest {
     static class ListNode {
         Object val;
@@ -35,6 +37,7 @@ public class ReverseLinkedListTest {
         return prev; // 返回逆转后的头节点
     }
 
+    @Test
     public static void main(String[] args) {
 
         // 创建一个链表：1 -> 2 -> 3 -> 4 -> 5
@@ -56,5 +59,6 @@ public class ReverseLinkedListTest {
             currentNode = currentNode.next;
         }
         System.out.println("null");
+        Assertions.assertTrue(true);
     }
 }

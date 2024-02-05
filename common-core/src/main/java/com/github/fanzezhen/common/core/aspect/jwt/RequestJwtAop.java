@@ -1,6 +1,6 @@
 package com.github.fanzezhen.common.core.aspect.jwt;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.jwt.JWT;
 import com.alibaba.fastjson.JSON;
@@ -18,6 +18,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -33,6 +34,7 @@ import java.util.List;
 @Slf4j
 @Aspect
 @Component
+@ConditionalOnBean(CacheService.class)
 public class RequestJwtAop {
     @Value("${jwt.account.secret.json:'{\n" +
             "    \"taimei\": {\n" +
@@ -41,6 +43,10 @@ public class RequestJwtAop {
             "    }" +
             "}'}")
     private String jwtSecretJson;
+
+    public RequestJwtAop(String jwtSecretJson) {
+        this.jwtSecretJson = jwtSecretJson;
+    }
 
     /**
      * 要处理的方法，包名+类名+方法名
@@ -63,8 +69,8 @@ public class RequestJwtAop {
             if (arg instanceof HttpServletRequest || arg instanceof HttpServletResponse) {
                 continue;
             }
-            if (arg instanceof MultipartFile) {
-                argList.add(((MultipartFile) arg).getName());
+            if (arg instanceof MultipartFile multipartFile) {
+                argList.add(multipartFile.getName());
                 continue;
             }
             argList.add(arg);
@@ -73,25 +79,34 @@ public class RequestJwtAop {
         log.info("验证JWT： url={}, Args={}", request.getRequestURL().toString(), args);
         JwtVerify jwtVerify = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(JwtVerify.class);
         String token = SysContextHolder.get(jwtVerify.header());
-        ExceptionUtil.throwIfBlank(token, "token", "不能为空");
+        if (CharSequenceUtil.isBlank(token)){
+            throw ExceptionUtil.wrapException("token不能为空");
+        }
         CacheService cacheService = SortUtil.getFirstByOrder(SpringUtil.getBeansOfType(CacheService.class).values());
-        ExceptionUtil.throwIf(cacheService == null, "缓存未注入");
         String account = cacheService.get(SysContextHolder.getAppId() + SysContextHolder.getTenantId() + "-jwt-" + token);
-        ExceptionUtil.throwIfBlank(account, "", "token is null or not exists");
-        JSONObject jwtSecretJsonObj = JSONObject.parseObject(jwtSecretJson);
+        if (CharSequenceUtil.isBlank(account)){
+            throw ExceptionUtil.wrapException("token is null or not exists");
+        }
+        JSONObject jwtSecretJsonObj = JSON.parseObject(jwtSecretJson);
         JSONObject authInfoJson = null;
         try {
             authInfoJson = jwtSecretJsonObj.getJSONObject(account);
-        } catch (Throwable throwable) {
+        } catch (Exception throwable) {
             log.warn("{}", jwtSecretJsonObj.get(account), throwable);
         }
-        ExceptionUtil.throwIfBlank(authInfoJson, "", "账户不存在");
+        if (ExceptionUtil.isBlank(authInfoJson)){
+            throw ExceptionUtil.wrapException("账户不存在");
+        }
         String secret = authInfoJson.getString("secret");
-        ExceptionUtil.throwIfBlank(secret, "", account + "应用秘钥未发布");
+        if (CharSequenceUtil.isBlank(secret)){
+            throw ExceptionUtil.wrapException(account + "应用秘钥未发布");
+        }
         // 默认验证HS265的算法
-        ExceptionUtil.throwIf(!JWT.of(token).setKey(secret.getBytes(StandardCharsets.UTF_8)).verify(), 405, "token验证失败");
+        if (!JWT.of(token).setKey(secret.getBytes(StandardCharsets.UTF_8)).verify()){
+            throw ExceptionUtil.wrapException(405, "token验证失败");
+        }
         String tenantId = authInfoJson.getString("tenantId");
-        if (StrUtil.isNotEmpty(tenantId)) {
+        if (CharSequenceUtil.isNotEmpty(tenantId)) {
             SysContextHolder.setTenantId(tenantId);
         }
         log.info("验证JWT通过： url={}, Args={}", request.getRequestURL().toString(), args);

@@ -3,7 +3,6 @@ version: "3"
 networks:
   common: #网络名称
     driver: bridge      #桥接模式
-    attachable: true      #允许独立的网络连接到该网络上
 
 #服务
 services:
@@ -30,9 +29,9 @@ services:
       --default-authentication-plugin=mysql_native_password
     privileged: true
     volumes:
-      - ./app/mysql/conf:/etc/mysql/conf.d:ro
-      - ./app/mysql/init:/docker-entrypoint-initdb.d:ro
-      - ./app/mysql/data:/var/lib/mysql
+      - ./cicd/app/mysql/conf:/etc/mysql/conf.d:ro
+      - ./cicd/app/mysql/init:/docker-entrypoint-initdb.d:ro
+      - ./cicd/app/mysql/data:/var/lib/mysql
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - /etc/hosts:/etc/hosts:ro
     networks:
@@ -48,8 +47,8 @@ services:
       - "discovery.type=single-node" #以单一节点模式启动
       - "ES_JAVA_OPTS=-Xms512m -Xmx1024m" #设置使用jvm内存大小
     volumes:
-      - ./app/elasticsearch/plugins:/usr/share/elasticsearch/plugins #插件文件挂载
-      - ./app/elasticsearch/data:/usr/share/elasticsearch/data #数据文件挂载
+      - ./cicd/app/elasticsearch/plugins:/usr/share/elasticsearch/plugins #插件文件挂载
+      - ./cicd/app/elasticsearch/data:/usr/share/elasticsearch/data #数据文件挂载
     ports:
       - "9200:9200"
 
@@ -65,7 +64,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - ./app/redis:/usr/local/etc/redis:ro
+      - ./cicd/app/redis:/usr/local/etc/redis:ro
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - /etc/hosts:/etc/hosts:ro
     command:
@@ -84,7 +83,7 @@ services:
     ports:
       - "8001:8001"
     volumes:
-      - ./app/redis-insight/db:/db
+      - ./cicd/app/redis-insight/db:/db
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - /etc/hosts:/etc/hosts:ro
     networks:
@@ -114,7 +113,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./app/nginx:/etc/nginx
+      - ./cicd/app/nginx:/etc/nginx
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - /etc/hosts:/etc/hosts:ro
     command: [ nginx-debug, '-g', 'daemon off;' ]
@@ -169,9 +168,9 @@ services:
     ports:
       - "8761:8761"
     volumes:
-      - ./app/jhipster-registry/config:/vault/config
-      - ./app/jhipster-registry/data:/vault/file
-      - ./app/jhipster-registry/logs:/vault/logs
+      - ./cicd/app/jhipster-registry/config:/vault/config
+      - ./cicd/app/jhipster-registry/data:/vault/file
+      - ./cicd/app/jhipster-registry/logs:/vault/logs
     environment:
       # - _JAVA_OPTIONS=-Xmx512m -Xms256m
       # - JAVA_OPTS=-Dfile.encoding=UTF-8
@@ -212,8 +211,8 @@ services:
       MYSQL_SERVICE_PASSWORD: root
       MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     volumes:
-      - ./app/nacos/standalone-logs:/home/nacos/logs
-      - ./app/nacos/init.d:/home/nacos/init.d/
+      - ./cicd/app/nacos/standalone-logs:/home/nacos/logs
+      - ./cicd/app/nacos/init.d:/home/nacos/init.d/
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - /etc/hosts:/etc/hosts:ro
     depends_on:

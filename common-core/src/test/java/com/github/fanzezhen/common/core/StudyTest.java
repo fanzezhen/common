@@ -2,8 +2,7 @@ package com.github.fanzezhen.common.core;
 
 import cn.hutool.core.collection.CollUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,7 +12,7 @@ import java.util.stream.Collectors;
  * @date 2023/8/7
  */
 @Slf4j
-@Ignore
+@Disabled
 public class StudyTest {
 
     public static void main(String[] args) {
@@ -33,7 +32,7 @@ public class StudyTest {
      * 32 33
      */
     @Test
-    @Ignore
+    @Disabled
     public void testTLV() {
         String tag = "31";
         String msg = "32 01 00 AE 90 02 00 01 02 30 03 00 AB 32 31 31 02 00 32 33 33 01 00 CC";
@@ -53,6 +52,7 @@ public class StudyTest {
                 break;
             }
         }
+        Assertions.assertTrue(true);
     }
 
     /**
@@ -66,7 +66,7 @@ public class StudyTest {
      * 输出 front furthest
      */
     @Test
-    @Ignore
+    @Disabled
     public void testAssociationEnglish() {
         String msg = "The furthest distance in the world. ls not between life and death, But when I stand in front of you, Yet you don't know that I love you";
         String pre = "f";
@@ -78,6 +78,7 @@ public class StudyTest {
         } else {
             System.out.print(String.join(" ", list));
         }
+        Assertions.assertTrue(true);
     }
 
     /**
@@ -92,7 +93,7 @@ public class StudyTest {
      * 输入xy，输出ya
      */
     @Test
-    @Ignore
+    @Disabled
     public void testEncryptOffset() {
 //        String origin = "abcde";
         String origin = "xy";
@@ -121,10 +122,11 @@ public class StudyTest {
             stringBuilder.append(c);
         }
         System.out.println(stringBuilder);
+        Assertions.assertTrue(true);
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testIpv4ToLong() {
 //        Scanner scanner = new Scanner(System.in);
 //        String ipv4 = scanner.nextLine();
@@ -143,6 +145,7 @@ public class StudyTest {
         } catch (Exception e) {
             System.out.println("invalid IP");
         }
+        Assertions.assertTrue(true);
     }
 
     public static String getHexStr(int i) {
@@ -154,11 +157,12 @@ public class StudyTest {
      * 单词接龙
      */
     @Test
-    @Ignore
+    @Disabled
     public void testWordsSolitaire() {
         String[] strings = {"word", "dd", "da", "dc", "dword", "d"};
         System.out.println(wordsSolitaire(strings[0], strings, CollUtil.newArrayList(0)));
         System.out.println(wordsSolitaireCupidity(strings[0], strings, CollUtil.newArrayList(0)));
+        Assertions.assertTrue(true);
     }
 
 

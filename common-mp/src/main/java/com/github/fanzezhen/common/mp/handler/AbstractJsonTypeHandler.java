@@ -13,7 +13,7 @@ public abstract class AbstractJsonTypeHandler<T> extends BaseTypeHandler<T> {
 
     protected Class<T> classType;
 
-    public AbstractJsonTypeHandler(Class<T> classType) {
+    protected AbstractJsonTypeHandler(Class<T> classType) {
         this.classType = classType;
     }
 

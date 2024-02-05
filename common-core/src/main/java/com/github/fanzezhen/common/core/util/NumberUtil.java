@@ -1,16 +1,17 @@
 package com.github.fanzezhen.common.core.util;
 
-import cn.hutool.core.util.StrUtil;
-import org.springframework.util.StringUtils;
-
-import java.util.regex.Pattern;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.text.StrPool;
 
 /**
  * @author zezhen.fan
  */
 public class NumberUtil {
+    private NumberUtil() {
+    }
+
     static final String CHINESE_TEN = "一十";
-    static final String CHINESE_TEN_ = "一十零";
+    static final String CHINESE_TEN_ZERO = "一十零";
 
     /**
      * 阿拉伯数字转中文数字
@@ -31,7 +32,7 @@ public class NumberUtil {
                 result.append(s1[num]);
             }
         }
-        if (result.indexOf(CHINESE_TEN_) == 0) {
+        if (result.indexOf(CHINESE_TEN_ZERO) == 0) {
             return result.substring(1, 2);
         } else if (result.indexOf(CHINESE_TEN) == 0) {
             return result.substring(1);
@@ -47,7 +48,7 @@ public class NumberUtil {
      */
     @SuppressWarnings("unused")
     public static Integer chineseNumberToInteger(String chineseNumber) {
-        if (StrUtil.isEmpty(chineseNumber)) {
+        if (CharSequenceUtil.isEmpty(chineseNumber)) {
             return null;
         }
         int result = 0;
@@ -75,7 +76,7 @@ public class NumberUtil {
                     break;
                 }
             }
-            // 单位{'十','百','千','万','亿'}
+            // 单位
             if (b) {
                 for (int j = 0; j < chArr.length; j++) {
                     if (c == chArr[j]) {
@@ -108,5 +109,41 @@ public class NumberUtil {
             }
         }
         return result;
+    }
+
+    /**
+     * 转百分数
+     */
+    public static String toPercent(String numStr) {
+        if (numStr == null) {
+            return null;
+        }
+        numStr = numStr.trim();
+        if (CharSequenceUtil.isEmpty(numStr)) {
+            return numStr;
+        }
+        String[] strings = numStr.split("\\.");
+        if (strings.length > 2) {
+            return numStr;
+        }
+        if (strings.length == 1 || strings[1].isEmpty()) {
+            return "0".equals(strings[0]) ? "0" : strings[0] + "00%";
+        }
+        String intStr = strings[0];
+        String decimalStr = strings[1];
+        if (decimalStr.length() == 1) {
+            intStr = intStr + decimalStr + "0";
+        } else if (decimalStr.length() == 2) {
+            intStr = intStr + decimalStr;
+        } else {
+            intStr = intStr + decimalStr.substring(0, 2);
+            decimalStr = decimalStr.substring(2);
+        }
+        intStr = intStr.replaceAll("^0+", "");
+        if (intStr.isEmpty()) {
+            intStr = "0";
+        }
+        decimalStr = decimalStr.replaceAll("0+$", "");
+        return decimalStr.isEmpty() ? (intStr + "%") : intStr + StrPool.DOT + decimalStr + "%";
     }
 }

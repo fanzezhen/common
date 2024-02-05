@@ -2,8 +2,8 @@ package com.github.fanzezhen.common.core.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
 import com.github.fanzezhen.common.core.dict.AbstractDict;
@@ -20,9 +20,7 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * @author Andy
- * @date 2018/12/20
- * Desc:
+ * @author fanzezhen
  */
 @Slf4j
 public class ReflectionUtil {
@@ -97,7 +95,7 @@ public class ReflectionUtil {
     @SuppressWarnings("unchecked")
     public static boolean isEmptyValue(String fieldName, Object bean) {
         Object value = getValue(fieldName, bean);
-        if (value == null || StrUtil.isEmpty(String.valueOf(value))) {
+        if (value == null || CharSequenceUtil.isEmpty(String.valueOf(value))) {
             return true;
         }
         if (value instanceof Iterable) {
@@ -216,7 +214,7 @@ public class ReflectionUtil {
                     hashMap.put("newValue", newValue);
                 }
             }
-            if (hashMap.size() > 0) {
+            if (!hashMap.isEmpty()) {
                 result.add(hashMap);
             }
         }

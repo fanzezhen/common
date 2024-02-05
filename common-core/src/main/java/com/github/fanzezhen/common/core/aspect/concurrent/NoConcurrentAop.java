@@ -1,6 +1,7 @@
 package com.github.fanzezhen.common.core.aspect.concurrent;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.text.StrPool;
 import com.alibaba.fastjson.JSON;
 import com.github.fanzezhen.common.core.context.SysContextHolder;
 import com.github.fanzezhen.common.core.service.LockService;
@@ -13,7 +14,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -25,19 +25,19 @@ import static java.util.stream.Collectors.toList;
  */
 @Slf4j
 @Aspect
-@Component("CommonNoConcurrentAop")
+@Component
 public class NoConcurrentAop {
-    @Value("${spring.application.name:}")
-    private String springApplicationName;
+    private final String springApplicationName;
     /**
      * 环境隔离变量
      */
-    @Value("${spring.profiles.active:}")
-    private String env;
+    private final String env;
     private final LockService lockService;
 
     @Autowired(required = false)
-    public NoConcurrentAop(LockService lockService) {
+    public NoConcurrentAop(String springApplicationName, String env, LockService lockService) {
+        this.springApplicationName = springApplicationName;
+        this.env = env;
         this.lockService = lockService;
     }
 
@@ -63,14 +63,14 @@ public class NoConcurrentAop {
     private String getKey(JoinPoint joinPoint, NoConcurrent noConcurrent) {
         Object[] args = joinPoint.getArgs();
         String paramKey = noConcurrent.key();
-        if (StrUtil.isEmpty(paramKey)) {
-            paramKey = JSON.toJSONString(Arrays.stream(args).filter(arg -> !(arg instanceof HttpServletRequest)).collect(toList()));
+        if (CharSequenceUtil.isEmpty(paramKey)) {
+            paramKey = JSON.toJSONString(Arrays.stream(args).filter(arg -> !(arg instanceof HttpServletRequest)).toList());
         }
-        String key = env + StrUtil.SLASH +
-                springApplicationName + StrUtil.SLASH +
-                "NoConcurrent" + StrUtil.SLASH +
-                joinPoint.getTarget().getClass().getName() + StrUtil.DOT + joinPoint.getSignature().getName() + StrUtil.SLASH +
-                paramKey + StrUtil.SLASH + SysContextHolder.getHeaderJsonStr(noConcurrent.headerArgs());
+        String key = env + StrPool.SLASH +
+                springApplicationName + StrPool.SLASH +
+                "NoConcurrent" + StrPool.SLASH +
+                joinPoint.getTarget().getClass().getName() + StrPool.DOT + joinPoint.getSignature().getName() + StrPool.SLASH +
+                paramKey + StrPool.SLASH + SysContextHolder.getHeaderJsonStr(noConcurrent.headerArgs());
         log.info("key={}", key);
         return key;
     }

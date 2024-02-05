@@ -2,53 +2,54 @@ package com.github.fanzezhen.common.core.thread;
 
 import com.github.fanzezhen.common.core.property.CommonThreadPoolProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.task.TaskDecorator;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.Map;
 import java.util.concurrent.*;
 
 /**
  * @author zezhen.fan
- * @date 2023/8/14
  */
 @Slf4j
+@SuppressWarnings("unused")
 public class PoolExecutors {
     private static final Map<String, ThreadPoolExecutor> POOL_EXECUTOR_MAP = new ConcurrentHashMap<>(2);
-    private static final Map<String, CommonThreadPoolTaskExecutor> POOL_TASK_EXECUTOR_MAP = new ConcurrentHashMap<>(2);
-    static CommonThreadPoolProperties threadPoolProperties = new CommonThreadPoolProperties();
+    private static final Map<String, ThreadPoolTaskExecutor> POOL_TASK_EXECUTOR_MAP = new ConcurrentHashMap<>(2);
 
     private PoolExecutors() {
     }
 
     public static ThreadPoolExecutor newThreadPoolExecutor(String name) {
         return newThreadPoolExecutor(name,
-                threadPoolProperties.getCoreSize(),
-                threadPoolProperties.getMaxSize(),
-                threadPoolProperties.getKeepAliveSeconds(),
-                threadPoolProperties.getQueueCapacity(),
-                null,
-                null
+            ThreadInstanceHelper.getThreadPoolProperties().getCoreSize(),
+            ThreadInstanceHelper.getThreadPoolProperties().getMaxSize(),
+            ThreadInstanceHelper.getThreadPoolProperties().getKeepAliveSeconds(),
+            ThreadInstanceHelper.getThreadPoolProperties().getQueueCapacity(),
+            null,
+            null
         );
     }
 
     public static ThreadPoolExecutor newThreadPoolCallerRunsPolicyExecutor(String name) {
         return newThreadPoolExecutor(name,
-                threadPoolProperties.getCoreSize(),
-                threadPoolProperties.getMaxSize(),
-                threadPoolProperties.getKeepAliveSeconds(),
-                threadPoolProperties.getQueueCapacity(),
-                null,
-                new ThreadPoolExecutor.CallerRunsPolicy()
+            ThreadInstanceHelper.getThreadPoolProperties().getCoreSize(),
+            ThreadInstanceHelper.getThreadPoolProperties().getMaxSize(),
+            ThreadInstanceHelper.getThreadPoolProperties().getKeepAliveSeconds(),
+            ThreadInstanceHelper.getThreadPoolProperties().getQueueCapacity(),
+            null,
+            new ThreadPoolExecutor.CallerRunsPolicy()
         );
     }
 
     public static ThreadPoolExecutor newThreadPoolExecutor(String name, RejectedExecutionHandler rejectedExecutionHandler) {
         return newThreadPoolExecutor(name,
-                threadPoolProperties.getCoreSize(),
-                threadPoolProperties.getMaxSize(),
-                threadPoolProperties.getKeepAliveSeconds(),
-                threadPoolProperties.getQueueCapacity(),
-                null,
-                rejectedExecutionHandler
+            ThreadInstanceHelper.getThreadPoolProperties().getCoreSize(),
+            ThreadInstanceHelper.getThreadPoolProperties().getMaxSize(),
+            ThreadInstanceHelper.getThreadPoolProperties().getKeepAliveSeconds(),
+            ThreadInstanceHelper.getThreadPoolProperties().getQueueCapacity(),
+            null,
+            rejectedExecutionHandler
         );
     }
 
@@ -71,12 +72,12 @@ public class PoolExecutors {
                                                            RejectedExecutionHandler rejectedExecutionHandler) {
         return POOL_EXECUTOR_MAP.computeIfAbsent(name, k -> {
             ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
-                    coreSize,
-                    maxSize,
-                    keepAliveSeconds,
-                    TimeUnit.SECONDS,
-                    workQueue,
-                    threadFactory != null ? threadFactory : Executors.defaultThreadFactory()
+                coreSize,
+                maxSize,
+                keepAliveSeconds,
+                TimeUnit.SECONDS,
+                workQueue,
+                threadFactory != null ? threadFactory : Executors.defaultThreadFactory()
             );
             if (rejectedExecutionHandler != null) {
                 threadPoolExecutor.setRejectedExecutionHandler(rejectedExecutionHandler);
@@ -85,59 +86,56 @@ public class PoolExecutors {
         });
     }
 
-    public static CommonThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name) {
-        return newThreadPoolTaskExecutor(name, threadPoolProperties.getCoreSize());
+    public static ThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name) {
+        return newThreadPoolTaskExecutor(name, ThreadInstanceHelper.getThreadPoolProperties(), ThreadInstanceHelper.getTaskDecorator(), null, null);
     }
 
-    public static CommonThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, RejectedExecutionHandler rejectedExecutionHandler) {
-        return newThreadPoolTaskExecutor(name,
-                threadPoolProperties.getCoreSize(),
-                threadPoolProperties.getMaxSize(),
-                threadPoolProperties.getQueueCapacity(),
-                threadPoolProperties.getKeepAliveSeconds(),
-                null,
-                rejectedExecutionHandler
+    public static ThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, RejectedExecutionHandler rejectedExecutionHandler) {
+        return newThreadPoolTaskExecutor(name, ThreadInstanceHelper.getThreadPoolProperties(), ThreadInstanceHelper.getTaskDecorator(), null, rejectedExecutionHandler
         );
     }
 
-    public static CommonThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, ThreadFactory threadFactory) {
-        return newThreadPoolTaskExecutor(name,
-                threadPoolProperties.getCoreSize(),
-                threadPoolProperties.getMaxSize(),
-                threadPoolProperties.getQueueCapacity(),
-                threadPoolProperties.getKeepAliveSeconds(),
-                threadFactory,
-                null
+    public static ThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, ThreadFactory threadFactory) {
+        return newThreadPoolTaskExecutor(name, ThreadInstanceHelper.getThreadPoolProperties(), ThreadInstanceHelper.getTaskDecorator(), threadFactory, null
         );
     }
 
-    public static CommonThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, int coreSize) {
-        return newThreadPoolTaskExecutor(name, coreSize, threadPoolProperties.getMaxSize());
+    public static ThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, int coreSize) {
+        return newThreadPoolTaskExecutor(name, coreSize, ThreadInstanceHelper.getThreadPoolProperties().getMaxSize());
     }
 
-    public static CommonThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, int coreSize, int maxSize) {
-        return newThreadPoolTaskExecutor(name, coreSize, maxSize, threadPoolProperties.getQueueCapacity());
+    public static ThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, int coreSize, int maxSize) {
+        return newThreadPoolTaskExecutor(name, coreSize, maxSize, ThreadInstanceHelper.getThreadPoolProperties().getQueueCapacity());
     }
 
-    public static CommonThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, int coreSize, int maxSize, int queueCapacity) {
-        return newThreadPoolTaskExecutor(name, coreSize, maxSize, queueCapacity, threadPoolProperties.getKeepAliveSeconds());
+    public static ThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, int coreSize, int maxSize, int queueCapacity) {
+        return newThreadPoolTaskExecutor(name, coreSize, maxSize, queueCapacity, ThreadInstanceHelper.getThreadPoolProperties().getKeepAliveSeconds());
     }
 
-    public static CommonThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, int coreSize, int maxSize, int queueCapacity, int keepAliveSeconds) {
+    public static ThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, int coreSize, int maxSize, int queueCapacity, int keepAliveSeconds) {
         return newThreadPoolTaskExecutor(name, coreSize, maxSize, queueCapacity, keepAliveSeconds, null, null);
     }
 
-    public static CommonThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, int coreSize, int maxSize, int queueCapacity, int keepAliveSeconds,
-                                                                         ThreadFactory threadFactory,
-                                                                         RejectedExecutionHandler rejectedExecutionHandler) {
+    public static ThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name, int coreSize, int maxSize, int queueCapacity, int keepAliveSeconds,
+                                                                   ThreadFactory threadFactory,
+                                                                   RejectedExecutionHandler rejectedExecutionHandler) {
+        CommonThreadPoolProperties commonThreadPoolProperties = new CommonThreadPoolProperties(coreSize, maxSize, keepAliveSeconds, queueCapacity);
+        return newThreadPoolTaskExecutor(name, commonThreadPoolProperties, ThreadInstanceHelper.getTaskDecorator(), threadFactory, rejectedExecutionHandler);
+    }
+
+    public static ThreadPoolTaskExecutor newThreadPoolTaskExecutor(String name,
+                                                                   CommonThreadPoolProperties threadPoolProperties,
+                                                                   TaskDecorator taskDecorator,
+                                                                   ThreadFactory threadFactory,
+                                                                   RejectedExecutionHandler rejectedExecutionHandler) {
         return POOL_TASK_EXECUTOR_MAP.computeIfAbsent(name, k -> {
-            CommonThreadPoolTaskExecutor threadPoolExecutor = new CommonThreadPoolTaskExecutor();
-            threadPoolExecutor.setCorePoolSize(coreSize);
-            threadPoolExecutor.setMaxPoolSize(maxSize);
-            threadPoolExecutor.setQueueCapacity(queueCapacity);
-            threadPoolExecutor.setKeepAliveSeconds(keepAliveSeconds);
+            ThreadPoolTaskExecutor threadPoolExecutor = new ThreadPoolTaskExecutor();
+            threadPoolExecutor.setCorePoolSize(threadPoolProperties.getCoreSize());
+            threadPoolExecutor.setKeepAliveSeconds(threadPoolProperties.getKeepAliveSeconds());
+            threadPoolExecutor.setMaxPoolSize(threadPoolProperties.getMaxSize());
+            threadPoolExecutor.setQueueCapacity(threadPoolProperties.getQueueCapacity());
+            threadPoolExecutor.setTaskDecorator(taskDecorator);
             threadPoolExecutor.setThreadGroupName(name);
-            threadPoolExecutor.afterPropertiesSet();
             if (threadFactory != null) {
                 threadPoolExecutor.setThreadFactory(threadFactory);
             }
@@ -148,7 +146,7 @@ public class PoolExecutors {
         });
     }
 
-    public static Map<String, CommonThreadPoolTaskExecutor> getPoolTaskExecutorMap() {
+    public static Map<String, ThreadPoolTaskExecutor> getPoolTaskExecutorMap() {
         return POOL_TASK_EXECUTOR_MAP;
     }
 }

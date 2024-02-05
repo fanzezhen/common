@@ -1,5 +1,9 @@
 package com.github.fanzezhen.common.core.util;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Pair;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.github.fanzezhen.common.core.model.ClassInfoBean;
 import com.github.fanzezhen.common.core.strategy.AnnotationFieldServiceStrategy;
@@ -11,10 +15,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,6 +24,7 @@ import java.util.stream.Stream;
  * @author zezhen.fan
  */
 @Slf4j
+@SuppressWarnings({"unchecked", "unused"})
 public class BeanCopyUtil {
     private BeanCopyUtil() {
     }
@@ -159,6 +161,77 @@ public class BeanCopyUtil {
                 }
             }
         }
+    }
+    /**
+     * 填充对象
+     *
+     * @param obj  待填充的对象
+     * @param from 数据来源对象
+     * @param maps 映射字段名，如果存在下划线会自动转驼峰
+     */
+    public static <T> T fillByFieldName(T obj, Object from, Pair<String, String>... maps) {
+        if (from == null || obj == null) {
+            return obj;
+        }
+        for (Pair<String, String> map : maps) {
+            String fieldName = CharSequenceUtil.toCamelCase(map.getKey());
+            Field field = ReflectUtil.getField(obj.getClass(), fieldName);
+            if (field != null) {
+                Object originFieldValue = getFieldValue(from, map.getValue());
+                if (originFieldValue instanceof Date dateValue&& field.getType().equals(String.class)) {
+                    if (fieldName.endsWith("Date")) {
+                        originFieldValue = DateUtil.formatDate(dateValue);
+                    } else {
+                        originFieldValue = DateUtil.formatDateTime(dateValue);
+                    }
+                }
+                ReflectUtil.setFieldValue(obj, fieldName, originFieldValue);
+            }
+        }
+        return obj;
+    }
+
+    /**
+     * 获取字段值
+     */
+    public static Object getFieldValue(Object instance, String fieldName) {
+        if (fieldName != null) {
+            if (instance instanceof Map) {
+                Map<String, Object> instanceObj = ((Map<String, Object>) instance);
+                return instanceObj.get(fieldName);
+            }
+            return ReflectUtil.getFieldValue(instance, fieldName);
+        }
+        return null;
+    }
+
+    /**
+     * 获取字段值
+     */
+    public static Object getFieldValue(Object instance, String fieldName, String cameFieldName) {
+        Object value = getFieldValue(instance, fieldName);
+        return value != null ? value : getFieldValue(instance, cameFieldName);
+    }
+
+    /**
+     * 获取字段值
+     */
+    public static Object getFieldValue(Object instance, String fieldName, boolean toCamel) {
+        return toCamel ? getFieldValue(instance, fieldName, CharSequenceUtil.toCamelCase(fieldName)) : getFieldValue(instance, fieldName);
+    }
+
+    /**
+     * 填充对象
+     *
+     * @param objClass 待填充的对象类型
+     * @param from     数据来源对象
+     * @param maps     映射字段名，如果存在下划线会自动转驼峰
+     */
+    public static <T> T fillByFieldName(Class<T> objClass, Object from, Pair<String, String>... maps) {
+        if (from == null || objClass == null) {
+            return null;
+        }
+        return fillByFieldName(BeanUtil.copyProperties(from, objClass), from, maps);
     }
 
 }

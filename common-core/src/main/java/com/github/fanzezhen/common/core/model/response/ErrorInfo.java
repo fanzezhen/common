@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.ErrorResponseException;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author zezhen.fan
@@ -23,8 +22,6 @@ public class ErrorInfo implements Serializable {
     private int code;
 
     private String message;
-
-    private List<Object> arguments;
 
     public ErrorInfo(String message) {
         this.message = message;

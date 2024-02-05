@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.security.controller;
 
+import cn.hutool.core.util.RandomUtil;
 import com.github.fanzezhen.common.core.constant.SecurityConstant;
 import com.github.fanzezhen.common.core.model.bean.ImageCode;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,7 +49,7 @@ public class CaptchaController {
 
         Graphics graphics = image.getGraphics();
 
-        Random random = new Random();
+        Random random = RandomUtil.getRandom();
 
         graphics.setColor(getRandColor(200, 500));
         graphics.fillRect(0, 0, width, height);
@@ -77,7 +78,7 @@ public class CaptchaController {
 
     private Color getRandColor(int fc, int bc) {
         int range = 255;
-        Random random = new Random();
+        Random random = RandomUtil.getRandom();
         if (fc > range) {
             fc = range;
         }

@@ -4,7 +4,7 @@ package com.github.fanzezhen.common.core.model.tree;
  * @author zezhen.fan
  */
 public class BinarySearchTree<T extends Comparable<T>> {
-    public BinaryNode<T> root;
+    private BinaryNode<T> root;
 
     public boolean insert(T data) {
         if (data == null) {

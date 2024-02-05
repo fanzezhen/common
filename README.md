@@ -10,7 +10,7 @@ common
     * common-redis                 ：redis缓存模块
     * common-security              ：权限模块
     * common-sentinel              ：sentinel防控模块
-    * common-swagger               ：swagger接口模块
+    * common-springdoc               ：swagger接口模块
     * common-web                   ：web模块，通用的mvc配置
    
 2. 项目介绍

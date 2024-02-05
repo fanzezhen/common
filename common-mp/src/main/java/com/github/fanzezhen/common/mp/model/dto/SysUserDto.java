@@ -2,7 +2,7 @@ package com.github.fanzezhen.common.mp.model.dto;
 
 import com.github.fanzezhen.common.core.annotion.OperateLog;
 import com.github.fanzezhen.common.mp.model.SysUserDict;
-import com.github.fanzezhen.common.mp.model.entity.BaseTenantEntity;
+import com.github.fanzezhen.common.mp.model.entity.tenant.BaseTenantEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

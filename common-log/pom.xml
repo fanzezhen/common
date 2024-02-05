@@ -5,29 +5,38 @@
     <parent>
         <artifactId>common</artifactId>
         <groupId>com.github.fanzezhen</groupId>
-        <version>3.0.1-2023.10.13</version>
+        <version>3.1.7-20240202</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.github.fanzezhen.common</groupId>
     <artifactId>common-log</artifactId>
+    <version>${com.github.fanzezhen.common.version}</version>
 
     <dependencies>
         <dependency>
-            <groupId>com.github.fanzezhen.common</groupId>
+            <groupId>com.github.fanzezhen</groupId>
             <artifactId>common-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.fanzezhen.common</groupId>
-            <artifactId>common-mp</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>${org.reflections.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>10.1.17</version>
         </dependency>
     </dependencies>
 </project>

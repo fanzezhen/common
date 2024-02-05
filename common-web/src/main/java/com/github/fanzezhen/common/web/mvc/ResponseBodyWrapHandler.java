@@ -1,7 +1,8 @@
 package com.github.fanzezhen.common.web.mvc;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.text.StrPool;
 import com.github.fanzezhen.common.core.model.response.ActionResult;
 import com.github.fanzezhen.common.core.property.CommonCoreProperties;
 import org.springframework.core.MethodParameter;
@@ -28,7 +29,7 @@ public class ResponseBodyWrapHandler implements HandlerMethodReturnValueHandler 
 
     public ResponseBodyWrapHandler(HandlerMethodReturnValueHandler delegate, CommonCoreProperties commonCoreProperties) {
         this.delegate = delegate;
-        this.autoWrapResponseIgnoreUrlSet = CollUtil.newHashSet(commonCoreProperties.getAutoWrapResponseIgnoreUrls().split(StrUtil.COMMA));
+        this.autoWrapResponseIgnoreUrlSet = CollUtil.newHashSet(commonCoreProperties.getAutoWrapResponseIgnoreUrls().split(StrPool.COMMA));
         this.resourcesFileSuffixArr = commonCoreProperties.getResourcesFileSuffixArr();
     }
 
@@ -38,6 +39,7 @@ public class ResponseBodyWrapHandler implements HandlerMethodReturnValueHandler 
     }
 
     @Override
+    @SuppressWarnings("all")
     public void handleReturnValue(@Nullable Object returnValue,
                                   @NonNull MethodParameter returnType,
                                   @NonNull ModelAndViewContainer mavContainer,
@@ -50,16 +52,15 @@ public class ResponseBodyWrapHandler implements HandlerMethodReturnValueHandler 
             } else {
                 HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
                 // 以下代码已兼容requestUri为空的情况，所以忽略空指针警告
-                @SuppressWarnings("all")
                 String requestUri = request.getRequestURI();
                 String separator = "?";
-                if (StrUtil.contains(requestUri, separator)) {
+                if (CharSequenceUtil.contains(requestUri, separator)) {
                     requestUri = requestUri.substring(0, requestUri.indexOf(separator));
                 }
                 // 对特殊的URL不进行统一包装结果处理
                 AntPathMatcher antPathMatcher = new AntPathMatcher();
                 String finalRequestUri = requestUri;
-                boolean ignoreWrap = StrUtil.endWithAnyIgnoreCase(requestUri, resourcesFileSuffixArr) || (
+                boolean ignoreWrap = CharSequenceUtil.endWithAnyIgnoreCase(requestUri, resourcesFileSuffixArr) || (
                         autoWrapResponseIgnoreUrlSet != null &&
                                 autoWrapResponseIgnoreUrlSet.stream().anyMatch(ignore ->
                                         antPathMatcher.match(ignore, finalRequestUri)));

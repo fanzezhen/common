@@ -1,7 +1,8 @@
 package com.github.fanzezhen.common.mp.generator;
 
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
 
@@ -11,15 +12,18 @@ import java.util.Collections;
  * @author zezhen.fan
  */
 public class GeneratorTool {
+    private GeneratorTool() {
+    }
+
     /**
      * <p>
      * 读取控制台内容
      * </p>
      */
     public static void generator(GeneratorBean generatorBean) {
-        String dbUrl = StrUtil.isBlank(generatorBean.getDbUrl()) ? generatorBean.scanner("数据库链接（如：jdbc:mysql://localhost:3306/demo）") : generatorBean.getDbUrl();
-        String dbUsername = StrUtil.isBlank(generatorBean.getDbUsername()) ? generatorBean.scanner("数据库用户名称") : generatorBean.getDbUsername();
-        String dbPassword = StrUtil.isBlank(generatorBean.getDbPassword()) ? generatorBean.scanner("数据库用户密码") : generatorBean.getDbPassword();
+        String dbUrl = CharSequenceUtil.isBlank(generatorBean.getDbUrl()) ? generatorBean.scanner("数据库链接（如：jdbc:mysql://localhost:3306/demo）") : generatorBean.getDbUrl();
+        String dbUsername = CharSequenceUtil.isBlank(generatorBean.getDbUsername()) ? generatorBean.scanner("数据库用户名称") : generatorBean.getDbUsername();
+        String dbPassword = CharSequenceUtil.isBlank(generatorBean.getDbPassword()) ? generatorBean.scanner("数据库用户密码") : generatorBean.getDbPassword();
         FastAutoGenerator generator = FastAutoGenerator.create(dbUrl, dbUsername, dbPassword);
         generator.globalConfig(builder -> builder
                 // 设置作者
@@ -29,12 +33,12 @@ public class GeneratorTool {
                 // 生成结束时不打开文件管理器
                 .disableOpenDir()
                 // 指定输出目录
-                .outputDir(System.getProperty("user.dir") + StrUtil.SLASH + generatorBean.getJavaDir()))
+                .outputDir(System.getProperty("user.dir") + StrPool.SLASH + generatorBean.getJavaDir()))
                 .packageConfig(builder -> builder
                         // 设置父包名
                         .parent(generatorBean.getParentPackageName())
                         // 设置mapperXml生成路径
-                        .pathInfo(Collections.singletonMap(OutputFile.xml, System.getProperty("user.dir") + StrUtil.SLASH + generatorBean.getMapperDir())))
+                        .pathInfo(Collections.singletonMap(OutputFile.xml, System.getProperty("user.dir") + StrPool.SLASH + generatorBean.getMapperDir())))
                 .strategyConfig(builder -> {
                     // 设置需要生成的表名
                     builder.addInclude(generatorBean.getTableNameList());

@@ -1,6 +1,6 @@
 package com.github.fanzezhen.common.core.model.response;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.stylefeng.roses.kernel.model.exception.AbstractBaseExceptionEnum;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
@@ -10,16 +10,13 @@ import lombok.experimental.Accessors;
 import org.springframework.validation.FieldError;
 
 import javax.validation.ConstraintViolationException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
  * 响应信息主体
  *
- * @param <T>
  * @author zezhen.fan
  */
 @Data
@@ -28,8 +25,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ActionResult<T> implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class ActionResult<T> {
 
     private boolean success;
     private T data;
@@ -39,7 +35,7 @@ public class ActionResult<T> implements Serializable {
         if (success) {
             return "success";
         }
-        if (CollectionUtil.isEmpty(errors)) {
+        if (CollUtil.isEmpty(errors)) {
             return CoreExceptionEnum.SERVICE_ERROR.getMessage();
         }
         return errors.get(0).getMessage();
@@ -91,7 +87,7 @@ public class ActionResult<T> implements Serializable {
     }
 
     public static <T> ActionResult<T> failed(List<FieldError> fieldErrors) {
-        if (CollectionUtil.isEmpty(fieldErrors)) {
+        if (CollUtil.isEmpty(fieldErrors)) {
             return failed();
         }
         List<ErrorInfo> errorList = new ArrayList<>();
@@ -100,12 +96,12 @@ public class ActionResult<T> implements Serializable {
     }
 
     public static <T> ActionResult<T> failed(ConstraintViolationException constraintViolationException) {
-        if (CollectionUtil.isEmpty(constraintViolationException.getConstraintViolations())) {
+        if (CollUtil.isEmpty(constraintViolationException.getConstraintViolations())) {
             return failed(constraintViolationException.getMessage());
         }
         List<ErrorInfo> errorList = constraintViolationException.getConstraintViolations().stream()
-                .map(constraintViolation -> new ErrorInfo(constraintViolation.getMessage()))
-                .collect(Collectors.toList());
+            .map(constraintViolation -> new ErrorInfo(constraintViolation.getMessage()))
+            .toList();
         return new ActionResult<>(errorList);
     }
 

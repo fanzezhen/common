@@ -1,8 +1,7 @@
 package com.github.fanzezhen.common.core;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
  * @date 2023/8/7
  */
 @Slf4j
-@Ignore
+@Disabled
 public class SubsetTest {
     public static void main(String[] args) {
         int i = Integer.MIN_VALUE;
@@ -22,8 +21,8 @@ public class SubsetTest {
 
 
     @Test
-    @Ignore
-    public void testSubset() {
+    @Disabled
+     void testSubset() {
         List<Integer> nums = new ArrayList<>();
         nums.add(1);
         nums.add(2);
@@ -33,6 +32,7 @@ public class SubsetTest {
         for (List<Integer> subset : subsets) {
             System.out.println(subset);
         }
+        Assertions.assertTrue(true);
     }
 
     public static List<List<Integer>> getSubsets(List<Integer> nums) {

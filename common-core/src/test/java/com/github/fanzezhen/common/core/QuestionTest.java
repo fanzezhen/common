@@ -1,8 +1,7 @@
 package com.github.fanzezhen.common.core;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +13,7 @@ import java.util.Scanner;
  * @date 2023/8/7
  */
 @Slf4j
-@Ignore
+@Disabled
 public class QuestionTest {
     public static void main(String[] args) {
         char c = 97;
@@ -39,8 +38,8 @@ public class QuestionTest {
      * password ****** timeout_100
      */
     @Test
-    @Ignore
-    public void testEncrypt() {
+    @Disabled("演示用")
+    void testEncrypt() {
         Scanner in = new Scanner(System.in);
         String numStr = in.nextLine();
         String str = in.nextLine();
@@ -68,6 +67,7 @@ public class QuestionTest {
         }
         list.set(num, "******");
         System.out.println(String.join("_", list));
+        Assertions.assertTrue(true);
     }
 
     /**
@@ -78,8 +78,8 @@ public class QuestionTest {
      * 如果是非法IPv4Q，返invalid IP
      */
     @Test
-    @Ignore
-    public void testIpv4ToLong() {
+    @Disabled("演示用")
+    void testIpv4ToLong() {
 //        Scanner scanner = new Scanner(System.in);
 //        String ipv4 = scanner.nextLine();
         String ipv4 = "128.0.255.255";

@@ -1,5 +1,6 @@
 package com.github.fanzezhen.common.security.interceptor;
 
+import cn.hutool.core.collection.CollUtil;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -32,8 +33,7 @@ public class CommonAccessDecisionManager implements AccessDecisionManager {
      */
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
-
-        if (null == configAttributes || configAttributes.size() == 0) {
+        if (CollUtil.isEmpty(configAttributes)) {
             return;
         }
         ConfigAttribute c;

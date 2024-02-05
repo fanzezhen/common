@@ -22,6 +22,6 @@ public class StrategyPostConstruct {
 
     @PostConstruct
     public void init() {
-        AnnotationFieldServiceStrategy.SERVICE_MAP = annotationFieldServiceMap;
+        AnnotationFieldServiceStrategy.setServiceMap(annotationFieldServiceMap);
     }
 }

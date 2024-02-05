@@ -24,11 +24,6 @@ public class RedisLockServiceImpl implements LockService {
     RedissonClient redissonClient;
 
     @Override
-    public <T> T lockKey(String key, Supplier<T> supplier) {
-        return lockKey(key, 120, TimeUnit.SECONDS, supplier);
-    }
-
-    @Override
     public <T> T lockKey(String key, long waitTime, TimeUnit timeUnit, Supplier<T> supplier) {
         RLock lock = redissonClient.getLock(key);
         try {

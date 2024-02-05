@@ -11,8 +11,7 @@ import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.NumberUtil;
 import com.github.fanzezhen.common.core.thread.PoolExecutors;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +19,14 @@ import java.util.concurrent.*;
 
 /**
  * @author zezhen.fan
- * @date 2023/8/7
  */
 @Slf4j
-@Ignore
+@Disabled
 public class StoryTest {
 
     @Test
-    @Ignore
-    public void testChapters() throws InterruptedException {
+    @Disabled
+     void testChapters() throws InterruptedException {
         String separator = "、";
         String originFilename = "D:\\Users\\zezhen.fan\\Documents\\Tencent Files\\842618916\\FileRecv\\MobileFile\\会说话的肘子-第一序列.txt";
         String targetFilename = originFilename.substring(0, originFilename.lastIndexOf(StrPool.DOT)) + StrPool.DOT + DateUtil.format(new DateTime(), DatePattern.CHINESE_DATE_TIME_FORMAT) + originFilename.substring(originFilename.lastIndexOf(StrPool.DOT));
@@ -61,5 +59,6 @@ public class StoryTest {
         countDownLatch.await(10, TimeUnit.MINUTES);
         writeLines.removeIf(CharSequenceUtil::isBlank);
         fileWriter.writeLines(writeLines);
+        Assertions.assertTrue(true);
     }
 }

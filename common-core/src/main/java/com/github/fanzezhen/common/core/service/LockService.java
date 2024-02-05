@@ -8,7 +8,9 @@ import java.util.function.Supplier;
  */
 public interface LockService {
 
-    <T> T lockKey(String key, Supplier<T> supplier);
+    default <T> T lockKey(String key, Supplier<T> supplier) {
+        return lockKey(key, 120, TimeUnit.SECONDS, supplier);
+    }
 
     <T> T lockKey(String key, long waitTime, TimeUnit timeUnit, Supplier<T> supplier);
 }

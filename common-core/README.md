@@ -21,7 +21,7 @@ common-core
     # 项目联系人
     project.link.man=author
     # 项目联系地址
-    project.link.url=https://github.com/fanzezhen/common/tree/master/common-swagger
+    project.link.url=https://github.com/fanzezhen/common/tree/master/common-springdoc
     # 项目联系邮箱
     project.link.email=e-mail
     # 项目许可

@@ -1,6 +1,6 @@
 package com.github.fanzezhen.common.web.mvc;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.github.fanzezhen.common.core.property.CommonCoreProperties;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class ResponseBodyWrapFactoryBean implements InitializingBean {
 
     private List<HandlerMethodReturnValueHandler> decorateHandlers(List<HandlerMethodReturnValueHandler> handlers) {
         List<HandlerMethodReturnValueHandler> newHandlers = new ArrayList<>();
-        if (CollectionUtil.isEmpty(handlers)) {
+        if (CollUtil.isEmpty(handlers)) {
             return newHandlers;
         }
         for (HandlerMethodReturnValueHandler handler : handlers) {

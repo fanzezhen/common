@@ -49,7 +49,9 @@ public class ValidationUtil {
     public static void validateImage(File imageFile) {
         try {
             BufferedImage image = ImageIO.read(imageFile);
-            ExceptionUtil.throwIfBlank(image);
+            if (ExceptionUtil.isBlank(image)){
+                throw ExceptionUtil.wrapException("图片文件不能为空");
+            }
         } catch (Throwable throwable) {
             log.warn("图片校验不通过！", throwable);
             throw new ValidationException("图片校验不通过！");
@@ -71,7 +73,9 @@ public class ValidationUtil {
     public static void validateImage(MultipartFile imageMultipartFile) {
         try {
             BufferedImage image = ImageIO.read(imageMultipartFile.getInputStream());
-            ExceptionUtil.throwIfBlank(image);
+            if (ExceptionUtil.isBlank(image)){
+                throw ExceptionUtil.wrapException("图片文件不能为空");
+            }
         } catch (Throwable throwable) {
             log.warn("图片校验不通过！", throwable);
             throw new ValidationException("图片校验不通过！");
@@ -93,7 +97,9 @@ public class ValidationUtil {
     public static void validateImage(InputStream inputStream) {
         try {
             BufferedImage image = ImageIO.read(inputStream);
-            ExceptionUtil.throwIfBlank(image);
+            if (ExceptionUtil.isBlank(image)){
+                throw ExceptionUtil.wrapException("图片文件不能为空");
+            }
         } catch (Throwable throwable) {
             log.warn("图片校验不通过！", throwable);
             throw new ValidationException("图片校验不通过！");
