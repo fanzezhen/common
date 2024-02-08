@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.web.config;
+package com.github.fanzezhen.common.swagger.config;
 
 import com.github.fanzezhen.common.core.config.EnableCoreConfig;
 import org.springframework.context.annotation.Import;
@@ -14,6 +14,6 @@ import java.lang.annotation.Target;
 @EnableCoreConfig
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Import({WebSpringConfig.class})
-public @interface EnableCommonWebConfig {
+@Import({SwaggerSpringConfig.class})
+public @interface EnableSpringDocConfig {
 }

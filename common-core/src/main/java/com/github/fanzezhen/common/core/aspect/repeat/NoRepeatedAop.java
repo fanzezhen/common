@@ -16,14 +16,14 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * @author zezhen.fan
@@ -31,20 +31,17 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 @Aspect
 @Component
+@ConditionalOnBean(CacheService.class)
 public class NoRepeatedAop {
-    private final String springApplicationName;
+    @Value("${spring.application.name}")
+    private final String springApplicationName = CharSequenceUtil.EMPTY;
     /**
      * 环境隔离变量
      */
-    private final String env;
-    private final CacheService cacheService;
-
-    @Autowired(required = false)
-    public NoRepeatedAop(String springApplicationName, String env, CacheService cacheService) {
-        this.springApplicationName = springApplicationName;
-        this.env = env;
-        this.cacheService = cacheService;
-    }
+    @Value("${spring.profiles.active}")
+    private final String env = CharSequenceUtil.EMPTY;
+    @Resource
+    private CacheService cacheService;
 
     /**
      * 要处理的方法，包名+类名+方法名
@@ -107,26 +104,28 @@ public class NoRepeatedAop {
 
     private static void loadParamArgs(JSONObject param, String[] paramArgs, Object[] args) {
         if (ArrayUtil.isNotEmpty(paramArgs) && ArrayUtil.isNotEmpty(args)) {
-            for (String validArg : paramArgs) {
-                if (CharSequenceUtil.isBlank(validArg)) {
-                    continue;
-                }
-                String[] fieldParts = validArg.split("\\.");
-                if (ArrayUtil.isEmpty(fieldParts)) {
-                    continue;
-                }
-                if (NumberUtil.isInteger(fieldParts[0])) {
-                    int i = Integer.parseInt(fieldParts[0]);
-                    if (i < args.length) {
-                        Object o = args[i];
-                        if (fieldParts.length > 1) {
-                            for (int j = 1; j < fieldParts.length; j++) {
-                                o = ReflectUtil.getFieldValue(o, fieldParts[j]);
-                            }
-                        }
-                        param.put(validArg, o);
+            for (String validArg : paramArgs) loadParamArgs(param, validArg, args);
+        }
+    }
+
+    private static void loadParamArgs(JSONObject param, String validArg, Object[] args) {
+        if (CharSequenceUtil.isBlank(validArg)) {
+            return;
+        }
+        String[] fieldParts = validArg.split("\\.");
+        if (ArrayUtil.isEmpty(fieldParts)) {
+            return;
+        }
+        if (NumberUtil.isInteger(fieldParts[0])) {
+            int i = Integer.parseInt(fieldParts[0]);
+            if (i < args.length) {
+                Object o = args[i];
+                if (fieldParts.length > 1) {
+                    for (int j = 1; j < fieldParts.length; j++) {
+                        o = ReflectUtil.getFieldValue(o, fieldParts[j]);
                     }
                 }
+                param.put(validArg, o);
             }
         }
     }

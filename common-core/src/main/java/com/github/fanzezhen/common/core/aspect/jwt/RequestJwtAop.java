@@ -6,6 +6,7 @@ import cn.hutool.jwt.JWT;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.fanzezhen.common.core.context.SysContextHolder;
+import com.github.fanzezhen.common.core.property.CommonCoreProperties;
 import com.github.fanzezhen.common.core.service.CacheService;
 import com.github.fanzezhen.common.core.util.ExceptionUtil;
 import com.github.fanzezhen.common.core.util.SortUtil;
@@ -17,13 +18,13 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,17 +37,8 @@ import java.util.List;
 @Component
 @ConditionalOnBean(CacheService.class)
 public class RequestJwtAop {
-    @Value("${jwt.account.secret.json:'{\n" +
-            "    \"taimei\": {\n" +
-            "        \"secret\": \"Taimei@123\",\n" +
-            "        \"tenantId\": \"\"\n" +
-            "    }" +
-            "}'}")
-    private String jwtSecretJson;
-
-    public RequestJwtAop(String jwtSecretJson) {
-        this.jwtSecretJson = jwtSecretJson;
-    }
+    @Resource
+    private CommonCoreProperties coreProperties;
 
     /**
      * 要处理的方法，包名+类名+方法名
@@ -69,11 +61,11 @@ public class RequestJwtAop {
             if (arg instanceof HttpServletRequest || arg instanceof HttpServletResponse) {
                 continue;
             }
-            if (arg instanceof MultipartFile multipartFile) {
+            if (!(arg instanceof MultipartFile multipartFile)) {
+                argList.add(arg);
+            }else {
                 argList.add(multipartFile.getName());
-                continue;
             }
-            argList.add(arg);
         }
         String args = JSON.toJSONString(argList);
         log.info("验证JWT： url={}, Args={}", request.getRequestURL().toString(), args);
@@ -87,7 +79,7 @@ public class RequestJwtAop {
         if (CharSequenceUtil.isBlank(account)){
             throw ExceptionUtil.wrapException("token is null or not exists");
         }
-        JSONObject jwtSecretJsonObj = JSON.parseObject(jwtSecretJson);
+        JSONObject jwtSecretJsonObj = JSON.parseObject(coreProperties.getJwtSecretJson());
         JSONObject authInfoJson = null;
         try {
             authInfoJson = jwtSecretJsonObj.getJSONObject(account);

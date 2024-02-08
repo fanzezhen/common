@@ -637,7 +637,6 @@
         <module>common-log</module>
         <module>common-mp</module>
         <module>common-redis</module>
-        <module>common-security</module>
         <module>common-sentinel</module>
         <module>common-spring-doc</module>
         <module>common-web</module>

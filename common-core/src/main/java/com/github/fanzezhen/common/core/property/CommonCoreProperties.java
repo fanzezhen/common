@@ -17,6 +17,7 @@ public class CommonCoreProperties {
     private Tenant tenant = new Tenant();
     private boolean responseJson = true;
     private String appCode = "demo";
+    private String jwtSecretJson = "{\n\"admin\": {\n\"secret\": \"admin\",\n\"tenantId\": \"\"\n}}";
     private String[] resourcesFileSuffixArr = new String[]{".html", ".css", ".js", ".json", ".doc"};
     private String autoWrapResponseIgnoreUrls = "/v2/api-docs/**,/v3/api-docs/**,/swagger**,/webjars/**";
     private CommonThreadPoolProperties threadPool = new CommonThreadPoolProperties();

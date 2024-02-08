@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * @author zezhen.fan
  */
 @Order
-@Service("CommonRedisCacheServiceImpl")
+@Service("defaultRedisCacheServiceImpl")
 @ConditionalOnProperty(prefix = "com.github.fanzezhen.common.redis", name = "enabled", havingValue = "true")
 public class RedisCacheServiceImpl implements CacheService {
     @Resource

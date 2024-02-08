@@ -13,9 +13,11 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 
 import static java.util.stream.Collectors.toList;
@@ -26,20 +28,17 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 @Aspect
 @Component
+@ConditionalOnBean(LockService.class)
 public class NoConcurrentAop {
-    private final String springApplicationName;
+    @Value("${spring.application.name}")
+    private final String springApplicationName = CharSequenceUtil.EMPTY;
     /**
      * 环境隔离变量
      */
-    private final String env;
-    private final LockService lockService;
-
-    @Autowired(required = false)
-    public NoConcurrentAop(String springApplicationName, String env, LockService lockService) {
-        this.springApplicationName = springApplicationName;
-        this.env = env;
-        this.lockService = lockService;
-    }
+    @Value("${spring.profiles.active}")
+    private final String env = CharSequenceUtil.EMPTY;
+    @Resource
+    private  LockService lockService;
 
     @Pointcut("@annotation(com.github.fanzezhen.common.core.aspect.concurrent.NoConcurrent)")
     public void cut() {

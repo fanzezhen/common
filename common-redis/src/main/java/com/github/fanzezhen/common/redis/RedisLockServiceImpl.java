@@ -7,7 +7,9 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -16,8 +18,9 @@ import java.util.function.Supplier;
 /**
  * @author zezhen.fan
  */
-@Component
 @Slf4j
+@ConditionalOnBean(RedissonClient.class)
+@Service("defaultRedisLockServiceImpl")
 public class RedisLockServiceImpl implements LockService {
 
     @Resource

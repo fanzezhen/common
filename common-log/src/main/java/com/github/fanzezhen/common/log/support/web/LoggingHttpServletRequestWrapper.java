@@ -9,11 +9,11 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 
-public class RequestReaderHttpServletRequestWrapper extends HttpServletRequestWrapper {
+public class LoggingHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     private final byte[] body;
 
-    public RequestReaderHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
+    public LoggingHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
         body = getBodyString(request).getBytes(StandardCharsets.UTF_8);
     }

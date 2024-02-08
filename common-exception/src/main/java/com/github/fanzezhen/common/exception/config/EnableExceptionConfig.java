@@ -15,5 +15,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Import({ExceptionSpringConfig.class})
-public @interface EnableCommonExceptionConfig {
+public @interface EnableExceptionConfig {
 }

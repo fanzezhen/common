@@ -1,6 +1,8 @@
 package com.github.fanzezhen.common.log.support.web;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.http.ContentType;
 import com.alibaba.fastjson.JSON;
 import com.github.fanzezhen.common.core.context.SysContextHolder;
 import jakarta.annotation.PostConstruct;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,10 +55,22 @@ public class LogPrintFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequestWrapper requestWrapper;
         if (servletRequest instanceof HttpServletRequest httpServletRequest) {
-            requestWrapper = new RequestReaderHttpServletRequestWrapper(httpServletRequest);
-            preHandle(requestWrapper, (HttpServletResponse) servletResponse, null);
-            filterChain.doFilter(requestWrapper, servletResponse);
-            postHandle(requestWrapper, (HttpServletResponse) servletResponse, null, null);
+            requestWrapper = new LoggingHttpServletRequestWrapper(httpServletRequest);
+            // 包装原始的响应输出流  
+            LoggingHttpServletResponseWrapper wrappedResponse = new LoggingHttpServletResponseWrapper((HttpServletResponse) servletResponse);
+
+            preHandle(requestWrapper, wrappedResponse, null);
+            filterChain.doFilter(requestWrapper, wrappedResponse);
+            byte[] responseByteArray = wrappedResponse.toByteArray();
+            // 打印响应体  
+            String contentType = wrappedResponse.getContentType();
+            levelLogger.log("请求返回类型：{}", contentType);
+            if (CharSequenceUtil.containsIgnoreCase(contentType, ContentType.JSON.getValue())) {
+                levelLogger.log("请求返回值：  {}", new String(responseByteArray, StandardCharsets.UTF_8));
+            }
+            servletResponse.getOutputStream().write(responseByteArray);
+            servletResponse.getOutputStream().flush();
+            postHandle(requestWrapper, wrappedResponse, null, null);
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
         }
