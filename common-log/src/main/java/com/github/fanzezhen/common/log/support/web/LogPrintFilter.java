@@ -21,10 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 日志拦截器
@@ -50,12 +47,10 @@ public class LogPrintFilter implements Filter {
     @Value("${com.github.fanzezhen.common.log.level:DEBUG}")
     private Level level;
 
-
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequestWrapper requestWrapper;
         if (servletRequest instanceof HttpServletRequest httpServletRequest) {
-            requestWrapper = new LoggingHttpServletRequestWrapper(httpServletRequest);
+            HttpServletRequestWrapper requestWrapper = new LoggingHttpServletRequestWrapper(httpServletRequest);
             // 包装原始的响应输出流  
             LoggingHttpServletResponseWrapper wrappedResponse = new LoggingHttpServletResponseWrapper((HttpServletResponse) servletResponse);
 
@@ -64,9 +59,16 @@ public class LogPrintFilter implements Filter {
             byte[] responseByteArray = wrappedResponse.toByteArray();
             // 打印响应体  
             String contentType = wrappedResponse.getContentType();
-            levelLogger.log("请求返回类型：{}", contentType);
+            levelLogger.log("请求返回Type：{}", contentType);
             if (CharSequenceUtil.containsIgnoreCase(contentType, ContentType.JSON.getValue())) {
                 levelLogger.log("请求返回值：  {}", new String(responseByteArray, StandardCharsets.UTF_8));
+            }
+            servletResponse.setContentType(wrappedResponse.getContentType());
+            Collection<String> headerNames = wrappedResponse.getHeaderNames();
+            if (headerNames != null) {
+                for (String headerName : headerNames) {
+                    ((HttpServletResponse) servletResponse).setHeader(headerName, wrappedResponse.getHeader(headerName));
+                }
             }
             servletResponse.getOutputStream().write(responseByteArray);
             servletResponse.getOutputStream().flush();
@@ -87,15 +89,18 @@ public class LogPrintFilter implements Filter {
                 headerMap.put(headerName, headerValue);
             }
             levelLogger.log("==================================接口调用======================================");
-            levelLogger.log("请求url：    {}", request.getRequestURL());
+            levelLogger.log("请求url：    {} {}", request.getMethod(), request.getRequestURL());
+            levelLogger.log("请求Type：   {}", request.getContentType());
             levelLogger.log("请求IP：     {}", request.getRemoteAddr());
+            levelLogger.log("请求Header： {}", headerMap);
+            levelLogger.log("请求param：  {}", JSON.toJSONString(request.getParameterMap()));
             try {
-                levelLogger.log("请求body：   {}", IoUtil.read(request.getReader()));
+                if (CharSequenceUtil.containsIgnoreCase(request.getContentType(), ContentType.JSON.getValue())) {
+                    levelLogger.log("请求body：   {}", IoUtil.read(request.getReader()));
+                }
             } catch (IOException e) {
                 levelLogger.log("读取请求体失败", e);
             }
-            levelLogger.log("请求Header： {}", headerMap);
-            levelLogger.log("请求param：  {}", JSON.toJSONString(request.getParameterMap()));
         }
         return true;
     }
@@ -106,6 +111,10 @@ public class LogPrintFilter implements Filter {
             levelLogger.log("请求总耗时：  {}毫秒", System.currentTimeMillis() - starTime);
             levelLogger.log("==================================调用结束=======================================");
         }
+    }
+
+    interface LevelLogger {
+        void log(String var1, Object... var2);
     }
 
     private LevelLogger findLevelLogger() {
@@ -121,10 +130,6 @@ public class LogPrintFilter implements Filter {
             return !log.isTraceEnabled() ? null : traceLogger;
         }
         return null;
-    }
-
-    interface LevelLogger {
-        void log(String var1, Object... var2);
     }
 
     private static void setLevelLogger(LevelLogger levelLogger) {
