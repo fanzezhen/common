@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
@@ -51,28 +52,16 @@ public class LogPrintFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         if (servletRequest instanceof HttpServletRequest httpServletRequest) {
             HttpServletRequestWrapper requestWrapper = new LoggingHttpServletRequestWrapper(httpServletRequest);
-            // 包装原始的响应输出流  
-            LoggingHttpServletResponseWrapper wrappedResponse = new LoggingHttpServletResponseWrapper((HttpServletResponse) servletResponse);
 
-            preHandle(requestWrapper, wrappedResponse, null);
-            filterChain.doFilter(requestWrapper, wrappedResponse);
-            byte[] responseByteArray = wrappedResponse.toByteArray();
+            preHandle(requestWrapper, (HttpServletResponse) servletResponse, null);
+            filterChain.doFilter(requestWrapper, servletResponse);
             // 打印响应体  
-            String contentType = wrappedResponse.getContentType();
+            String contentType = servletResponse.getContentType();
             levelLogger.log("请求返回Type：{}", contentType);
             if (CharSequenceUtil.containsIgnoreCase(contentType, ContentType.JSON.getValue())) {
-                levelLogger.log("请求返回值：  {}", new String(responseByteArray, StandardCharsets.UTF_8));
+                levelLogger.log("请求返回值：  {}", MDC.get("接口返回结果"));
             }
-            servletResponse.setContentType(wrappedResponse.getContentType());
-            Collection<String> headerNames = wrappedResponse.getHeaderNames();
-            if (headerNames != null) {
-                for (String headerName : headerNames) {
-                    ((HttpServletResponse) servletResponse).setHeader(headerName, wrappedResponse.getHeader(headerName));
-                }
-            }
-            servletResponse.getOutputStream().write(responseByteArray);
-            servletResponse.getOutputStream().flush();
-            postHandle(requestWrapper, wrappedResponse, null, null);
+            postHandle(requestWrapper, (HttpServletResponse) servletResponse, null, null);
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
         }

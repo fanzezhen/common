@@ -32,7 +32,7 @@ public class LogAop {
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         final Object object = joinPoint.proceed(joinPoint.getArgs());
         if (object instanceof ActionResult<?> || object instanceof Serializable){
-//            MDC.put("接口返回结果", JSON.toJSONString(object));
+            MDC.put("接口返回结果", JSON.toJSONString(object));
         }
         return object;
     }
