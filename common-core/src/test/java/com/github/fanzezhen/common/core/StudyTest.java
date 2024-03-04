@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Disabled
-public class StudyTest {
+class StudyTest {
 
     public static void main(String[] args) {
         String str = "The furthest distance in the world. ls not between life and death, But when I stand in front of you, Yet you don't know that I love you";

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 @Slf4j
 @Disabled
-public class ReverseLinkedListTest {
+class ReverseLinkedListTest {
     static class ListNode {
         Object val;
         ListNode next;

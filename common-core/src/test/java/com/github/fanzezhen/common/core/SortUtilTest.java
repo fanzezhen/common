@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 @Slf4j
 @Disabled
-public class SortUtilTest {
+class SortUtilTest {
     int[] arr = new int[]{3, 1, 7, 4, 5, 2, 6};
     int[] arr2 = new int[]{3, 1, 7, 4, 5, 3, 6, 2};
 

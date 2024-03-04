@@ -1,13 +1,15 @@
 package com.github.fanzezhen.common.core;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 //注意这个类叫Solution
-public class SudokuTest {
+@Disabled
+class SudokuTest {
     @Test
     public static void main(String[] args) {
         //直接在这里填写数独题目

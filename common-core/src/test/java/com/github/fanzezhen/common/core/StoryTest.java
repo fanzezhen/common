@@ -22,7 +22,7 @@ import java.util.concurrent.*;
  */
 @Slf4j
 @Disabled
-public class StoryTest {
+class StoryTest {
 
     @Test
     @Disabled

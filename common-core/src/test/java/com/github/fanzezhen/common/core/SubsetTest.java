@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Slf4j
 @Disabled
-public class SubsetTest {
+class SubsetTest {
     public static void main(String[] args) {
         int i = Integer.MIN_VALUE;
         System.out.println(i);

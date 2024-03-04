@@ -13,11 +13,11 @@
     <artifactId>common</artifactId>
     <groupId>com.github.fanzezhen</groupId>
     <packaging>pom</packaging>
-    <version>3.1.7-20240202</version>
+    <version>3.1.7-20240303</version>
 
     <properties>
         <com.github.fanzezhen.jdk8.version>0.0.3.4</com.github.fanzezhen.jdk8.version>
-        <com.github.fanzezhen.common.version>3.1.7-20240202</com.github.fanzezhen.common.version>
+        <com.github.fanzezhen.common.version>3.1.7-20240303</com.github.fanzezhen.common.version>
         <app.server>-tomcat</app.server>
         <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
         <cn.hutool.version>5.8.25</cn.hutool.version>
@@ -640,7 +640,6 @@
         <module>common-sentinel</module>
         <module>common-spring-doc</module>
         <module>common-web</module>
-        <module>common-magic-doc</module>
     </modules>
 
     <name>${project.groupId}.${project.artifactId}</name>
@@ -703,9 +702,11 @@
                 <maven.compiler.target>${java.version}</maven.compiler.target>
                 <maven.compiler.compilerVersion>${java.version}</maven.compiler.compilerVersion>
                 <gpg.executable>gpg</gpg.executable>
-                <gpg.executable>C:/Program Files (x86)/Gpg4win/../GnuPG/bin/gpg.exe</gpg.executable>
+<!--                <gpg.executable>C:/Program Files (x86)/Gpg4win/../GnuPG/bin/gpg.exe</gpg.executable>-->
+                <gpg.executable>/usr/bin/gpg</gpg.executable>
                 <!-- 前面pom.xml中配置了gpg的maven插件，这个目录就是你本地机器存放gpg秘钥的目录 -->
-                <gpg.homedir>C:/Users/andy/AppData/Roaming/gnupg</gpg.homedir>
+<!--                <gpg.homedir>C:/Users/andy/AppData/Roaming/gnupg</gpg.homedir>-->
+                <gpg.homedir>/home/fanzezhen/.gnupg</gpg.homedir>
             </properties>
         </profile>
     </profiles>

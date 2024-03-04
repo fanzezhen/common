@@ -20,7 +20,7 @@ trim_trailing_whitespace = false
 # 结尾换行符，可选"lf"、"cr"、"crlf"
 end_of_line = lf
 
-[*.{sh,yaml,json,sql}]
+[*.{sh,yaml,yml,json,sql}]
 # 缩进的空格数
 indent_size = 2
 # 删除一行中的前后空格
