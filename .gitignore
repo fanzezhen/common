@@ -35,6 +35,8 @@ cicd/app/nacos/standalone-logs
 # log
 logs/
 
+# mongo
+.dbshell
 
 # others
 andy

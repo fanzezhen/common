@@ -51,6 +51,8 @@ services:
       - ./cicd/app/elasticsearch/data:/usr/share/elasticsearch/data #数据文件挂载
     ports:
       - "9200:9200"
+    networks:
+      - common
 
 
   #服务名称
@@ -86,6 +88,49 @@ services:
       - ./cicd/app/redis-insight/db:/db
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - /etc/hosts:/etc/hosts:ro
+    networks:
+      - common
+
+  mongodb:
+    image: mongo
+    hostname: mongodb
+    container_name: mongodb
+    restart: on-failure
+    environment:
+      - TZ=Asia/Shanghai
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "3072k"
+        max-file: "10"
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./cicd/app/mongodb:/home/mongodb
+      - ./logs:/var/log
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
+    command: mongod --config /home/mongodb/config/mongodb.conf
+    networks:
+      - common
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    # http://localhost:27018
+    ports:
+      - "27018:8081"
+    environment:
+      ME_CONFIG_OPTIONS_EDITORTHEME: 3024-night
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: root
+    depends_on:
+      - mongodb
     networks:
       - common
 
