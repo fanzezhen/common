@@ -1,8 +1,8 @@
-package com.github.fanzezhen.common.mp.model.entity.tenant;
+package com.github.fanzezhen.common.mp.base.entity.tenant;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.github.fanzezhen.common.mp.model.entity.BaseEntity;
+import com.github.fanzezhen.common.mp.base.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

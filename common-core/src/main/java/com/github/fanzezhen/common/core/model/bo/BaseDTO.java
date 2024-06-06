@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.mp.model.dto;
+package com.github.fanzezhen.common.core.model.bo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -21,9 +21,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public abstract class BaseDto implements Serializable {
+public abstract class BaseDTO<K> implements Serializable {
     @Schema(name = "主键ID")
-    private String id;
+    private K id;
 
     /**
      * 创建时间
@@ -37,7 +37,7 @@ public abstract class BaseDto implements Serializable {
     @Schema(name = "创建人ID")
     private String createUserId;
 
-    public void init(BaseDto baseVarEntry) {
+    public void init(BaseDTO<K> baseVarEntry) {
         this.id = baseVarEntry.getId();
         this.createTime = baseVarEntry.getCreateTime();
         this.createUserId = baseVarEntry.getCreateUserId();

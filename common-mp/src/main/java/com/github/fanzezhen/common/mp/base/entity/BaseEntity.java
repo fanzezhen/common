@@ -1,9 +1,6 @@
-package com.github.fanzezhen.common.mp.model.entity;
+package com.github.fanzezhen.common.mp.base.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.annotation.*;
-import com.github.fanzezhen.common.mp.enums.DelFlagEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +10,6 @@ import lombok.experimental.Accessors;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * 公共Model,将每个表都有的公共字段抽取出来
@@ -27,13 +23,13 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public abstract class BaseEntity implements Serializable {
+public abstract class BaseEntity<K extends Serializable> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     @TableId(value = "ID", type = IdType.ASSIGN_UUID)
     @Schema(name = "主键ID")
-    private String id;
+    private K id;
 
     /**
      * 创建时间
@@ -51,7 +47,7 @@ public abstract class BaseEntity implements Serializable {
     @Schema(name = "创建人ID")
     private String createUserId;
 
-    public void init(BaseEntity baseVarEntry) {
+    public void init(BaseEntity<K> baseVarEntry) {
         this.id = baseVarEntry.getId();
         this.createTime = baseVarEntry.getCreateTime();
         this.createUserId = baseVarEntry.getCreateUserId();

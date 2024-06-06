@@ -4,13 +4,11 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.github.fanzezhen.common.mp.enums.log.OperationLogTypeEnum;
-import com.github.fanzezhen.common.mp.model.dto.BaseDto;
+import com.github.fanzezhen.common.core.model.bo.BaseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
-import javax.persistence.Column;
 
 /**
  * <p>
@@ -24,7 +22,7 @@ import javax.persistence.Column;
 @EqualsAndHashCode(callSuper = true)
 @Schema(name="LogOperation对象", description="操作日志表")
 @Accessors(chain = true)
-public class LogOperationDto extends BaseDto {
+public class LogOperationDto extends BaseDTO<String> {
 
     @Schema(name = "业务Id")
     private String bizId;

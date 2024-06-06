@@ -1,7 +1,7 @@
 package com.github.fanzezhen.common.mp.model.dto;
 
 
-import com.github.fanzezhen.common.mp.model.entity.tenant.BaseTenantEntity;
+import com.github.fanzezhen.common.mp.base.entity.tenant.BaseTenantEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

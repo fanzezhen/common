@@ -1,4 +1,4 @@
-package com.github.fanzezhen.common.mp.model.entity;
+package com.github.fanzezhen.common.mp.base.entity;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.alibaba.fastjson.annotation.JSONField;
@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -35,7 +36,7 @@ import java.util.Objects;
 @Table(indexes = {
         @Index(name = "ix_del_status", columnList = "DEL_FLAG, STATUS")
 })
-public abstract class BaseGenericEntity extends BaseEntity {
+public abstract class BaseGenericEntity<K extends Serializable> extends BaseEntity<K> {
 
     /**
      * 删除标识（1-已删除；0-未删除），默认 0

@@ -29,7 +29,7 @@ public class GeneratorTool {
                 // 设置作者
                 .author(System.getProperty("user.name"))
                 // 开启 swagger 模式
-                .enableSwagger()
+//                .enableSwagger()
                 // 生成结束时不打开文件管理器
                 .disableOpenDir()
                 // 指定输出目录

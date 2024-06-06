@@ -1,0 +1,50 @@
+package ${package.Service};
+
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import ${package.Entity}.${entity};
+import ${modelPackage}bo.${name}BO;
+import ${modelPackage}dto.${name}DTO;
+import ${modelPackage}dto.${name}SearchDTO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import ${superServiceClassPackage};
+
+/**
+ * $!{table.comment} 服务类
+ *
+ * @author ${author}
+ * @createTime ${createTime}
+ * @since ${date}
+ */
+#if(${kotlin})
+interface ${table.serviceName} : ${superServiceClass}<${entity}>
+#else
+public interface ${table.serviceName} extends ${superServiceClass}<${entity}, ${name}BO, ${pkType}> {
+    default Page<${name}BO> page(${name}SearchDTO searchDTO){
+        LambdaQueryWrapper<${entity}> wrapper = Wrappers.lambdaQuery(${entity}.class);
+        #foreach($field in ${table.fields})
+            #if(${field.propertyType.equals("boolean")})
+                #set($getprefix="is")
+        if(searchDTO.${getprefix}${field.capitalName}()){
+            wrapper.eq(${entity}::${getprefix}${field.capitalName}, searchDTO.${getprefix}${field.capitalName}());
+        }
+            #elseif(!${field.keyFlag})
+                #set($getprefix="get")
+        if(searchDTO.${getprefix}${field.capitalName}() != null){
+            wrapper.eq(${entity}::${getprefix}${field.capitalName}, searchDTO.${getprefix}${field.capitalName}());
+        }
+            #end
+        #end
+        Page<${entity}> poPage = page(searchDTO, wrapper);
+        Page<${name}BO> boPage = new Page<>(poPage.getCurrent(), poPage.getSize(), poPage.getTotal());
+        return boPage.setRecords(toBO(poPage.getRecords()));
+    }
+    default String save(${name}DTO dto){
+        ${entity} po = BeanUtil.copyProperties(dto, ${entity}.class);
+        save(po);
+        BeanUtil.copyProperties(po, dto);
+        return po.getId();
+    }
+}
+#end

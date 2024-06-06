@@ -27,7 +27,9 @@ public class MemoryLockServiceImpl implements LockService {
     public <T> T lockKey(String key, long waitTime, TimeUnit timeUnit, Supplier<T> supplier) {
         if (memoryCacheServiceImpl.get(key) != null) {
             try {
-                Thread.sleep(TimeUnit.MILLISECONDS.convert(waitTime, timeUnit));
+                if (waitTime>0) {
+                    Thread.sleep(TimeUnit.MILLISECONDS.convert(waitTime, timeUnit));
+                }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -1,12 +1,10 @@
 package com.github.fanzezhen.common.mp.interceptor.operate.model;
 
-import com.github.fanzezhen.common.mp.model.dto.BaseDto;
+import com.github.fanzezhen.common.core.model.bo.BaseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
-import javax.persistence.Entity;
 
 /**
  * <p>
@@ -20,7 +18,7 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper = true)
 @Schema(name="LogOperationDetail对象", description="操作日志详情表")
 @Accessors(chain = true)
-public class LogOperationDetailDto extends BaseDto {
+public class LogOperationDetailDto extends BaseDTO {
 
     @Schema(name = "操作日志Id")
     private String logId;
