@@ -23,13 +23,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public abstract class BaseEntity<K extends Serializable> implements Serializable {
+public abstract class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     @TableId(value = "ID", type = IdType.ASSIGN_UUID)
     @Schema(name = "主键ID")
-    private K id;
+    private String id;
 
     /**
      * 创建时间
@@ -47,7 +47,7 @@ public abstract class BaseEntity<K extends Serializable> implements Serializable
     @Schema(name = "创建人ID")
     private String createUserId;
 
-    public void init(BaseEntity<K> baseVarEntry) {
+    public void init(BaseEntity baseVarEntry) {
         this.id = baseVarEntry.getId();
         this.createTime = baseVarEntry.getCreateTime();
         this.createUserId = baseVarEntry.getCreateUserId();

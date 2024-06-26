@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import javax.annotation.PostConstruct;
-import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -13,9 +12,8 @@ import java.util.List;
 /**
  * @author fanzezhen
  * @createTime 2024/6/6 16:02
- * @since 1.0.0
  */
-public class ServiceImpl<M extends BaseMapper<T>, T, B, K extends Serializable> extends com.baomidou.mybatisplus.extension.service.impl.ServiceImpl<M, T> implements IService<T, B, K> {
+public class ServiceImpl<M extends BaseMapper<T>, T, B> extends com.baomidou.mybatisplus.extension.service.impl.ServiceImpl<M, T> implements IService<T, B> {
     protected Class<B> boClass;
 
     @Override

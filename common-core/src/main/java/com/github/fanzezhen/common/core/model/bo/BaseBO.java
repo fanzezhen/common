@@ -35,7 +35,7 @@ public abstract class BaseBO<K> implements Serializable {
      * 创建人ID
      */
     @Schema(name = "创建人ID")
-    private String createUserId;
+    private K createUserId;
 
     public void init(BaseBO<K> baseVarEntry) {
         this.id = baseVarEntry.getId();

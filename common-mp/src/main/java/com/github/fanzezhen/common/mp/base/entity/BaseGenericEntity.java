@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.github.fanzezhen.common.mp.enums.DelFlagEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,15 +15,13 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * 公共Model,将每个表都有的公共字段抽取出来
+ * MappedSuperclass 注解表示不是一个完整的实体类，将不会映射到数据库表，但是它的属性都将映射到其子类的数据库字段中
  *
  * @author zezhen.fan
- * @ MappedSuperclass注解表示不是一个完整的实体类，将不会映射到数据库表，但是它的属性都将映射到其子类的数据库字段中
  */
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -34,20 +31,22 @@ import java.util.Objects;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Table(indexes = {
-        @Index(name = "ix_del_status", columnList = "DEL_FLAG, STATUS")
+    @Index(name = "ix_del", columnList = "DEL_FLAG")
 })
-public abstract class BaseGenericEntity<K extends Serializable> extends BaseEntity<K> {
+public abstract class BaseGenericEntity extends BaseEntity {
+    public static final Long DEFAULT_DEL_FLAG = 0L;
+    static final String DEFAULT_DEL_FLAG_STR = "0";
 
     /**
      * 删除标识（1-已删除；0-未删除），默认 0
      */
     @EnumValue
-    @TableLogic
     @Column(name = "DEL_FLAG")
     @TableField(value = "DEL_FLAG", fill = FieldFill.INSERT)
-    @Schema(name = "删除标识（1-已删除；0-未删除），默认 0")
+    @TableLogic(value = DEFAULT_DEL_FLAG_STR, delval = "NOW()")
+    @Schema(name = "删除标识（0-未删除），默认 0")
     @JSONField(serialzeFeatures = SerializerFeature.WriteEnumUsingToString)
-    private DelFlagEnum delFlag;
+    private Long delFlag;
 
     /**
      * 更新时间
@@ -66,7 +65,7 @@ public abstract class BaseGenericEntity<K extends Serializable> extends BaseEnti
     private String updateUserId;
 
     public boolean isDeleted() {
-        return delFlag != null && Objects.equals(DelFlagEnum.DELETED.code, delFlag.code);
+        return delFlag != null && !delFlag.equals(0L);
     }
 
     public static String[] getFieldNames() {

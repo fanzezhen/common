@@ -35,7 +35,7 @@ public abstract class BaseDTO<K> implements Serializable {
      * 创建人ID
      */
     @Schema(name = "创建人ID")
-    private String createUserId;
+    private K createUserId;
 
     public void init(BaseDTO<K> baseVarEntry) {
         this.id = baseVarEntry.getId();

@@ -40,7 +40,7 @@ import lombok.experimental.Accessors;
 @ApiModel(value = "${entity}对象", description = "$!{table.comment}")
 #end
 #if(${superEntityClass})
-public class ${entity} extends ${superEntityClass}<${pkType}> {
+public class ${entity} extends ${superEntityClass} {
 #else
 public class ${entity} {
 #end

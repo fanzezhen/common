@@ -18,9 +18,8 @@ import java.util.List;
  *
  * @author fanzezhen
  * @createTime 2024-05-25 11:29:51
- * @since 1.0.0
  */
-public interface BaseMapper<T extends BaseEntity<?>> extends com.baomidou.mybatisplus.core.mapper.BaseMapper<T> {
+public interface BaseMapper<T extends BaseEntity> extends com.baomidou.mybatisplus.core.mapper.BaseMapper<T> {
 
     /**
      * 根据唯一字段查询

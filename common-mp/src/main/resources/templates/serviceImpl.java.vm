@@ -26,7 +26,7 @@ open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperNam
 
 }
 #else
-public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}, ${name}BO, ${pkType}>#if(${generateService}) implements ${table.serviceName}#end {
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}, ${name}BO>#if(${generateService}) implements ${table.serviceName}#end {
 
 }
 #end

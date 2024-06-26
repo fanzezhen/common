@@ -20,7 +20,7 @@ import ${superServiceClassPackage};
 #if(${kotlin})
 interface ${table.serviceName} : ${superServiceClass}<${entity}>
 #else
-public interface ${table.serviceName} extends ${superServiceClass}<${entity}, ${name}BO, ${pkType}> {
+public interface ${table.serviceName} extends ${superServiceClass}<${entity}, ${name}BO> {
     default Page<${name}BO> page(${name}SearchDTO searchDTO){
         LambdaQueryWrapper<${entity}> wrapper = Wrappers.lambdaQuery(${entity}.class);
         #foreach($field in ${table.fields})
